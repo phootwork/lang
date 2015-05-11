@@ -1,0 +1,17 @@
+{
+	"autoload" : {
+		"psr-4" : {
+			"phootwork\\lang\\" : "src"
+		}
+	},
+	"name" : "phootwork/lang",
+	"type" : "library",
+	"description" : "(Missing) PHP features represented by objects",
+	"license" : "MIT",
+	"require" : {
+		"php" : ">=5.4"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "~4"
+	}
+}
