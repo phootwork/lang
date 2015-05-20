@@ -32,6 +32,9 @@ class String implements \ArrayAccess, Comparable {
 	
 	/*
 	 * Mutators
+	 * 
+	 * TODO: Not sure whether append() and prepend() should return a new string or not (everything else is immutable)
+	 * or maybe add a second parameter for it, still weird...
 	 */
 	
 	public function append($string) {
@@ -79,7 +82,10 @@ class String implements \ArrayAccess, Comparable {
 	 * @param string $compare string to compare to
 	 * @param callable $callback
 	 */
-	public function compare($compare, callable $callback = 'strcmp') {
+	public function compare($compare, callable $callback = null) {
+		if ($callback === null) {
+			$callback = 'strcmp';
+		}
 		return $callback($this->string, $compare);
 	}
 	
@@ -127,14 +133,6 @@ class String implements \ArrayAccess, Comparable {
 		return new String(substr($this->string, $offset, $length));
 	}
 
-	
-	public function splice($replacement, $offset, $length = null) {
-		$offset = $this->prepareOffset($offset);
-		$length = $this->prepareLength($offset, $length);
-	
-		return new String(substr_replace($this->string, $replacement, $offset, $length));
-	}
-
 	/**
 	 * Slices a piece of the string from a given start to an end.
 	 * If no length is given, the String is sliced to its maximum length.
@@ -146,10 +144,15 @@ class String implements \ArrayAccess, Comparable {
 	 */
 	public function substring($start, $end = null) {
 		$length = $this->length();
+		if ($end < 0) {
+			$end = $length + $end;
+		}
 		$end = $end !== null ? min($end, $length) : $length;
 		$start = min($start, $end);
+		$end = max($start, $end);
+		$end = $end - $start;
 
-		return new String(substr($this->string, $start, $length - $end - $start));
+		return new String(substr($this->string, $start, $end));
 	}
 	
 	/*
@@ -183,6 +186,13 @@ class String implements \ArrayAccess, Comparable {
 	public function supplant(array $map) {
 		$this->string = str_replace(array_keys($map), array_values($map), $this->string);
 		return $this;
+	}
+	
+	public function splice($replacement, $offset, $length = null) {
+		$offset = $this->prepareOffset($offset);
+		$length = $this->prepareLength($offset, $length);
+	
+		return new String(substr_replace($this->string, $replacement, $offset, $length));
 	}
 	
 	/*

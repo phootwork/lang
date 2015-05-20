@@ -4,6 +4,11 @@
 			"phootwork\\lang\\" : "src"
 		}
 	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"phootwork\\lang\\tests\\" : "tests"
+		}
+	},
 	"name" : "phootwork/lang",
 	"type" : "library",
 	"description" : "(Missing) PHP features represented by objects",

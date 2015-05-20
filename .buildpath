@@ -11,6 +11,7 @@
 	<buildpathentry kind="src" path="vendor/sebastian/comparator/src"/>
 	<buildpathentry kind="src" path="vendor/sebastian/exporter/src"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
+	<buildpathentry kind="src" path="tests"/>
 	<buildpathentry kind="src" path="src"/>
 	<buildpathentry kind="src" path="vendor/doctrine/instantiator/src"/>
 	<buildpathentry kind="src" path="vendor/phpunit/php-code-coverage/src"/>
