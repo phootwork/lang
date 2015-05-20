@@ -9,6 +9,10 @@ class String implements \ArrayAccess, Comparable {
 		$this->string = $string;
 	}
 	
+	public static function create($string) {
+		return new String($string);
+	}
+	
 	/*
 	 * Convenience methods
 	 */
