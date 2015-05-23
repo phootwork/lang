@@ -96,6 +96,9 @@ class String implements \ArrayAccess, Comparable {
 	 * @return boolean
 	 */
 	public function equals($string) {
+		if ($string instanceof String) {
+			$string = $string->toString();
+		}
 		return $this->compareTo($string) === 0;
 	}
 	
@@ -106,6 +109,9 @@ class String implements \ArrayAccess, Comparable {
 	 * @return boolean
 	 */
 	public function equalsIgnoreCase($string) {
+		if ($string instanceof String) {
+			$string = $string->toString();
+		}
 		return $this->compareCaseInsensitive($string) === 0;
 	}
 	
@@ -173,6 +179,18 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function replace($search, $replace) {
+		if ($search instanceof String) {
+			$search = $search->toString();
+		} else if ($search instanceof ArrayObject) {
+			$search = $search->toArray();
+		}
+		
+		if ($replace instanceof String) {
+			$replace = $replace->toString();
+		} else if ($replace instanceof ArrayObject) {
+			$replace = $replace->toArray();
+		}
+		
 		$this->string = str_replace($search, $replace, $this->string);
 		return $this;
 	}
@@ -204,6 +222,9 @@ class String implements \ArrayAccess, Comparable {
 	}
 
 	public function indexOf($string, $offset = 0) {
+		if ($string instanceof String) {
+			$string = $string->toString();
+		}
 		$offset = $this->prepareOffset($offset);
 	
 		if ($string === '') {
@@ -214,6 +235,9 @@ class String implements \ArrayAccess, Comparable {
 	}
 	
 	public function lastIndexOf($string, $offset = null) {
+		if ($string instanceof String) {
+			$string = $string->toString();
+		}
 		if (null === $offset) {
 			$offset = $this->length();
 		} else {
@@ -231,14 +255,23 @@ class String implements \ArrayAccess, Comparable {
 	
 
 	public function startsWith($search) {
+		if ($search instanceof String) {
+			$search = $search->toString();
+		}
 		return $this->indexOf($search) === 0;
 	}
 	
 	public function endsWith($search) {
+		if ($search instanceof String) {
+			$search = $search->toString();
+		}
 		return substr($this->string, -strlen($search)) === $search;
 	}
 	
 	public function contains($string) {
+		if ($string instanceof String) {
+			$string = $string->toString();
+		}
 		return $this->indexOf($string) !== false;
 	}
 	
@@ -340,6 +373,9 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trim($characters = " \t\n\r\v\0") {
+		if ($characters instanceof String) {
+			$characters = $characters->toString();
+		}
 		return new String(trim($this->string, $characters));
 	}
 	
@@ -354,6 +390,9 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trimLeft($characters = " \t\n\r\v\0") {
+		if ($characters instanceof String) {
+			$characters = $characters->toString();
+		}
 		return new String(ltrim($this->string, $characters));
 	}
 	
@@ -368,14 +407,23 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trimRight($characters = " \t\n\r\v\0") {
+		if ($characters instanceof String) {
+			$characters = $characters->toString();
+		}
 		return new String(rtrim($this->string, $characters));
 	}
 
 	public function padLeft($length, $padding = ' ') {
+		if ($padding instanceof String) {
+			$padding = $padding->toString();
+		}
 		return new String(str_pad($this->string, $length, $padding, STR_PAD_LEFT));
 	}
 	
 	public function padRight($length, $padding = ' ') {
+		if ($padding instanceof String) {
+			$padding = $padding->toString();
+		}
 		return new String(str_pad($this->string, $length, $padding, STR_PAD_RIGHT));
 	}
 	
@@ -464,6 +512,10 @@ class String implements \ArrayAccess, Comparable {
 	 */
 	public function chunk($splitLength = 1) {
 		return new ArrayObject(str_split($this->string, $splitLength));
+	}
+	
+	public function toString() {
+		return $this->string;
 	}
 	
 	/*
