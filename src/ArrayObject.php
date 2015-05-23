@@ -28,6 +28,52 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	}
 	
 	/**
+	 * Push one or more elements onto the end of array
+	 * 
+	 * @param mixed $_ values
+	 * @return $this
+	 */
+	public function push() {
+		// das ist doch behindi!
+		foreach (func_get_args() as $v) {
+			array_push($this->array, $v);
+		}
+		return $this;
+	}
+
+	/**
+	 * Pop the element off the end of array
+	 * 
+	 * @return mixed the popped element
+	 */
+	public function pop() {
+		return array_pop($this->array);
+	}
+	
+	/**
+	 * Prepend one or more elements to the beginning of an array
+	 * 
+	 * @param mixed $_ values
+	 * @return $this
+	 */
+	public function prepend() {
+		// das ist doch auch behindi!
+		foreach (func_get_args() as $v) {
+			array_unshift($this->array, $v);
+		}
+		return $this;
+	}
+
+	/**
+	 * Shift an element off the beginning of array
+	 * 
+	 * @return mixed the shifted element
+	 */
+	public function shift() {
+		return array_shift($this->array);
+	}
+
+	/**
 	 * Sorts the array
 	 *
 	 * @param Comparator|callable $cmp

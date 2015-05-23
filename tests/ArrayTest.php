@@ -127,4 +127,18 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(['a' => 'aval', 'b' => 'bval', 'c' => 'cval'], $arr->toArray());
 	}
 	
+	public function testMutators() {
+		$base = ['b', 'c', 'd'];
+		$arr = new ArrayObject($base);
+		$arr->push('e', 'f');
+		
+		$this->assertEquals(['b', 'c', 'd', 'e', 'f'], $arr->toArray());
+		$this->assertEquals('f', $arr->pop());
+		$this->assertEquals('e', $arr->pop());
+		$arr->prepend('a');
+		$this->assertEquals(['a', 'b', 'c', 'd'], $arr->toArray());
+		$this->assertEquals('a', $arr->shift());
+		$this->assertEquals($base, $arr->toArray());
+	}
+	
 }
