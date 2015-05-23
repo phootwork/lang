@@ -51,8 +51,9 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 	public function testMutators() {
 		$str = new String('it');
 		
-// 		$this->assertEquals('let it', $str->prepend('let '));
-// 		$this->assertEquals('let it go', $str->append(' go'));
-		$this->assertEquals('Hulk', $str->set('Hulk'));
+		$this->assertEquals('let it', $str->prepend('let '));
+		$this->assertEquals('it go', $str->append(' go'));
 	}
+	
+	
 }

@@ -1,6 +1,11 @@
 <?php
 namespace phootwork\lang;
 
+/**
+ * Object representation of an immutable String
+ * 
+ * @author gossi
+ */
 class String implements \ArrayAccess, Comparable {
 	
 	private $string;
@@ -29,30 +34,25 @@ class String implements \ArrayAccess, Comparable {
 	public function length() {
 		return strlen($this->string);
 	}
-	
-	/*
-	 * Mutators
+
+	/**
+	 * Appends $string and returns as a new String
 	 * 
-	 * TODO: Not sure whether append() and prepend() should return a new string or not (everything else is immutable)
-	 * or maybe add a second parameter for it, still weird...
+	 * @param string $string
+	 * @return String
 	 */
-	
 	public function append($string) {
-		$this->string .= $string;
-		
-		return $this;
+		return new String($this->string . $string);
 	}
 	
+	/**
+	 * Prepends a string and returns as a new String
+	 * 
+	 * @param string $string
+	 * @return String
+	 */
 	public function prepend($string) {
-		$this->string = $string . $this->string;
-		
-		return $this;
-	}
-	
-	public function set($string) {
-		$this->string = $string;
-		
-		return $this;
+		return new String($string . $this->string);
 	}
 	
 	/*
@@ -261,10 +261,10 @@ class String implements \ArrayAccess, Comparable {
 	 * Formatting and transformation methods
 	 */
 
-	// should this be in a formatter?
-	public function format() {
-		return vsprintf($this->string, func_get_args());
-	}
+// 	// should this be in a formatter?
+// 	public function format() {
+// 		return vsprintf($this->string, func_get_args());
+// 	}
 
 	/**
 	 * Transforms the string to lowercase
@@ -272,8 +272,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function lower() {
-		$this->string = strtolower($this->string);
-		return $this;
+		return new String(strtolower($this->string));
 	}
 
 	/**
@@ -282,8 +281,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function lowerFirst() {
-		$this->string = lcfirst($this->string);
-		return $this;
+		return new String(lcfirst($this->string));
 	}
 	
 	/**
@@ -292,8 +290,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function upper() {
-		$this->string = strtoupper($this->string);
-		return $this;
+		return new String(strtoupper($this->string));
 	}
 	
 	/**
@@ -302,8 +299,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this
 	 */
 	public function upperFirst() {
-		$this->string = ucfirst($this->string);
-		return $this;
+		return new String(ucfirst($this->string));
 	}
 	
 	/**
@@ -312,8 +308,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function upperWords() {
-		$this->string = ucwords($this->string);
-		return $this;
+		return new String(ucwords($this->string));
 	}
 	
 	/**
@@ -345,8 +340,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trim($characters = " \t\n\r\v\0") {
-		trim($this->string, $characters);
-		return $this;
+		return new String(trim($this->string, $characters));
 	}
 	
 	/**
@@ -360,8 +354,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trimLeft($characters = " \t\n\r\v\0") {
-		ltrim($this->string, $characters);
-		return $this;
+		return new String(ltrim($this->string, $characters));
 	}
 	
 	/**
@@ -375,18 +368,15 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trimRight($characters = " \t\n\r\v\0") {
-		rtrim($this->string, $characters);
-		return $this;
+		return new String(rtrim($this->string, $characters));
 	}
 
 	public function padLeft($length, $padString = " ") {
-		$this->string = str_pad($this->string, $length, $padString, STR_PAD_LEFT);
-		return $this;
+		return new String(str_pad($this->string, $length, $padString, STR_PAD_LEFT));
 	}
 	
 	public function padRight($length, $padString = " ") {
-		$this->string = str_pad($this->string, $length, $padString, STR_PAD_RIGHT);
-		return $this;
+		return new String(str_pad($this->string, $length, $padString, STR_PAD_RIGHT));
 	}
 	
 	/**
@@ -403,15 +393,13 @@ class String implements \ArrayAccess, Comparable {
 		return new String(wordwrap($this->string, $width, $break, $cut));
 	}
 
-	// TODO: copy or modify?
 	public function repeat($times) {
 		$this->verifyNotNegative($times, 'Number of repetitions');
 		return new String(str_repeat($this->string, $times));
 	}
 
 	public function reverse() {
-		$this->string = strrev($this->string);
-		return $this;
+		return new String(strrev($this->string));
 	}
 	
 	/*
