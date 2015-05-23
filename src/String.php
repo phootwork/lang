@@ -249,7 +249,7 @@ class String implements \ArrayAccess, Comparable {
 		if ($string === '') {
 			return $length + 1;
 		}
-	
+
 		return substr_count($this->string, $string, $offset, $length);
 	}
 	
@@ -371,12 +371,12 @@ class String implements \ArrayAccess, Comparable {
 		return new String(rtrim($this->string, $characters));
 	}
 
-	public function padLeft($length, $padString = " ") {
-		return new String(str_pad($this->string, $length, $padString, STR_PAD_LEFT));
+	public function padLeft($length, $padding = ' ') {
+		return new String(str_pad($this->string, $length, $padding, STR_PAD_LEFT));
 	}
 	
-	public function padRight($length, $padString = " ") {
-		return new String(str_pad($this->string, $length, $padString, STR_PAD_RIGHT));
+	public function padRight($length, $padding = ' ') {
+		return new String(str_pad($this->string, $length, $padding, STR_PAD_RIGHT));
 	}
 	
 	/**

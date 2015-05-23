@@ -55,5 +55,17 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('it go', $str->append(' go'));
 	}
 	
+	public function testTrimming() {
+		$str = new String('  let it go  ');
+		$this->assertEquals('let it go  ', $str->trimLeft());
+		$this->assertEquals('  let it go', $str->trimRight());
+		$this->assertEquals('let it go', $str->trim());
+	}
+	
+	public function testPadding() {
+		$str = new String('let it go');
+		$this->assertEquals('-=let it go', $str->padLeft(11, '-='));
+		$this->assertEquals('let it go=-', $str->padRight(11, '=-'));
+	}
 	
 }

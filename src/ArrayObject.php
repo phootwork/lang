@@ -34,7 +34,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @return $this
 	 */
 	public function sort($cmp = null) {
-		$this->doSort($this->array, $cmp, 'usort', 'sort');
+		$this->doSort($this->array, $cmp, 'uasort', 'asort');
 	
 		return $this;
 	}
@@ -90,7 +90,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @return ArrayObject
 	 */
 	public function map(callable $callback) {
-		return new ArrayObject(array_map($callback, $this->collection));
+		return new ArrayObject(array_map($callback, $this->array));
 	}
 	
 	/**
@@ -101,7 +101,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @return ArrayObject
 	 */
 	public function filter(callable $callback) {
-		return new ArrayObject(array_values(array_filter($this->collection, $callback)));
+		return new ArrayObject(array_filter($this->array, $callback));
 	}
 	
 	/**
