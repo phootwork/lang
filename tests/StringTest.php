@@ -31,7 +31,7 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 		
 		$this->assertFalse($str->isEmpty());
 	}
-	
+
 	public function testSlicing() {
 		$str = new String('let it go');
 		
@@ -40,14 +40,14 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 // 		$this->assertEquals(new String(''), $str->slice(5, 0));
 // 		$this->assertEquals('it go', $str->slice(4));
 		// TODO: Negative values for slice - what behavior should it be?
-		
+
 		$this->assertEquals('it go', $str->substring(4));
 		$this->assertEquals('let', $str->substring(0, 3));
 		$this->assertEquals('it', $str->substring(4, 6));
 		$this->assertEquals('et it g', $str->substring(1, -1));
 		$this->assertEquals('g', $str->substring(7, -1));
 	}
-	
+
 	public function testMutators() {
 		$str = new String('it');
 		

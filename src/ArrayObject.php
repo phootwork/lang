@@ -1,12 +1,74 @@
 <?php
 namespace phootwork\lang;
 
-class ArrayObject implements \ArrayAccess {
-	
+class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Serializable {
+
 	private $array;
-	
+
 	public function __construct($contents = []) {
 		$this->array = $contents;
+	}
+
+	public function count() {
+		return count($this->array);
+	}
+	
+	public function getIterator() {
+		return new \ArrayIterator($this->array);
+	}
+	
+	public function serialize() {
+		return serialize($this->array);
+	}
+	
+	public function unserialize($serialized) {
+		$this->array = unserialize($serialized);
+		
+		return $this;
+	}
+	
+	/**
+	 * Sorts the array
+	 *
+	 * @param Comparator|callable $cmp
+	 * @return $this
+	 */
+	public function sort($cmp = null) {
+		$this->doSort($this->array, $cmp, 'usort', 'sort');
+	
+		return $this;
+	}
+	
+	/**
+	 * Sorts the array by keys
+	 *
+	 * @param Comparator|callable $cmp
+	 * @return $this
+	 */
+	public function sortKeys($cmp = null) {
+		$this->doSort($this->array, $cmp, 'uksort', 'ksort');
+	
+		return $this;
+	}
+	
+	/**
+	 * Internal sort function
+	 *
+	 * @param array $collection the collection on which is operated on
+	 * @param Comparator|callable $cmp the compare function
+	 * @param callable $usort the sort function for user passed $cmd
+	 * @param callable $sort the default sort function
+	 */
+	protected function doSort(&$collection, $cmp, callable $usort, callable $sort) {
+		if (is_callable($cmp)) {
+			$usort($collection, $cmp);
+		} else if ($cmp instanceof Comparator) {
+			$usort($collection, function($a, $b) use ($cmp) {
+				return $cmp->compare($a, $b);
+			});
+		} else {
+			$sort($collection);
+		}
 	}
 
 	/**
@@ -93,6 +155,15 @@ class ArrayObject implements \ArrayAccess {
 	public function flip() {
 		$this->array = array_flip($this->array);
 		return $this;
+	}
+	
+	/**
+	 * Returns the php array type
+	 * 
+	 * @return array
+	 */
+	public function toArray() {
+		return $this->array;
 	}
 	
 	/**
