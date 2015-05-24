@@ -86,7 +86,7 @@ class String implements \ArrayAccess, Comparable {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
-		return $callback($this->string, $compare);
+		return $callback($this->string, ''.$compare);
 	}
 	
 	/**
@@ -96,9 +96,6 @@ class String implements \ArrayAccess, Comparable {
 	 * @return boolean
 	 */
 	public function equals($string) {
-		if ($string instanceof String) {
-			$string = $string->toString();
-		}
 		return $this->compareTo($string) === 0;
 	}
 	
@@ -109,9 +106,6 @@ class String implements \ArrayAccess, Comparable {
 	 * @return boolean
 	 */
 	public function equalsIgnoreCase($string) {
-		if ($string instanceof String) {
-			$string = $string->toString();
-		}
 		return $this->compareCaseInsensitive($string) === 0;
 	}
 	
@@ -169,10 +163,10 @@ class String implements \ArrayAccess, Comparable {
 	 * Replace all occurrences of the search string with the replacement string
 	 *
 	 * @see #supplant
-	 * @param array|string $search
+	 * @param Arrayable|String|array|string $search
 	 * 		The value being searched for, otherwise known as the needle. An array may be used
 	 * 		to designate multiple needles.
-	 * @param array|string $replace
+	 * @param Arrayable|String|array|string $replace
 	 * 		The replacement value that replaces found search values. An array may be used to
 	 * 		designate multiple replacements.
 	 *
@@ -181,13 +175,13 @@ class String implements \ArrayAccess, Comparable {
 	public function replace($search, $replace) {
 		if ($search instanceof String) {
 			$search = $search->toString();
-		} else if ($search instanceof ArrayObject) {
+		} else if ($search instanceof Arrayable) {
 			$search = $search->toArray();
 		}
 		
 		if ($replace instanceof String) {
 			$replace = $replace->toString();
-		} else if ($replace instanceof ArrayObject) {
+		} else if ($replace instanceof Arrayable) {
 			$replace = $replace->toArray();
 		}
 		
@@ -222,22 +216,16 @@ class String implements \ArrayAccess, Comparable {
 	}
 
 	public function indexOf($string, $offset = 0) {
-		if ($string instanceof String) {
-			$string = $string->toString();
-		}
 		$offset = $this->prepareOffset($offset);
 	
 		if ($string === '') {
 			return $offset;
 		}
 
-		return strpos($this->string, $string, $offset);
+		return strpos($this->string, ''.$string, $offset);
 	}
 	
 	public function lastIndexOf($string, $offset = null) {
-		if ($string instanceof String) {
-			$string = $string->toString();
-		}
 		if (null === $offset) {
 			$offset = $this->length();
 		} else {
@@ -250,28 +238,18 @@ class String implements \ArrayAccess, Comparable {
 	
 		/* Converts $offset to a negative offset as strrpos has a different
 		 * behavior for positive offsets. */
-		return strrpos($this, $string, $offset - $this->length());
+		return strrpos($this, ''.$string, $offset - $this->length());
 	}
-	
 
 	public function startsWith($search) {
-		if ($search instanceof String) {
-			$search = $search->toString();
-		}
 		return $this->indexOf($search) === 0;
 	}
 	
 	public function endsWith($search) {
-		if ($search instanceof String) {
-			$search = $search->toString();
-		}
-		return substr($this->string, -strlen($search)) === $search;
+		return substr($this->string, -strlen(''.$search)) === ''.$search;
 	}
 	
 	public function contains($string) {
-		if ($string instanceof String) {
-			$string = $string->toString();
-		}
 		return $this->indexOf($string) !== false;
 	}
 	
@@ -373,10 +351,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trim($characters = " \t\n\r\v\0") {
-		if ($characters instanceof String) {
-			$characters = $characters->toString();
-		}
-		return new String(trim($this->string, $characters));
+		return new String(trim($this->string, ''.$characters));
 	}
 	
 	/**
@@ -390,10 +365,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trimLeft($characters = " \t\n\r\v\0") {
-		if ($characters instanceof String) {
-			$characters = $characters->toString();
-		}
-		return new String(ltrim($this->string, $characters));
+		return new String(ltrim($this->string, ''.$characters));
 	}
 	
 	/**
@@ -407,24 +379,15 @@ class String implements \ArrayAccess, Comparable {
 	 * @return $this for fluent API support
 	 */
 	public function trimRight($characters = " \t\n\r\v\0") {
-		if ($characters instanceof String) {
-			$characters = $characters->toString();
-		}
-		return new String(rtrim($this->string, $characters));
+		return new String(rtrim($this->string, ''.$characters));
 	}
 
 	public function padLeft($length, $padding = ' ') {
-		if ($padding instanceof String) {
-			$padding = $padding->toString();
-		}
-		return new String(str_pad($this->string, $length, $padding, STR_PAD_LEFT));
+		return new String(str_pad($this->string, $length, ''.$padding, STR_PAD_LEFT));
 	}
 	
 	public function padRight($length, $padding = ' ') {
-		if ($padding instanceof String) {
-			$padding = $padding->toString();
-		}
-		return new String(str_pad($this->string, $length, $padding, STR_PAD_RIGHT));
+		return new String(str_pad($this->string, $length, ''.$padding, STR_PAD_RIGHT));
 	}
 	
 	/**

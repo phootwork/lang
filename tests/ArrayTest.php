@@ -88,12 +88,36 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	public function testSort() {
+		$unsorted = [5, 2, 8, 3, 9, 4, 6, 1, 7, 10];
+		$list = new ArrayObject($unsorted);
+
+		$this->assertEquals(range(1, 10), $list->sort()->toArray());
+		
+		$list = new ArrayObject($unsorted);
+		$cmp = function ($a, $b) {
+			if ($a == $b) {
+				return 0;
+			}
+			return ($a < $b) ? -1 : 1;
+		};
+		$this->assertEquals(range(1, 10), $list->sort($cmp)->toArray());
+		
+		$items = ['x', 'c', 'a', 't', 'm'];
+		$list = new ArrayObject();
+		foreach ($items as $item) {
+			$list->push(new Item($item));
+		}
+		$list->sort(new ComparableComparator());
+		$this->assertEquals(['a', 'c', 'm', 't', 'x'], $list->map(function ($item) {return $item->getContent();})->toArray());
+	}
+	
+	public function testSortAssoc() {
 		$arr = new ArrayObject(['b' => 'bval', 'a' => 'aval', 'c' => 'cval']);
-		$arr->sort();
+		$arr->sortAssoc();
 		$this->assertEquals(['a' => 'aval', 'b' => 'bval', 'c' => 'cval'], $arr->toArray());
 	
 		$arr = new ArrayObject(['b' => 'bval', 'a' => 'aval', 'c' => 'cval']);
-		$arr->sort(function ($a, $b) {
+		$arr->sortAssoc(function ($a, $b) {
 			if ($a == $b) {
 				return 0;
 			}
@@ -102,7 +126,7 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(['a' => 'aval', 'b' => 'bval', 'c' => 'cval'], $arr->toArray());
 	
 		$arr = new ArrayObject(['b' => new Item('bval'), 'a' => new Item('aval'), 'c' => new Item('cval')]);
-		$arr->sort(new ComparableComparator());
+		$arr->sortAssoc(new ComparableComparator());
 		$this->assertEquals(['a' => 'aval', 'b' => 'bval', 'c' => 'cval'], $arr
 				->map(function ($elem) {return $elem->getContent();})
 				->toArray());

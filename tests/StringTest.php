@@ -17,17 +17,25 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 		$str = new String('let it go');
 		
 		$this->assertTrue($str->startsWith('let'));
+		$this->assertTrue($str->startsWith(new String('let')));
 		$this->assertFalse($str->startsWith('go'));
+		$this->assertFalse($str->startsWith(new String('go')));
 		
 		$this->assertTrue($str->endsWith('go'));
+		$this->assertTrue($str->endsWith(new String('go')));
 		$this->assertFalse($str->endsWith('let'));
+		$this->assertFalse($str->endsWith(new String('let')));
 		
 		$this->assertTrue($str->contains('it'));
+		$this->assertTrue($str->contains(new String('it')));
 		$this->assertFalse($str->contains('Hulk'));
+		$this->assertFalse($str->contains(new String('Hulk')));
 		
 		$this->assertTrue($str->equals('let it go'));
+		$this->assertTrue($str->equals(new String('let it go')));
 		$this->assertFalse($str->equals('Let It Go'));
 		$this->assertTrue($str->equalsIgnoreCase('Let It Go'));
+		$this->assertTrue($str->equalsIgnoreCase(new String('Let It Go')));
 		
 		$this->assertFalse($str->isEmpty());
 	}
@@ -52,7 +60,9 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 		$str = new String('it');
 		
 		$this->assertEquals('let it', $str->prepend('let '));
+		$this->assertEquals('let it', $str->prepend(new String('let ')));
 		$this->assertEquals('it go', $str->append(' go'));
+		$this->assertEquals('it go', $str->append(new String(' go')));
 	}
 	
 	public function testTrimming() {
@@ -65,7 +75,14 @@ class StringTest extends \PHPUnit_Framework_TestCase {
 	public function testPadding() {
 		$str = new String('let it go');
 		$this->assertEquals('-=let it go', $str->padLeft(11, '-='));
+		$this->assertEquals('-=let it go', $str->padLeft(11, new String('-=')));
 		$this->assertEquals('let it go=-', $str->padRight(11, '=-'));
+		$this->assertEquals('let it go=-', $str->padRight(11, new String('=-')));
 	}
 	
+	public function testIndexSearch() {
+		$str = new String('let it go');
+		$this->assertEquals(4, $str->indexOf('it'));
+		$this->assertEquals(4, $str->indexOf(new String('it')));
+	}
 }

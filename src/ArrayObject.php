@@ -1,7 +1,7 @@
 <?php
 namespace phootwork\lang;
 
-class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Serializable {
+class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Serializable, Arrayable {
 
 	private $array;
 
@@ -80,6 +80,18 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @return $this
 	 */
 	public function sort($cmp = null) {
+		$this->doSort($this->array, $cmp, 'usort', 'sort');
+	
+		return $this;
+	}
+	
+	/**
+	 * Sorts the array and persisting key-value pairs
+	 *
+	 * @param Comparator|callable $cmp
+	 * @return $this
+	 */
+	public function sortAssoc($cmp = null) {
 		$this->doSort($this->array, $cmp, 'uasort', 'asort');
 	
 		return $this;
