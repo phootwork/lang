@@ -6,7 +6,7 @@ namespace phootwork\lang;
  * 
  * @author gossi
  */
-class String implements \ArrayAccess, Comparable {
+class Text implements \ArrayAccess, Comparable {
 	
 	private $string;
 	
@@ -15,7 +15,7 @@ class String implements \ArrayAccess, Comparable {
 	}
 	
 	public static function create($string) {
-		return new String($string);
+		return new Text($string);
 	}
 	
 	/*
@@ -39,26 +39,31 @@ class String implements \ArrayAccess, Comparable {
 	 * Appends $string and returns as a new String
 	 * 
 	 * @param string $string
-	 * @return String
+	 * @return Text
 	 */
 	public function append($string) {
-		return new String($this->string . $string);
+		return new Text($this->string . $string);
 	}
 	
 	/**
 	 * Prepends a string and returns as a new String
 	 * 
 	 * @param string $string
-	 * @return String
+	 * @return Text
 	 */
 	public function prepend($string) {
-		return new String($string . $this->string);
+		return new Text($string . $this->string);
 	}
 	
 	/*
 	 * Comparison
 	 */
 
+	/**
+	 * Compares this string to another
+	 * 
+	 * @see \phootwork\lang\Comparable::compareTo()
+	 */
 	public function compareTo($compare) {
 		return $this->compare($compare);
 	}
@@ -71,13 +76,14 @@ class String implements \ArrayAccess, Comparable {
 	 * 		Return Values:
 	 * 		< 0 if the object is less than comparison
 	 * 		> 0 if the object is greater than comparison 
-	 * 		0 if they are equal. 
+	 * 		0 if they are equal.
 	 */
 	public function compareCaseInsensitive($compare) {
 		return $this->compare($compare, 'strcasecmp');
 	}
 
 	/**
+	 * Compares this string to another
 	 * 
 	 * @param string $compare string to compare to
 	 * @param callable $callback
@@ -120,17 +126,17 @@ class String implements \ArrayAccess, Comparable {
 	 * @see #substring
 	 * @param int $offset
 	 * @param int $length
-	 * @return String
+	 * @return Text
 	 */
 	public function slice($offset, $length = null) {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
 
 		if ($length === 0) {
-			return new String('');
+			return new Text('');
 		}
 	
-		return new String(substr($this->string, $offset, $length));
+		return new Text(substr($this->string, $offset, $length));
 	}
 
 	/**
@@ -140,7 +146,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @see #slice
 	 * @param int $start
 	 * @param int $end
-	 * @return String
+	 * @return Text
 	 */
 	public function substring($start, $end = null) {
 		$length = $this->length();
@@ -152,7 +158,7 @@ class String implements \ArrayAccess, Comparable {
 		$end = max($start, $end);
 		$end = $end - $start;
 
-		return new String(substr($this->string, $start, $end));
+		return new Text(substr($this->string, $start, $end));
 	}
 	
 	/*
@@ -170,41 +176,39 @@ class String implements \ArrayAccess, Comparable {
 	 * 		The replacement value that replaces found search values. An array may be used to
 	 * 		designate multiple replacements.
 	 *
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function replace($search, $replace) {
-		if ($search instanceof String) {
+		if ($search instanceof Text) {
 			$search = $search->toString();
 		} else if ($search instanceof Arrayable) {
 			$search = $search->toArray();
 		}
 		
-		if ($replace instanceof String) {
+		if ($replace instanceof Text) {
 			$replace = $replace->toString();
 		} else if ($replace instanceof Arrayable) {
 			$replace = $replace->toArray();
 		}
 		
-		$this->string = str_replace($search, $replace, $this->string);
-		return $this;
+		return new Text(str_replace($search, $replace, $this->string));
 	}
 
 	/**
 	 * Replaces all occurences of given replacement map. Keys will be replaced with its values.
 	 * 
 	 * @param array $map the replacements. Keys will be replaced with its value.
-	 * @return String $this for fluent API support
+	 * @return Text
 	 */
 	public function supplant(array $map) {
-		$this->string = str_replace(array_keys($map), array_values($map), $this->string);
-		return $this;
+		return new Text(str_replace(array_keys($map), array_values($map), $this->string));
 	}
 	
 	public function splice($replacement, $offset, $length = null) {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
 	
-		return new String(substr_replace($this->string, $replacement, $offset, $length));
+		return new Text(substr_replace($this->string, $replacement, $offset, $length));
 	}
 	
 	/*
@@ -215,6 +219,13 @@ class String implements \ArrayAccess, Comparable {
 		return $this->offsetGet($index);
 	}
 
+	/**
+	 * Returns the index of a given string, starting at the optional offset
+	 * 
+	 * @param string $string
+	 * @param int $offset
+	 * @return int|boolean int for the index or false if the given string doesn't occur
+	 */
 	public function indexOf($string, $offset = 0) {
 		$offset = $this->prepareOffset($offset);
 	
@@ -225,6 +236,13 @@ class String implements \ArrayAccess, Comparable {
 		return strpos($this->string, ''.$string, $offset);
 	}
 	
+	/**
+	 * Returns the last index of a given string, starting at the optional offset
+	 * 
+	 * @param string $string
+	 * @param int $offset
+	 * @return int|boolean int for the index or false if the given string doesn't occur
+	 */
 	public function lastIndexOf($string, $offset = null) {
 		if (null === $offset) {
 			$offset = $this->length();
@@ -241,14 +259,32 @@ class String implements \ArrayAccess, Comparable {
 		return strrpos($this, ''.$string, $offset - $this->length());
 	}
 
+	/**
+	 * Checks whether the string starts with the given string
+	 * 
+	 * @param string $search
+	 * @return boolean
+	 */
 	public function startsWith($search) {
 		return $this->indexOf($search) === 0;
 	}
 	
+	/**
+	 * Checks whether the string ends with the given string
+	 *
+	 * @param string $search
+	 * @return boolean
+	 */
 	public function endsWith($search) {
 		return substr($this->string, -strlen(''.$search)) === ''.$search;
 	}
 	
+	/**
+	 * Checks whether the given string occurs
+	 * 
+	 * @param string $string
+	 * @return boolean
+	 */
 	public function contains($string) {
 		return $this->indexOf($string) !== false;
 	}
@@ -264,6 +300,12 @@ class String implements \ArrayAccess, Comparable {
 		return substr_count($this->string, $string, $offset, $length);
 	}
 	
+	/**
+	 * Performs a regular expression matching with the given regexp
+	 * 
+	 * @param string $regexp
+	 * @return boolean
+	 */
 	public function match($regexp) {
 		return preg_match($regexp, $this->string);
 	}
@@ -280,52 +322,52 @@ class String implements \ArrayAccess, Comparable {
 	/**
 	 * Transforms the string to lowercase
 	 * 
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function lower() {
-		return new String(strtolower($this->string));
+		return new Text(strtolower($this->string));
 	}
 
 	/**
 	 * Transforms the string to first character lowercased
 	 *
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function lowerFirst() {
-		return new String(lcfirst($this->string));
+		return new Text(lcfirst($this->string));
 	}
 	
 	/**
 	 * Transforms the string to uppercase
 	 *
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function upper() {
-		return new String(strtoupper($this->string));
+		return new Text(strtoupper($this->string));
 	}
 	
 	/**
 	 * Transforms the string to first character uppercased
 	 *
-	 * @return $this
+	 * @return Text
 	 */
 	public function upperFirst() {
-		return new String(ucfirst($this->string));
+		return new Text(ucfirst($this->string));
 	}
 	
 	/**
 	 * Transforms the string to first character of each word uppercased
 	 * 
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function upperWords() {
-		return new String(ucwords($this->string));
+		return new Text(ucwords($this->string));
 	}
 	
 	/**
 	 * Transforms the string to only its first character capitalized.
 	 * 
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function capitalize() {
 		return $this->lower()->upperFirst();
@@ -334,7 +376,7 @@ class String implements \ArrayAccess, Comparable {
 	/**
 	 * Transforms the string with the words capitalized.
 	 * 
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function capitalizeWords() {
 		return $this->lower()->upperWords();
@@ -348,10 +390,10 @@ class String implements \ArrayAccess, Comparable {
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a 
 	 * 		range of characters.
 	 *  
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function trim($characters = " \t\n\r\v\0") {
-		return new String(trim($this->string, ''.$characters));
+		return new Text(trim($this->string, ''.$characters));
 	}
 	
 	/**
@@ -362,10 +404,10 @@ class String implements \ArrayAccess, Comparable {
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
 	 * 		range of characters.
 	 *
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function trimLeft($characters = " \t\n\r\v\0") {
-		return new String(ltrim($this->string, ''.$characters));
+		return new Text(ltrim($this->string, ''.$characters));
 	}
 	
 	/**
@@ -376,18 +418,18 @@ class String implements \ArrayAccess, Comparable {
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
 	 * 		range of characters.
 	 *
-	 * @return $this for fluent API support
+	 * @return Text
 	 */
 	public function trimRight($characters = " \t\n\r\v\0") {
-		return new String(rtrim($this->string, ''.$characters));
+		return new Text(rtrim($this->string, ''.$characters));
 	}
 
 	public function padLeft($length, $padding = ' ') {
-		return new String(str_pad($this->string, $length, ''.$padding, STR_PAD_LEFT));
+		return new Text(str_pad($this->string, $length, ''.$padding, STR_PAD_LEFT));
 	}
 	
 	public function padRight($length, $padding = ' ') {
-		return new String(str_pad($this->string, $length, ''.$padding, STR_PAD_RIGHT));
+		return new Text(str_pad($this->string, $length, ''.$padding, STR_PAD_RIGHT));
 	}
 	
 	/**
@@ -398,19 +440,19 @@ class String implements \ArrayAccess, Comparable {
 	 * @param string $cut 
 	 * 		If the cut is set to TRUE, the string is always wrapped at or before the specified 
 	 * 		width. So if you have a word that is larger than the given width, it is broken apart. 
-	 * @return String Returns the string wrapped at the specified length. 
+	 * @return Text Returns the string wrapped at the specified length. 
 	 */
 	public function wrapWords($width = 75, $break = "\n", $cut = false) {
-		return new String(wordwrap($this->string, $width, $break, $cut));
+		return new Text(wordwrap($this->string, $width, $break, $cut));
 	}
 
 	public function repeat($times) {
 		$this->verifyNotNegative($times, 'Number of repetitions');
-		return new String(str_repeat($this->string, $times));
+		return new Text(str_repeat($this->string, $times));
 	}
 
 	public function reverse() {
-		return new String(strrev($this->string));
+		return new Text(strrev($this->string));
 	}
 	
 	/*
@@ -456,7 +498,7 @@ class String implements \ArrayAccess, Comparable {
 	 * @TODO: Convenience method? Remove it in favor of ArrayObject.join() ?
 	 */
 	public static function join(array $pieces, $glue = '') {
-		return new String(implode($pieces, $glue));
+		return new Text(implode($pieces, $glue));
 	}
 	
 	/**

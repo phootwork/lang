@@ -2,7 +2,7 @@
 namespace phootwork\lang\tests;
 
 use phootwork\lang\ArrayObject;
-use phootwork\lang\String;
+use phootwork\lang\Text;
 use phootwork\lang\tests\fixtures\Item;
 use phootwork\lang\ComparableComparator;
 use phootwork\lang\StringComparator;
@@ -26,7 +26,7 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(new ArrayObject(['b' => 'a', 'd' => 'c']), $arr->flip());
 		
 		$arr = new ArrayObject(['these', 'are', 'my', 'items']);
-		$this->assertEquals(new String('these are my items'), $arr->join(' '));
+		$this->assertEquals(new Text('these are my items'), $arr->join(' '));
 	}
 	
 	public function testCount() {

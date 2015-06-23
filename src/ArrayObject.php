@@ -133,12 +133,12 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * Joins the array with a string
 	 *
 	 * @param string $glue Defaults to an empty string.
-	 * @return String
+	 * @return Text
 	 * 		Returns a string containing a string representation of all the array elements in the
 	 * 		same order, with the glue string between each element.
 	 */
 	public function join($glue = '') {
-		return new String(implode($this->array, $glue));
+		return new Text(implode($this->array, $glue));
 	}
 
 	/**
