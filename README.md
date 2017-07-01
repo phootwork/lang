@@ -13,7 +13,7 @@ Missing PHP language constructs
 
 - Provide common but missing php classes
 - Objects for native php constructs
-- Consistend API
+- Consistent API
 
 ## Installation
 
