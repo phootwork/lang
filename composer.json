@@ -2,6 +2,11 @@
 	"name" : "phootwork/lang",
 	"type" : "library",
 	"description" : "Missing PHP language constructs",
+	"authors" : [{
+			"name" : "Thomas Gossmann",
+			"homepage" : "http://gos.si"
+		}
+	],
 	"license" : "MIT",
 	"keywords" : [
 		"array",
