@@ -424,45 +424,39 @@ id est laborum.";
 		$str->chunk(0);
 	}
 
-	public function testIsAlphanumeric()
-	{
+	public function testIsAlphanumeric() {
 		$this->assertTrue((new Text('AbCd1zyZ9'))->isAlphanumeric());
 		$this->assertFalse((new Text('AbC?d1z#yZ$9'))->isAlphanumeric());
 		$this->assertFalse((new Text(''))->isAlphanumeric(), 'Null string is not alphanumeric');
 	}
 
-	public function testIsAlphabetic()
-	{
+	public function testIsAlphabetic() {
 		$this->assertTrue((new Text('AbCdzyZ'))->isAlphabetic());
 		$this->assertFalse((new Text('AbC?d1z#yZ$9'))->isAlphabetic());
 		$this->assertFalse((new Text('123456789'))->isAlphabetic());
 		$this->assertFalse((new Text(''))->isAlphabetic(), 'Null string is not alphabetic');
 	}
 
-	public function testIsNumeric()
-	{
+	public function testIsNumeric() {
 		$this->assertTrue((new Text('125874698'))->isNumeric());
 		$this->assertFalse((new Text('AbC?d1z#yZ$9'))->isNumeric());
 		$this->assertFalse((new Text('qwerty'))->isNumeric());
 		$this->assertFalse((new Text(''))->isNumeric(), 'Null string is not numeric');
 	}
 
-	public function testIsPunctuation()
-	{
+	public function testIsPunctuation() {
 		$this->assertTrue((new Text('#@[{}?^&%.;'))->isPunctuation());
 		$this->assertFalse((new Text('AbC?d1z#yZ$9'))->isPunctuation());
 		$this->assertFalse((new Text(''))->isPunctuation(), 'Null string is not punctuation');
 	}
 
-	public function testIsSpace()
-	{
+	public function testIsSpace() {
 		$this->assertTrue((new Text('  '))->isSpace());
 		$this->assertFalse((new Text(' 9 '))->isSpace());
 		$this->assertFalse((new Text(''))->isSpace(), 'Null string is not space');
 	}
 
-	public function testIsLowercase()
-	{
+	public function testIsLowercase() {
 		$this->assertTrue((new Text('lowercase'))->isLowerCase());
 		$this->assertFalse((new Text('The show must go on'))->isLowerCase());
 		$this->assertFalse((new Text(''))->isLowerCase(), 'Null string is not lowercase');
@@ -471,8 +465,7 @@ id est laborum.";
 		$this->assertFalse((new Text('lowercase string'))->isLowerCase());
 	}
 
-	public function testIsUpperCase()
-	{
+	public function testIsUpperCase() {
 		$this->assertTrue((new Text('UPPERCASE'))->isUpperCase());
 		$this->assertFalse((new Text('nONUPPERCASE'))->isUpperCase());
 		$this->assertFalse((new Text(''))->isUpperCase(), 'Null string is not uppercase');
@@ -481,15 +474,47 @@ id est laborum.";
 		$this->assertFalse((new Text('UPPERCASE STRING'))->isUpperCase());
 	}
 
-	public function testIsSingular()
-	{
+	public function testIsSingular() {
 		$this->assertTrue((new Text('chair'))->isSingular());
 		$this->assertFalse((new Text('tables'))->isSingular());
 	}
 
-	public function testIsPlural()
-	{
+	public function testIsPlural() {
 		$this->assertFalse((new Text('chair'))->isPlural());
 		$this->assertTrue((new Text('tables'))->isPlural());
+	}
+
+	public function testToCamelCase() {
+		$this->assertEquals('snakeCaseString', (new Text('snake_case_string'))->toCamelCase());
+		$this->assertEquals('kebabCaseString', (new Text('kebab-case-string'))->toCamelCase());
+		$this->assertEquals('', (new Text(''))->toCamelCase());
+		$this->assertEquals('stringWith3Numbers2', (new Text('string_with_3_numbers2'))->toCamelCase());
+		$this->assertEquals('stringWith3Numbers2', (new Text('string-with-3-numbers2'))->toCamelCase());
+	}
+
+	public function testToStudlyCase() {
+		$this->assertEquals('SnakeCaseString', (new Text('snake_case_string'))->toStudlyCase());
+		$this->assertEquals('KebabCaseString', (new Text('kebab-case-string'))->toStudlyCase());
+		$this->assertEquals('', (new Text(''))->toCamelCase());
+		$this->assertEquals('StringWith3Numbers2', (new Text('string_with_3_numbers2'))->toStudlyCase());
+		$this->assertEquals('StringWith3Numbers2', (new Text('string-with-3-numbers2'))->toStudlyCase());
+	}
+
+	public function testToSnakeCase() {
+		$this->assertEquals('camel_case_string', (new Text('camelCaseString'))->toSnakeCase());
+		$this->assertEquals('studly_case_string', (new Text('StudlyCaseString'))->toSnakeCase());
+		$this->assertEquals('kebab_case_string', (new Text('kebab-case-string'))->toSnakeCase());
+		$this->assertEquals('', (new Text(''))->toSnakeCase());
+		$this->assertEquals('string_with3_numbers2', (new Text('StringWith3Numbers2'))->toSnakeCase());
+		$this->assertEquals('string_with_3_numbers2', (new Text('string-with-3-numbers2'))->toSnakeCase());
+	}
+
+	public function testToKebabCase() {
+		$this->assertEquals('camel-case-string', (new Text('camelCaseString'))->toKebabCase());
+		$this->assertEquals('studly-case-string', (new Text('StudlyCaseString'))->toKebabCase());
+		$this->assertEquals('snake-case-string', (new Text('snake_case_string'))->toKebabCase());
+		$this->assertEquals('', (new Text(''))->toSnakeCase());
+		$this->assertEquals('string-with3-numbers2', (new Text('StringWith3Numbers2'))->toKebabCase());
+		$this->assertEquals('string-with-3-numbers2', (new Text('string_with_3_numbers2'))->toKebabCase());
 	}
 }
