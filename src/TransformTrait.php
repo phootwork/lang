@@ -74,8 +74,7 @@ trait TransformTrait
 	 *
 	 * @return Text
 	 */
-	public function toPlural()
-	{
+	public function toPlural() {
 		$pluralizer = new EnglishPluralizer();
 
 		return new Text($pluralizer->getPluralForm($this->string));
@@ -86,10 +85,70 @@ trait TransformTrait
 	 *
 	 * @return Text
 	 */
-	public function toSingular()
-	{
+	public function toSingular() {
 		$pluralizer = new EnglishPluralizer();
 
 		return new Text($pluralizer->getSingularForm($this->string));
+	}
+
+	/**
+	 * Convert a string from underscore or kebab-case to camel case.
+	 * E.g. my_own_variable => myOwnVariable
+	 *
+	 * @return Text
+	 */
+	public function toCamelCase() {
+		return $this->toStudlyCase()->toLowerCaseFirst();
+	}
+
+	/**
+	 * Convert a string from camel case or kebab-case to underscore.
+	 * E.g. myOwnVariable => my_own_variable.
+	 *
+	 * Numbers are considered as part of its previous piece:
+	 * E.g. myTest3Variable => my_test3_variable
+	 *
+	 * @return Text
+	 */
+	public function toSnakeCase() {
+		if ($this->contains('-')) {
+			return $this->replace('-', '_');
+		}
+
+		return new Text(strtolower(preg_replace('/([a-z0-9])([A-Z])/', '$1_$2', $this->string)));
+	}
+
+	/**
+	 * Convert a string from underscore or kebab-case to camel case, with upper-case first letter.
+	 * This function is useful while writing getter and setter method names.
+	 * E.g. my_own_variable => MyOwnVariable
+	 *
+	 * @return Text
+	 */
+	public function toStudlyCase() {
+		$separator = '_';
+
+		if ($this->contains('-')) {
+			$separator = '-';
+		}
+
+		return new Text(implode('', array_map('ucfirst', explode($separator, $this->string))));
+	}
+
+	/**
+	 * Convert a string from camel case orsnake case to kebab-case.
+	 * E.g. myOwnVariable => my-own-variable.
+	 *
+	 * Numbers are considered as part of its previous piece:
+	 * E.g. myTest3Variable => my_test3_variable
+	 *
+	 * @return Text
+	 */
+	public function toKebabCase() {
+		if ($this->contains('_')) {
+			return $this->replace('_', '-');
+		}
+
+		return new Text(strtolower(preg_replace('/([a-z0-9])([A-Z])/', '$1-$2', $this->string)));
 	}
 }

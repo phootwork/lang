@@ -91,7 +91,7 @@ class Text implements \ArrayAccess, Comparable {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
-		return $callback($this->string, ''.$compare);
+		return $callback($this->string, '' . $compare);
 	}
 	
 	/**
@@ -243,7 +243,7 @@ class Text implements \ArrayAccess, Comparable {
 			return $offset;
 		}
 
-		return strpos($this->string, ''.$string, $offset);
+		return strpos($this->string, '' . $string, $offset);
 	}
 	
 	/**
@@ -266,7 +266,7 @@ class Text implements \ArrayAccess, Comparable {
 	
 		/* Converts $offset to a negative offset as strrpos has a different
 		 * behavior for positive offsets. */
-		return strrpos($this, ''.$string, $offset - $this->length());
+		return strrpos($this, '' . $string, $offset - $this->length());
 	}
 
 	/**
@@ -286,7 +286,7 @@ class Text implements \ArrayAccess, Comparable {
 	 * @return boolean
 	 */
 	public function endsWith($search) {
-		return substr($this->string, -strlen(''.$search)) === ''.$search;
+		return substr($this->string, - strlen(''.$search)) === '' . $search;
 	}
 	
 	/**
