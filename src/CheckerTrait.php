@@ -1,8 +1,6 @@
 <?php
 namespace phootwork\lang;
 
-use Propel\Pluralizer\EnglishPluralizer;
-
 trait CheckerTrait
 {
 	/**
