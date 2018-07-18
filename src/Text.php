@@ -7,7 +7,9 @@ namespace phootwork\lang;
  * @author gossi
  */
 class Text implements \ArrayAccess, Comparable {
-	
+
+	use TransformTrait, CheckerTrait;
+
 	private $string;
 	
 	public function __construct($string = '') {
@@ -21,10 +23,6 @@ class Text implements \ArrayAccess, Comparable {
 	/*
 	 * Convenience methods
 	 */
-	
-	public function isEmpty() {
-		return empty($this->string);
-	}
 	
 	/**
 	 * Get string length
@@ -87,32 +85,35 @@ class Text implements \ArrayAccess, Comparable {
 	 * 
 	 * @param string $compare string to compare to
 	 * @param callable $callback
+	 * @return int
 	 */
 	public function compare($compare, callable $callback = null) {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
-		return $callback($this->string, ''.$compare);
+		return $callback($this->string, '' . $compare);
 	}
 	
 	/**
-	 * Checks wether the string and the given object are equal
+	 * Checks whether the string and the given object are equal
 	 * 
 	 * @param mixed $string
 	 * @return boolean
+	 * @deprecated Use `isEqualTo` method instead
 	 */
 	public function equals($string) {
-		return $this->compareTo($string) === 0;
+		return $this->isEqualTo($string);
 	}
 	
 	/**
-	 * Checks wether the string and the given object are equal ignoring the case
+	 * Checks whether the string and the given object are equal ignoring the case
 	 * 
 	 * @param mixed $string
 	 * @return boolean
+	 * @deprecated Use `isEqualIgnoreCaseTo` method instead
 	 */
 	public function equalsIgnoreCase($string) {
-		return $this->compareCaseInsensitive($string) === 0;
+		return $this->isEqualIgnoreCaseTo($string);
 	}
 	
 	/*
@@ -169,10 +170,10 @@ class Text implements \ArrayAccess, Comparable {
 	 * Replace all occurrences of the search string with the replacement string
 	 *
 	 * @see #supplant
-	 * @param Arrayable|String|array|string $search
+	 * @param Arrayable|Text|array|string $search
 	 * 		The value being searched for, otherwise known as the needle. An array may be used
 	 * 		to designate multiple needles.
-	 * @param Arrayable|String|array|string $replace
+	 * @param Arrayable|Text|array|string $replace
 	 * 		The replacement value that replaces found search values. An array may be used to
 	 * 		designate multiple replacements.
 	 *
@@ -203,7 +204,16 @@ class Text implements \ArrayAccess, Comparable {
 	public function supplant(array $map) {
 		return new Text(str_replace(array_keys($map), array_values($map), $this->string));
 	}
-	
+
+	/**
+	 * Replace text within a portion of a string.
+	 *
+	 * @param string|Text $replacement
+	 * @param int $offset
+	 * @param int|null $length
+	 * @return Text
+	 * @throws \InvalidArgumentException If $offset is greater then the string length or $length is too small.
+	 */
 	public function splice($replacement, $offset, $length = null) {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
@@ -229,11 +239,11 @@ class Text implements \ArrayAccess, Comparable {
 	public function indexOf($string, $offset = 0) {
 		$offset = $this->prepareOffset($offset);
 	
-		if ($string === '') {
+		if ($string == '') {
 			return $offset;
 		}
 
-		return strpos($this->string, ''.$string, $offset);
+		return strpos($this->string, '' . $string, $offset);
 	}
 	
 	/**
@@ -256,7 +266,7 @@ class Text implements \ArrayAccess, Comparable {
 	
 		/* Converts $offset to a negative offset as strrpos has a different
 		 * behavior for positive offsets. */
-		return strrpos($this, ''.$string, $offset - $this->length());
+		return strrpos($this, '' . $string, $offset - $this->length());
 	}
 
 	/**
@@ -276,7 +286,7 @@ class Text implements \ArrayAccess, Comparable {
 	 * @return boolean
 	 */
 	public function endsWith($search) {
-		return substr($this->string, -strlen(''.$search)) === ''.$search;
+		return substr($this->string, - strlen(''.$search)) === '' . $search;
 	}
 	
 	/**
@@ -288,7 +298,16 @@ class Text implements \ArrayAccess, Comparable {
 	public function contains($string) {
 		return $this->indexOf($string) !== false;
 	}
-	
+
+	/**
+	 * Count the number of substring occurrences.
+	 *
+	 * @param string|Text $string The substring to count the occurrencies
+	 * @param int $offset
+	 * @param int|null $length
+	 * @return int
+	 * @throws \InvalidArgumentException If $offset is greater then the string length or $length is too small.
+	 */
 	public function count($string, $offset = 0, $length = null) {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
@@ -307,7 +326,7 @@ class Text implements \ArrayAccess, Comparable {
 	 * @return boolean
 	 */
 	public function match($regexp) {
-		return preg_match($regexp, $this->string);
+		return (bool) preg_match($regexp, $this->string);
 	}
 
 	/*
@@ -323,63 +342,70 @@ class Text implements \ArrayAccess, Comparable {
 	 * Transforms the string to lowercase
 	 * 
 	 * @return Text
+	 * @deprecated Use `toLowercase()` method instead.
 	 */
 	public function lower() {
-		return new Text(strtolower($this->string));
+		return $this->toLowerCase();
 	}
 
 	/**
 	 * Transforms the string to first character lowercased
 	 *
 	 * @return Text
+	 * @deprecated Use `toLowerCaseFirst()` instead.
 	 */
 	public function lowerFirst() {
-		return new Text(lcfirst($this->string));
+		return $this->toLowerCaseFirst();
 	}
 	
 	/**
 	 * Transforms the string to uppercase
 	 *
 	 * @return Text
+	 * @deprecated Use `toUpperCase()` method instead.
 	 */
 	public function upper() {
-		return new Text(strtoupper($this->string));
+		return $this->toUpperCase();
 	}
 	
 	/**
 	 * Transforms the string to first character uppercased
 	 *
 	 * @return Text
+	 * @deprecated Use `toUpperCaseFirst` method instead.
 	 */
 	public function upperFirst() {
-		return new Text(ucfirst($this->string));
+		return $this->toUpperCaseFirst();
 	}
 	
 	/**
 	 * Transforms the string to first character of each word uppercased
 	 * 
 	 * @return Text
+	 * @deprecated Use `toUpperCaseWords` instead.
 	 */
 	public function upperWords() {
-		return new Text(ucwords($this->string));
+		return $this->toUpperCaseWords();
 	}
 	
 	/**
 	 * Transforms the string to only its first character capitalized.
 	 * 
 	 * @return Text
+	 * @deprecated Use `toCapitalCase` method instead.
 	 */
 	public function capitalize() {
-		return $this->lower()->upperFirst();
+		return $this->toCapitalCase();
 	}
 	
 	/**
 	 * Transforms the string with the words capitalized.
 	 * 
 	 * @return Text
+	 * @deprecated Use `toCapitalCaseWords()` method instead.
 	 */
 	public function capitalizeWords() {
-		return $this->lower()->upperWords();
+		return $this->toCapitalCaseWords();
 	}
 	
 	/**
@@ -435,9 +461,9 @@ class Text implements \ArrayAccess, Comparable {
 	/**
 	 * Returns a copy of the string wrapped at a given number of characters
 	 * 
-	 * @param number $width The number of characters at which the string will be wrapped. 
+	 * @param int $width The number of characters at which the string will be wrapped.
 	 * @param string $break The line is broken using the optional break parameter. 
-	 * @param string $cut 
+	 * @param bool $cut
 	 * 		If the cut is set to TRUE, the string is always wrapped at or before the specified 
 	 * 		width. So if you have a word that is larger than the given width, it is broken apart. 
 	 * @return Text Returns the string wrapped at the specified length. 
@@ -446,6 +472,13 @@ class Text implements \ArrayAccess, Comparable {
 		return new Text(wordwrap($this->string, $width, $break, $cut));
 	}
 
+	/**
+	 * Repeat the string $times times. If $times is 0, it returns ''.
+	 *
+	 * @param int $times
+	 * @return Text
+	 * @throws \InvalidArgumentException If $times is negative.
+	 */
 	public function repeat($times) {
 		$this->verifyNotNegative($times, 'Number of repetitions');
 		return new Text(str_repeat($this->string, $times));
@@ -510,19 +543,20 @@ class Text implements \ArrayAccess, Comparable {
 	 * 		If the optional splitLength parameter is specified, the returned array will be 
 	 * 		broken down into chunks with each being splitLength in length, otherwise each chunk 
 	 * 		will be one character in length.
-	 * 
-	 * 		FALSE is returned if splitLength is less than 1. If the split_length length exceeds 
-	 * 		the length of string, the entire string is returned as the first (and only) array 
-	 * 		element. 
+	 *      If the split_length length exceeds the length of string, the entire string is returned
+	 *      as the first (and only) array element.
+	 * @throws \InvalidArgumentException If splitLength is less than 1.
 	 */
 	public function chunk($splitLength = 1) {
+		$this->verifyPositive($splitLength, 'The chunk length');
+
 		return new ArrayObject(str_split($this->string, $splitLength));
 	}
 	
 	public function toString() {
 		return $this->string;
 	}
-	
+
 	/*
 	 * Some magic here
 	 */
