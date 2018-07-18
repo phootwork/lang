@@ -1,52 +1,11 @@
 <?php
-namespace phootwork\lang;
+namespace phootwork\lang\text;
 
 trait CheckerTrait
 {
-	/**
-	 * Compares this string to another
-	 *
-	 * @param $string
-	 * @return mixed
-	 *
-	 * @see \phootwork\lang\Comparable::compareTo()
-	 */
-	abstract public function compareTo($string);
-
-	/**
-	 * Compares this string to another string, ignoring the case
-	 *
-	 * @param mixed $compare
-	 * @return int
-	 * 		Return Values:
-	 * 		< 0 if the object is less than comparison
-	 * 		> 0 if the object is greater than comparison
-	 * 		0 if they are equal.
-	 */
-	abstract public function compareCaseInsensitive($compare);
 
 	public function isEmpty() {
 		return empty($this->string);
-	}
-
-	/**
-	 * Checks whether the string and the given object are equal
-	 *
-	 * @param mixed $string
-	 * @return boolean
-	 */
-	public function isEqualTo($string) {
-		return $this->compareTo($string) === 0;
-	}
-
-	/**
-	 * Checks whether the string and the given object are equal ignoring the case
-	 *
-	 * @param mixed $string
-	 * @return boolean
-	 */
-	public function isEqualIgnoreCaseTo($string) {
-		return $this->compareCaseInsensitive($string) === 0;
 	}
 
 	/**
@@ -135,9 +94,9 @@ trait CheckerTrait
 	 *
 	 * @return bool
 	 */
-	public function isSingular()
+	public function isSingular(Pluralizer $pluralizer = null)
 	{
-		$pluralizer = new EnglishPluralizer();
+		$pluralizer = $pluralizer ?: new EnglishPluralizer();
 
 		return $pluralizer->isSingular($this->string);
 	}
@@ -147,9 +106,9 @@ trait CheckerTrait
 	 *
 	 * @return bool
 	 */
-	public function isPlural()
+	public function isPlural(Pluralizer $pluralizer = null)
 	{
-		$pluralizer = new EnglishPluralizer();
+		$pluralizer = $pluralizer ?: new EnglishPluralizer();
 
 		return $pluralizer->isPlural($this->string);
 	}

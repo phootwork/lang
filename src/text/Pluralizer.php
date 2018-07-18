@@ -1,6 +1,5 @@
 <?php
-
-namespace phootwork\lang;
+namespace phootwork\lang\text;
 
 /**
  * The generic interface to create a plural form of a name.
@@ -8,7 +7,7 @@ namespace phootwork\lang;
  * @author Hans Lellelid <hans@xmpl.org>
  * @author Cristiano Cinotti <cristianocinotti@gmail.com>
  */
-interface PluralizerInterface {
+interface Pluralizer {
 	/**
 	 * Generate a plural name based on the passed in root.
 	 *
@@ -24,4 +23,22 @@ interface PluralizerInterface {
 	 * @return string The singular form of $root.
 	 */
 	public function getSingularForm($root);
+
+	/**
+	 * Check if $root word is plural.
+	 *
+	 * @param string $root
+	 *
+	 * @return bool
+	 */
+	public function isPlural($root);
+
+	/**
+	 * Check if $root word is singular.
+	 *
+	 * @param $root
+	 *
+	 * @return bool
+	 */
+	public function isSingular($root);
 }

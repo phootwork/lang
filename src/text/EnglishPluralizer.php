@@ -1,5 +1,5 @@
 <?php
-namespace phootwork\lang;
+namespace phootwork\lang\text;
 
 /**
  * Standard replacement English pluralizer class. Based on the links below
@@ -11,7 +11,7 @@ namespace phootwork\lang;
  * @author paul.hanssen
  * @author Cristiano Cinotti
  */
-class EnglishPluralizer implements PluralizerInterface {
+class EnglishPluralizer implements Pluralizer {
 	/**
 	 * @var array
 	 */

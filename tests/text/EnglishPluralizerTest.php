@@ -2,7 +2,7 @@
 namespace phootwork\lang\tests;
 
 use PHPUnit\Framework\TestCase;
-use phootwork\lang\EnglishPluralizer;
+use phootwork\lang\text\EnglishPluralizer;
 
 /**
  * Tests for the StandardEnglishPluralizer class
