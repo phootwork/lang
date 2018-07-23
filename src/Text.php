@@ -72,6 +72,26 @@ class Text implements \ArrayAccess, Comparable {
 		return new Text($string . $this->string, $this->encoding);
 	}
 
+	/**
+	 * Inserts a substring at the given index
+	 * @param string|Text $substring
+	 * @param int $index
+	 * @return Text
+	 */
+	public function insert($substring, $index) {
+		if ($index <= 0) {
+			return $this->prepend($substring);
+		}
+
+		if ($index > $this->length()) {
+			return $this->append($substring);
+		}
+
+		$start = mb_substr($this->string, 0, $index, $this->encoding);
+		$end = mb_substr($this->string, $index, $this->length(), $this->encoding);
+		return new Text($start . $substring . $end);
+	}
+
 	//
 	//
 	// COMPARISON
@@ -258,7 +278,10 @@ class Text implements \ArrayAccess, Comparable {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
 
-		return new Text(substr_replace($this->string, $replacement, $offset, $length), $this->encoding);
+		$start = $this->substring(0, $offset);
+		$end = $this->substring($offset + $length);
+
+		return new Text($start . $replacement . $end);
 	}
 
 	//
@@ -268,7 +291,7 @@ class Text implements \ArrayAccess, Comparable {
 	//
 
 	public function charAt($index) {
-		return $this->offsetGet($index);
+		return mb_substr($this->string, $index, 1, $this->encoding);
 	}
 
 	/**
@@ -285,7 +308,7 @@ class Text implements \ArrayAccess, Comparable {
 			return $offset;
 		}
 
-		return mb_strpos($this->string, '' . $string, $offset, $this->encoding);
+		return mb_strpos($this->string, (string) $string, $offset, $this->encoding);
 	}
 
 	/**
@@ -315,7 +338,7 @@ class Text implements \ArrayAccess, Comparable {
 	 * Checks whether the string starts with the given string. By default the check is run case sensitive,
 	 * though you can turn that off, by passing false as second parameter.
 	 *
-	 * @param string $substring The substring to look for
+	 * @param string|Text $substring The substring to look for
 	 * @param boolean $caseSensitive Force case-sensitivity
 	 * @return boolean
 	 */
@@ -334,7 +357,7 @@ class Text implements \ArrayAccess, Comparable {
 	 * Checks whether the string ends with the given string. By default the check is run case sensitive,
 	 * though you can turn that off, by passing false as second parameter.
 	 *
-	 * @param string $substring The substring to look for
+	 * @param string|Text $substring The substring to look for
 	 * @param boolean $caseSensitive Force case-sensitivity
 	 * @return boolean
 	 */
@@ -532,7 +555,7 @@ class Text implements \ArrayAccess, Comparable {
 	 * @param array $pieces The array of strings to join.
 	 * @param string $glue Defaults to an empty string.
 	 * @param string $encoding the desired encoding
-	 * @return String
+	 * @return Text
 	 * 		Returns a string containing a string representation of all the array elements in the
 	 * 		same order, with the glue string between each element.
 	 */
@@ -609,15 +632,6 @@ class Text implements \ArrayAccess, Comparable {
 	}
 
 	/**
-	 * Transforms the string to first character of each word uppercased
-	 *
-	 * @return Text
-	 */
-	public function toUpperCaseWords() {
-		return new Text(ucwords($this->string));
-	}
-
-	/**
 	 * Transforms the string to only its first character capitalized.
 	 *
 	 * @return Text
@@ -632,7 +646,10 @@ class Text implements \ArrayAccess, Comparable {
 	 * @return Text
 	 */
 	public function toCapitalCaseWords() {
-		return $this->toLowerCase()->toUpperCaseWords();
+		$encoding = $this->encoding;
+		return $this->split(' ')->map(function($str) use ($encoding) {
+			return Text::create($str, $encoding)->toCapitalCase();
+		})->join(' ');
 	}
 
 	/**
@@ -843,7 +860,7 @@ class Text implements \ArrayAccess, Comparable {
 
 	/** @internal */
 	public function offsetGet($offset) {
-		return isset($this->string[$offset]) ? $this->string[$offset] : null;
+		return $this->charAt($offset);
 	}
 
 	protected function prepareOffset($offset) {
