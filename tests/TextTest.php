@@ -16,6 +16,12 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('bla', ''.$str);
 	}
 
+	public function testLength() {
+		$this->assertEquals(9, Text::create('let it go')->length());
+		$this->assertEquals(6, Text::create('いちりんしゃ')->length());
+		$this->assertEquals(17, Text::create('Ο συγγραφέας είπε')->length());
+	}
+
 	public function testOccurences() {
 		$str = new Text('let it go');
 
@@ -41,6 +47,31 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertTrue($str->equalsIgnoreCase(new Text('Let It Go')));
 
 		$this->assertFalse($str->isEmpty());
+
+		// mb
+		$str = new Text('Ο συγγραφέας είπε');
+
+		$this->assertTrue($str->startsWith('Ο συγ'));
+		$this->assertTrue($str->startsWith(new Text('Ο συγ')));
+		$this->assertFalse($str->startsWith('ραφέ'));
+		$this->assertFalse($str->startsWith(new Text('ραφέ')));
+
+		$this->assertTrue($str->endsWith('είπε'));
+		$this->assertTrue($str->endsWith(new Text('είπε')));
+		$this->assertFalse($str->endsWith('ραφέ'));
+		$this->assertFalse($str->endsWith(new Text('ραφέ')));
+
+		$this->assertTrue($str->contains('συγγραφέας'));
+		$this->assertTrue($str->contains(new Text('συγγραφέας')));
+		$this->assertFalse($str->contains('いちりんしゃ'));
+		$this->assertFalse($str->contains(new Text('いちりんしゃ')));
+
+		$this->assertTrue($str->equals('Ο συγγραφέας είπε'));
+		$this->assertTrue($str->equals(new Text('Ο συγγραφέας είπε')));
+		$this->assertFalse($str->equals('いちりんしゃ'));
+		$this->assertFalse($str->equals(new Text('いちりんしゃ')));
+		$this->assertTrue($str->equalsIgnoreCase('Ο συγγραφέας είπε'));
+		$this->assertTrue($str->equalsIgnoreCase(new Text('Ο συγγραφέας είπε')));
 	}
 
 	public function testSlicing() {
@@ -50,13 +81,27 @@ class TextTest extends \PHPUnit_Framework_TestCase {
  		$this->assertEquals('it', $str->slice(4, 2));
  		$this->assertEquals(new Text(''), $str->slice(5, 0));
  		$this->assertEquals('it go', $str->slice(4));
-		// TODO: Negative values for slice - what behavior should it be?
+ 		$this->assertEquals('go', $str->slice(-2));
 
 		$this->assertEquals('it go', $str->subString(4));
 		$this->assertEquals('let', $str->subString(0, 3));
 		$this->assertEquals('it', $str->subString(4, 6));
 		$this->assertEquals('et it g', $str->subString(1, -1));
 		$this->assertEquals('g', $str->subString(7, -1));
+
+		// mb
+		$str = new Text('Ο συγγραφέας είπε');
+
+		$this->assertEquals('Ο σ', $str->slice(0, 3));
+		$this->assertEquals('γγ', $str->slice(4, 2));
+		$this->assertEquals(new Text(''), $str->slice(5, 0));
+		$this->assertEquals('γγραφέας είπε', $str->slice(4));
+
+		$this->assertEquals('γγραφέας είπε', $str->subString(4));
+		$this->assertEquals('Ο σ', $str->subString(0, 3));
+		$this->assertEquals('γγ', $str->subString(4, 6));
+		$this->assertEquals(' συγγραφέας είπ', $str->subString(1, -1));
+		$this->assertEquals('αφέας είπ', $str->subString(7, -1));
 	}
 
 	public function testMutators() {
@@ -66,6 +111,7 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('let it', $str->prepend(new Text('let ')));
 		$this->assertEquals('it go', $str->append(' go'));
 		$this->assertEquals('it go', $str->append(new Text(' go')));
+		$this->assertEquals('iTTt', $str->insert('TT', 1));
 	}
 
 	public function testTrimming() {
@@ -87,6 +133,11 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$str = new Text('let it go');
 		$this->assertEquals(4, $str->indexOf('it'));
 		$this->assertEquals(4, $str->indexOf(new Text('it')));
+
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ');
+		$this->assertEquals(2, $str->indexOf('Ö'));
+		$this->assertEquals(2, $str->indexOf(new Text('Ö')));
 	}
 
 	public function testIndexSearchNullString() {
@@ -101,6 +152,10 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf(Text::class, $lower);
 		$this->assertEquals('let it go', $lower->toString());
 		$this->assertEquals('=let it go', '=' . $str->toLowerCase());
+
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ');
+		$this->assertEquals('äåöääåûüüû', $str->toLowerCase());
 	}
 
 	public function testToLowerCaseFirst() {
@@ -109,6 +164,10 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf(Text::class, $lower);
 		$this->assertEquals('lET IT GO', $lower->toString());
 		$this->assertEquals('=lET IT GO', '=' . $str->toLowerCaseFirst());
+
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ');
+		$this->assertEquals('ÄåÖäÄåûüÜÛ', $str->toUpperCaseFirst());
 	}
 
 	public function testToUpperCase() {
@@ -117,6 +176,10 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf(Text::class, $upper);
 		$this->assertEquals('LET IT GO', $upper->toString());
 		$this->assertEquals('=LET IT GO', '=' . $str->toUpperCase());
+
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ');
+		$this->assertEquals('ÄÅÖÄÄÅÛÜÜÛ', $str->toUpperCase());
 	}
 
 	public function testToUpperCaseFirst() {
@@ -125,14 +188,10 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf(Text::class, $upper);
 		$this->assertEquals('Let it go', $upper->toString());
 		$this->assertEquals('=Let it go', '=' . $str->toUpperCaseFirst());
-	}
 
-	public function testToUpperCaseWords() {
-		$str = new Text('let it go');
-		$upper = $str->toUpperCaseWords();
-		$this->assertInstanceOf(Text::class, $upper);
-		$this->assertEquals('Let It Go', $upper->toString());
-		$this->assertEquals('=Let It Go', '=' . $str->toUpperCaseWords());
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ');
+		$this->assertEquals('ÄåÖäÄåûüÜÛ', $str->toUpperCaseFirst());
 	}
 
 	public function testToCapitalCase()	{
@@ -141,14 +200,22 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf(Text::class, $upper);
 		$this->assertEquals('Let it go', $upper->toString());
 		$this->assertEquals('=Let it go', '=' . $str->toCapitalCase());
+
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ');
+		$this->assertEquals('Äåöääåûüüû', $str->toCapitalCase());
 	}
 
 	public function testToCapitalCaseWords() {
-		$str = new Text('let it go');
+		$str = new Text('let iT go');
 		$upper = $str->toCapitalCaseWords();
 		$this->assertInstanceOf(Text::class, $upper);
 		$this->assertEquals('Let It Go', $upper->toString());
 		$this->assertEquals('=Let It Go', '=' . $str->toCapitalCaseWords());
+
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ äåÖäÄåûüÜÛ');
+		$this->assertEquals('Äåöääåûüüû Äåöääåûüüû', $str->toCapitalCaseWords());
 	}
 
 	public function testReplace() {
@@ -176,6 +243,10 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$repl = $str->replace(new Search(), new Replace());
 		$this->assertEquals('let\'s run', $repl);
 		$this->assertInstanceOf(Text::class, $repl);
+
+		// mb
+		$str = new Text('äåÖäÄåûüÜÛ');
+		$this->assertEquals('öåÖöÄåûüÜÛ', $str->replace('ä', 'ö'));
 	}
 
 	public function testSupplant() {
@@ -217,6 +288,18 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$repl = $str->splice(new Text(' you can'), 4, 3);
 		$this->assertInstanceOf(Text::class, $repl);
 		$this->assertEquals('Text you can splice', $repl);
+
+		// mb
+		$str = new Text('Ο συγγραφέας είπε');
+
+		$repl = $str->splice('', 2);
+		$this->assertInstanceOf(Text::class, $repl);
+		$this->assertEquals('Ο ', $repl);
+
+		$this->assertEquals('Ο συγγραφέας', $str->splice('', -5));
+		$this->assertEquals('Ο συγγραφέας', $str->splice('', -5));
+		$this->assertEquals('Ο wurst συγγραφέας είπε', $str->splice('wurst ', 2, 0));
+		$this->assertEquals('Ο συγγραφέας wurst', $str->splice('wurst', -4, 4));
 	}
 
 	/**
@@ -259,6 +342,10 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$str = new Text('Text to splice');
 		$pos = $str->charAt(5);
 		$this->assertSame('t', $pos);
+
+		// mb
+		$str = new Text('いちりんしゃ');
+		$this->assertEquals('し', $str->charAt(4));
 	}
 
 	public function testLastIndexOf() {
