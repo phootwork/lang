@@ -503,10 +503,24 @@ class Text implements Comparable {
 		return new Text(rtrim($this->string, ''.$characters), $this->encoding);
 	}
 
+	/**
+	 * Adds padding to the left
+	 *
+	 * @param int $length
+	 * @param string $padding
+	 * @return Text
+	 */
 	public function padLeft($length, $padding = ' ') {
 		return new Text(str_pad($this->string, $length, ''.$padding, STR_PAD_LEFT), $this->encoding);
 	}
 
+	/**
+	 * Adds padding to the right
+	 *
+	 * @param int $length
+	 * @param string $padding
+	 * @return Text
+	 */
 	public function padRight($length, $padding = ' ') {
 		return new Text(str_pad($this->string, $length, ''.$padding, STR_PAD_RIGHT), $this->encoding);
 	}
@@ -563,6 +577,11 @@ class Text implements Comparable {
 		return new Text(str_repeat($this->string, $multiplier), $this->encoding);
 	}
 
+	/**
+	 * Reverses the character order
+	 *
+	 * @return Text
+	 */
 	public function reverse() {
 		return new Text(strrev($this->string), $this->encoding);
 	}
@@ -588,13 +607,6 @@ class Text implements Comparable {
 		return $this->substring(0, $length)->append($substring);
 	}
 
-// 	/*
-// 	 * Formatting and transformation methods
-// 	 */
-// 	// should this be in a formatter?
-// 	public function format() {
-// 		return vsprintf($this->string, func_get_args());
-// 	}
 
 	//
 	//
@@ -844,7 +856,7 @@ class Text implements Comparable {
 
 	//
 	//
-	// DEPRECATIONS
+	// DEPRECATIONS - Remove with 0.10
 	//
 	//
 
@@ -872,7 +884,7 @@ class Text implements Comparable {
 	 * Transforms the string to uppercase
 	 *
 	 * @return Text
-	 * @deprecated Use `toUpperCase()` method instead.
+	 * @deprecated Use <code>toUpperCase()</code> method instead.
 	 */
 	public function upper() {
 		return $this->toUpperCase();
