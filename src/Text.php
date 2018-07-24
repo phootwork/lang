@@ -44,6 +44,14 @@ class Text implements \ArrayAccess, Comparable {
 	}
 
 	/**
+	 * Returns the used encoding
+	 * @return string
+	 */
+	public function getEncoding() {
+		return $this->encoding;
+	}
+
+	/**
 	 * Get string length
 	 *
 	 * @return int Returns the length
@@ -506,6 +514,27 @@ class Text implements \ArrayAccess, Comparable {
 
 	public function reverse() {
 		return new Text(strrev($this->string), $this->encoding);
+	}
+
+	/**
+	 * Truncates the string with a substring and ensures it doesn't exceed the given length
+	 *
+	 * @param int $length
+	 * @param string $substring
+	 * @return Text
+	 */
+	public function truncate($length, $substring = '') {
+		if ($this->length() <= $length) {
+			return new Text($this->string, $this->encoding);
+		}
+
+		$substrLen = mb_strlen($substring, $this->encoding);
+
+		if ($this->length() + $substrLen > $length) {
+			$length -= $substrLen;
+		}
+
+		return $this->substring(0, $length)->append($substring);
 	}
 
 // 	/*
