@@ -10,7 +10,7 @@ use phootwork\lang\text\Pluralizer;
  *
  * @author gossi
  */
-class Text implements \ArrayAccess, Comparable {
+class Text implements Comparable {
 
 	use CheckerTrait;
 
@@ -869,28 +869,6 @@ class Text implements \ArrayAccess, Comparable {
 	// INTERNALS
 	//
 	//
-
-	/** @internal */
-	public function offsetSet($offset, $value) {
-		if (!is_null($offset)) {
-			$this->string[$offset] = $value;
-		}
-	}
-
-	/** @internal */
-	public function offsetExists($offset) {
-		return isset($this->string[$offset]);
-	}
-
-	/** @internal */
-	public function offsetUnset($offset) {
-		unset($this->string[$offset]);
-	}
-
-	/** @internal */
-	public function offsetGet($offset) {
-		return $this->charAt($offset);
-	}
 
 	protected function prepareOffset($offset) {
 		$len = $this->length();
