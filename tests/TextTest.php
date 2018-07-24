@@ -119,6 +119,11 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('let it go  ', $str->trimLeft());
 		$this->assertEquals('  let it go', $str->trimRight());
 		$this->assertEquals('let it go', $str->trim());
+
+		$str = new Text('  fòôbàř  ');
+		$this->assertEquals('fòôbàř  ', $str->trimLeft());
+		$this->assertEquals('  fòôbàř', $str->trimRight());
+		$this->assertEquals('fòôbàř', $str->trim());
 	}
 
 	public function testPadding() {
