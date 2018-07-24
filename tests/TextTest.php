@@ -482,6 +482,18 @@ id est laborum.";
 		$this->assertEquals("!dlrow olleH", $rev);
 	}
 
+	public function testTruncate() {
+		$str = new Text('Hello World!');
+		$truncate = $str->truncate(8, '...');
+		$this->assertEquals('Hello...', $truncate);
+		$this->assertEquals(8, $truncate->length());
+		$this->assertEquals('Hello World!', $str->truncate(20));
+
+		$str = Text::create('いちりんしゃ');
+		$this->assertEquals('いち', $str->truncate(2));
+		$this->assertEquals('いち...', $str->truncate(5, '...'));
+	}
+
 	public function testChunk() {
 		$str = new Text('Let it go');
 		$splitted = $str->chunk();
