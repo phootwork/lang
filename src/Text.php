@@ -18,8 +18,8 @@ class Text implements Comparable {
 	private $encoding;
 
 	/**
-     * Initializes a Stringy object and assigns both str and encoding properties
-     * the supplied values. $str is cast to a string prior to assignment, and if
+     * Initializes a String object and assigns both string and encoding properties
+     * the supplied values. $string is cast to a string prior to assignment, and if
      * $encoding is not specified, it defaults to mb_internal_encoding(). Throws
      * an InvalidArgumentException if the first argument is an array or object
      * without a __toString method.
@@ -39,6 +39,14 @@ class Text implements Comparable {
 		$this->encoding = $encoding ?: mb_internal_encoding();
 	}
 
+	/**
+	 * Static initializing a String object.
+	 *
+	 * @see Text::__construct()
+	 * @param mixed $string
+	 * @param string $encoding
+	 * @return Text
+	 */
 	public static function create($string, $encoding = null) {
 		return new Text($string, $encoding);
 	}
@@ -54,6 +62,14 @@ class Text implements Comparable {
 	/**
 	 * Get string length
 	 *
+	 * <code>
+	 * $str = new Text('Hello World!');<br>
+	 * $str->length(); // 12
+	 *
+	 * $str = new Text('いちりんしゃ');<br>
+	 * $str->length(); // 6
+	 * </code>
+	 *
 	 * @return int Returns the length
 	 */
 	public function length() {
@@ -61,7 +77,7 @@ class Text implements Comparable {
 	}
 
 	/**
-	 * Appends $string and returns as a new String
+	 * Appends <code>$string</code> and returns as a new <code>Text</code>
 	 *
 	 * @param string $string
 	 * @return Text
@@ -71,7 +87,7 @@ class Text implements Comparable {
 	}
 
 	/**
-	 * Prepends a string and returns as a new String
+	 * Prepends <code>$string</code> and returns as a new <code>Text</code>
 	 *
 	 * @param string $string
 	 * @return Text
@@ -82,6 +98,12 @@ class Text implements Comparable {
 
 	/**
 	 * Inserts a substring at the given index
+	 *
+	 * <code>
+	 * $str = new Text('Hello World!');<br>
+	 * $str->insert('to this ', 5); // Hello to this World!
+	 * </code>
+	 *
 	 * @param string|Text $substring
 	 * @param int $index
 	 * @return Text
@@ -119,10 +141,9 @@ class Text implements Comparable {
 	 * Compares this string to another string, ignoring the case
 	 *
 	 * @param mixed $compare
-	 * @return int
-	 * 		Return Values:
-	 * 		< 0 if the object is less than comparison
-	 * 		> 0 if the object is greater than comparison
+	 * @return int Return Values:<br>
+	 * 		&lt; 0 if the object is less than comparison<br>
+	 *  	&gt; 0 if the object is greater than comparison<br>
 	 * 		0 if they are equal.
 	 */
 	public function compareCaseInsensitive($compare) {
@@ -298,15 +319,29 @@ class Text implements Comparable {
 	//
 	//
 
+	/**
+	 * Returns the character at the given zero-related index
+	 *
+	 * <code>
+	 * $str = new Text('Hello World!');<br>
+	 * $str->charAt(6); // W
+	 *
+	 * $str = new Text('いちりんしゃ');<br>
+	 * $str->charAt(4) // し
+	 * </code>
+	 *
+	 * @param int $index zero-related index
+	 * @return string the found character
+	 */
 	public function charAt($index) {
 		return mb_substr($this->string, $index, 1, $this->encoding);
 	}
 
 	/**
-	 * Returns the index of a given string, starting at the optional offset
+	 * Returns the index of a given string, starting at the optional zero-related offset
 	 *
 	 * @param string $string
-	 * @param int $offset
+	 * @param int $offset zero-related offset
 	 * @return int|boolean int for the index or false if the given string doesn't occur
 	 */
 	public function indexOf($string, $offset = 0) {
@@ -343,46 +378,62 @@ class Text implements Comparable {
 	}
 
 	/**
-	 * Checks whether the string starts with the given string. By default the check is run case sensitive,
-	 * though you can turn that off, by passing false as second parameter.
+	 * Checks whether the string starts with the given string. Case sensitive!
 	 *
+	 * @see Text::startsWithIgnoreCase()
 	 * @param string|Text $substring The substring to look for
-	 * @param boolean $caseSensitive Force case-sensitivity
 	 * @return boolean
 	 */
-	public function startsWith($substring, $caseSensitive = true) {
+	public function startsWith($substring) {
 		$substringLength = mb_strlen($substring, $this->encoding);
 		$startOfStr = mb_substr($this->string, 0, $substringLength, $this->encoding);
 
-		if (!$caseSensitive) {
-			$substring = mb_strtolower($substring, $this->encoding);
-			$startOfStr = mb_strtolower($startOfStr, $this->encoding);
-		}
 		return (string) $substring === $startOfStr;
 	}
 
 	/**
-	 * Checks whether the string ends with the given string. By default the check is run case sensitive,
-	 * though you can turn that off, by passing false as second parameter.
+	 * Checks whether the string starts with the given string. Ignores case.
 	 *
+	 * @see Text::startsWith()
 	 * @param string|Text $substring The substring to look for
-	 * @param boolean $caseSensitive Force case-sensitivity
 	 * @return boolean
 	 */
-	public function endsWith($substring, $caseSensitive = true) {
+	public function startsWithIgnoreCase($substring) {
+		$substring = mb_strtolower($substring, $this->encoding);
 		$substringLength = mb_strlen($substring, $this->encoding);
-		$strLength = $this->length();
-		$endOfStr = mb_substr($this->string, $strLength - $substringLength, $substringLength, $this->encoding);
+		$startOfStr = mb_strtolower(mb_substr($this->string, 0, $substringLength, $this->encoding));
 
-		if (!$caseSensitive) {
-			$substring = mb_strtolower($substring, $this->encoding);
-			$endOfStr = mb_strtolower($endOfStr, $this->encoding);
-		}
+		return (string) $substring === $startOfStr;
+	}
+
+	/**
+	 * Checks whether the string ends with the given string. Case sensitive!
+	 *
+	 * @see Text::endsWithIgnoreCase()
+	 * @param string|Text $substring The substring to look for
+	 * @return boolean
+	 */
+	public function endsWith($substring) {
+		$substringLength = mb_strlen($substring, $this->encoding);
+		$endOfStr = mb_substr($this->string, $this->length() - $substringLength, $substringLength, $this->encoding);
 
 		return (string) $substring === $endOfStr;
 	}
 
+	/**
+	 * Checks whether the string ends with the given string. Ingores case.
+	 *
+	 * @see Text::endsWith()
+	 * @param string|Text $substring The substring to look for
+	 * @return boolean
+	 */
+	public function endsWithIgnoreCase($substring) {
+		$substring = mb_strtolower($substring, $this->encoding);
+		$substringLength = mb_strlen($substring, $this->encoding);
+		$endOfStr = mb_strtolower(mb_substr($this->string, $this->length() - $substringLength, $substringLength, $this->encoding));
 
+		return (string) $substring === $endOfStr;
+	}
 
 	/**
 	 * Checks whether the given string occurs
