@@ -1,9 +1,13 @@
 <?php
 namespace phootwork\lang\text;
 
-trait CheckerTrait
-{
+trait CheckerTrait {
 
+	/**
+	 * Checks if the string is empty
+	 *
+	 * @return boolean
+	 */
 	public function isEmpty() {
 		return empty($this->string);
 	}
@@ -11,7 +15,7 @@ trait CheckerTrait
 	/**
 	 * Check if the string contains only alphanumeric characters.
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isAlphanumeric()
 	{
@@ -21,7 +25,7 @@ trait CheckerTrait
 	/**
 	 * Check if the string contains only alphanumeric characters.
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isAlphabetic()
 	{
@@ -31,7 +35,7 @@ trait CheckerTrait
 	/**
 	 * Check if the string contains only numeric characters.
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isNumeric()
 	{
@@ -41,7 +45,7 @@ trait CheckerTrait
 	/**
 	 * Check if the string contains only characters which are not whitespace or an alphanumeric.
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isPunctuation()
 	{
@@ -51,7 +55,7 @@ trait CheckerTrait
 	/**
 	 * Check if the string contains only space characters.
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isSpace()
 	{
@@ -60,14 +64,16 @@ trait CheckerTrait
 
 	/**
 	 * Check if the string contains only lower case characters.
+	 *
 	 * Spaces are considered non-lowercase characters, so lowercase strings with multiple words, separated by spaces,
 	 * return false. E.g.:
+	 *
 	 * <code>
-	 *      $text = new Text('lowercase multi words string')
-	 *      var_dump($text->isLowercase()); //FALSE
+	 * $text = new Text('lowercase multi words string');<br>
+	 * var_dump($text->isLowercase()); // false
 	 * </code>
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public function isLowerCase()
 	{
@@ -76,13 +82,16 @@ trait CheckerTrait
 
 	/**
 	 * Check if the string contains only upper case characters.
+	 *
 	 * Spaces are considered non-uppercase characters, so uppercase strings with multiple words, separated by spaces,
 	 * return false. E.g.:
+	 *
 	 * <code>
-	 *      $text = new Text('UPPERCASE MULTI WORDS STRING')
-	 *      var_dump($text->isUppercase()); //FALSE
+	 * $text = new Text('UPPERCASE MULTI WORDS STRING'); <br>
+	 * var_dump($text->isUppercase()); // false
 	 * </code>
-	 * @return bool
+	 *
+	 * @return boolean
 	 */
 	public function isUpperCase()
 	{
@@ -92,7 +101,8 @@ trait CheckerTrait
 	/**
 	 * Check if a string is singular form.
 	 *
-	 * @return bool
+	 * @param Pluralizer $pluralizer A custom pluralizer. Default is the EnglishPluralizer
+	 * @return boolean
 	 */
 	public function isSingular(Pluralizer $pluralizer = null)
 	{
@@ -104,7 +114,8 @@ trait CheckerTrait
 	/**
 	 * Check if a string is plural form.
 	 *
-	 * @return bool
+	 * @param Pluralizer $pluralizer A custom pluralizer. Default is the EnglishPluralizer
+	 * @return boolean
 	 */
 	public function isPlural(Pluralizer $pluralizer = null)
 	{
