@@ -466,7 +466,7 @@ class Text implements Comparable {
 	 * @param string $substring
 	 * @return Text
 	 */
-	public function ensureStart($substring) {
+	public function ensureLeft($substring) {
 		if (!$this->startsWith($substring)) {
 			return $this->prepend($substring);
 		}
@@ -479,7 +479,7 @@ class Text implements Comparable {
 	 * @param string $substring
 	 * @return Text
 	 */
-	public function ensureEnd($substring) {
+	public function ensureRight($substring) {
 		if (!$this->endsWith($substring)) {
 			return $this->append($substring);
 		}
@@ -682,8 +682,15 @@ class Text implements Comparable {
 	}
 
 	/**
-	 * Converts this string into camelCase.
-	 * E.g. my_own_variable => myOwnVariable
+	 * Converts this string into camelCase. Numbers are considered as part of its previous piece.
+	 *
+	 * <code>
+	 * $var = new Text('my_own_variable');<br>
+	 * $var->toCamelCase(); // myOwnVariable
+	 *
+	 * $var = new Text('my_test3_variable');<br>
+	 * $var->toCamelCase(); // myTest3Variable
+	 * </code>
 	 *
 	 * @return Text
 	 */
@@ -692,11 +699,15 @@ class Text implements Comparable {
 	}
 
 	/**
-	 * Converts this string into snake_case.
-	 * E.g. myOwnVariable => my_own_variable.
+	 * Converts this string into snake_case. Numbers are considered as part of its previous piece.
 	 *
-	 * Numbers are considered as part of its previous piece:
-	 * E.g. myTest3Variable => my_test3_variable
+	 * <code>
+	 * $var = new Text('myOwnVariable');<br>
+	 * $var->toSnakeCase(); // my_own_variable
+	 *
+	 * $var = new Text('myTest3Variable');<br>
+	 * $var->toSnakeCase(); // my_test3_variable
+	 * </code>
 	 *
 	 * @return Text
 	 */
@@ -705,8 +716,15 @@ class Text implements Comparable {
 	}
 
 	/**
-	 * Converts this string into StudlyCase.
-	 * E.g. my_own_variable => MyOwnVariable
+	 * Converts this string into StudlyCase. Numbers are considered as part of its previous piece.
+	 *
+	 * <code>
+	 * $var = new Text('my_own_variable');<br>
+	 * $var->toStudlyCase(); // MyOwnVariable
+	 *
+	 * $var = new Text('my_test3_variable');<br>
+	 * $var->toStudlyCase(); // MyTest3Variable
+	 * </code>
 	 *
 	 * @return Text
 	 */
@@ -722,24 +740,19 @@ class Text implements Comparable {
 	}
 
 	/**
-	 * Convert this string into kebab-case.
-	 * E.g. myOwnVariable => my-own-variable.
+	 * Convert this string into kebab-case. Numbers are considered as part of its previous piece.
 	 *
-	 * Numbers are considered as part of its previous piece:
-	 * E.g. myTest3Variable => my_test3_variable
+	 * <code>
+	 * $var = new Text('myOwnVariable');<br>
+	 * $var->toKebapCase(); // my-own-variable
+	 *
+	 * $var = new Text('myTest3Variable');<br>
+	 * $var->toKebapCase(); // my-test3-variable
+	 * </code>
 	 *
 	 * @return Text
 	 */
 	public function toKebabCase() {
-		// 		return Text::create(trim(mb_strtolower(preg_replace_callback('/([A-Z _])/', function($matches) {
-		// 			$suffix = '';
-		// 			if (preg_match('/[A-Z]/', $matches[0])) {
-		// 				$suffix = $matches[0];
-		// 			}
-		// 			return '-' . $suffix;
-		// 		}, $this->string)), '-'));
-
-
 		if ($this->contains('_')) {
 			return $this->replace('_', '-');
 		}
