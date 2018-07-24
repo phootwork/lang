@@ -17,8 +17,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isAlphanumeric()
-	{
+	public function isAlphanumeric() {
 		return ctype_alnum($this->string);
 	}
 
@@ -27,8 +26,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isAlphabetic()
-	{
+	public function isAlphabetic() {
 		return ctype_alpha($this->string);
 	}
 
@@ -37,8 +35,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isNumeric()
-	{
+	public function isNumeric() {
 		return ctype_digit($this->string);
 	}
 
@@ -47,8 +44,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isPunctuation()
-	{
+	public function isPunctuation() {
 		return ctype_punct($this->string);
 	}
 
@@ -57,8 +53,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isSpace()
-	{
+	public function isSpace() {
 		return ctype_space($this->string);
 	}
 
@@ -75,8 +70,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isLowerCase()
-	{
+	public function isLowerCase() {
 		return ctype_lower($this->string);
 	}
 
@@ -93,19 +87,18 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isUpperCase()
-	{
+	public function isUpperCase() {
 		return ctype_upper($this->string);
 	}
 
 	/**
 	 * Check if a string is singular form.
 	 *
-	 * @param Pluralizer $pluralizer A custom pluralizer. Default is the EnglishPluralizer
+	 * @param Pluralizer $pluralizer
+	 *        	A custom pluralizer. Default is the EnglishPluralizer
 	 * @return boolean
 	 */
-	public function isSingular(Pluralizer $pluralizer = null)
-	{
+	public function isSingular(Pluralizer $pluralizer = null) {
 		$pluralizer = $pluralizer ?: new EnglishPluralizer();
 
 		return $pluralizer->isSingular($this->string);
@@ -114,11 +107,11 @@ trait CheckerTrait {
 	/**
 	 * Check if a string is plural form.
 	 *
-	 * @param Pluralizer $pluralizer A custom pluralizer. Default is the EnglishPluralizer
+	 * @param Pluralizer $pluralizer
+	 *        	A custom pluralizer. Default is the EnglishPluralizer
 	 * @return boolean
 	 */
-	public function isPlural(Pluralizer $pluralizer = null)
-	{
+	public function isPlural(Pluralizer $pluralizer = null) {
 		$pluralizer = $pluralizer ?: new EnglishPluralizer();
 
 		return $pluralizer->isPlural($this->string);
