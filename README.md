@@ -14,7 +14,7 @@ Missing PHP language constructs
 - Provide common but missing php classes
 - Objects for native php constructs
 - Consistent API
-- Inspired by `java.lang`, `java.util` and [`Stringy`](https://github.com/danielstjules/Stringy)
+- Inspired by `java.lang`, `java.util`, `String.prototype`, `Array.prototype` and [`Stringy`](https://github.com/danielstjules/Stringy)
 
 ## Installation
 
