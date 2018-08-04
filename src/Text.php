@@ -18,16 +18,16 @@ class Text implements Comparable {
 	private $encoding;
 
 	/**
-     * Initializes a String object and assigns both string and encoding properties
-     * the supplied values. $string is cast to a string prior to assignment, and if
-     * $encoding is not specified, it defaults to mb_internal_encoding(). Throws
-     * an InvalidArgumentException if the first argument is an array or object
-     * without a __toString method.
-     *
-     * @param mixed $string Value to modify, after being cast to string
-     * @param string $encoding The character encoding
-     * @throws \InvalidArgumentException if an array or object without a __toString method is passed as the first argument
-     */
+	 * Initializes a String object and assigns both string and encoding properties
+	 * the supplied values. $string is cast to a string prior to assignment, and if
+	 * $encoding is not specified, it defaults to mb_internal_encoding(). Throws
+	 * an InvalidArgumentException if the first argument is an array or object
+	 * without a __toString method.
+	 *
+	 * @param mixed $string Value to modify, after being cast to string
+	 * @param string $encoding The character encoding
+	 * @throws \InvalidArgumentException if an array or object without a __toString method is passed as the first argument
+	 */
 	public function __construct($string = '', $encoding = null) {
 		if (is_array($string)) {
 			throw new \InvalidArgumentException('Passed value cannot be an array');
@@ -485,7 +485,7 @@ class Text implements Comparable {
 	 * @return Text
 	 */
 	public function trim($characters = " \t\n\r\v\0") {
-		return new Text(trim($this->string, ''.$characters), $this->encoding);
+		return new Text(trim($this->string, '' . $characters), $this->encoding);
 	}
 
 	/**
@@ -499,7 +499,7 @@ class Text implements Comparable {
 	 * @return Text
 	 */
 	public function trimStart($characters = " \t\n\r\v\0") {
-		return new Text(ltrim($this->string, ''.$characters), $this->encoding);
+		return new Text(ltrim($this->string, '' . $characters), $this->encoding);
 	}
 
 	/**
@@ -513,7 +513,7 @@ class Text implements Comparable {
 	 * @return Text
 	 */
 	public function trimEnd($characters = " \t\n\r\v\0") {
-		return new Text(rtrim($this->string, ''.$characters), $this->encoding);
+		return new Text(rtrim($this->string, '' . $characters), $this->encoding);
 	}
 
 	/**
@@ -787,7 +787,7 @@ class Text implements Comparable {
 	 */
 	public function toCapitalCaseWords() {
 		$encoding = $this->encoding;
-		return $this->split(' ')->map(function($str) use ($encoding) {
+		return $this->split(' ')->map(function ($str) use ($encoding) {
 			return Text::create($str, $encoding)->toCapitalCase();
 		})->join(' ');
 	}
@@ -845,8 +845,8 @@ class Text implements Comparable {
 			return $input;
 		}
 		$encoding = $this->encoding;
-		return Text::create(preg_replace_callback('/([A-Z-_][a-z0-9]+)/', function($matches) use ($encoding) {
-			return Text::create($matches[0], $encoding)->replace(['-','_'], '')->toUpperCaseFirst();
+		return Text::create(preg_replace_callback('/([A-Z-_][a-z0-9]+)/', function ($matches) use ($encoding) {
+			return Text::create($matches[0], $encoding)->replace(['-', '_'], '')->toUpperCaseFirst();
 		}, $input), $this->encoding)->toUpperCaseFirst();
 	}
 
