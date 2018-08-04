@@ -9,6 +9,10 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 		$this->array = $contents;
 	}
 
+	public function __clone() {
+		return new ArrayObject($this->array);
+	}
+
 	/**
 	 * Counts the array
 	 *

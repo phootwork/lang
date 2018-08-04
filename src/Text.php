@@ -39,6 +39,10 @@ class Text implements Comparable {
 		$this->encoding = $encoding ?: mb_internal_encoding();
 	}
 
+	public function __clone() {
+		return new Text($this->string, $this->encoding);
+	}
+
 	/**
 	 * Static initializing a String object.
 	 *
