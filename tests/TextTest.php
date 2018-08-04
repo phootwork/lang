@@ -343,7 +343,7 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$str->splice('test', -4, -12);
 	}
 
-	public function testCharAt() {
+	public function testAt() {
 		$str = new Text('Text to splice');
 		$pos = $str->charAt(5);
 		$this->assertSame('t', $pos);
@@ -351,6 +351,15 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		// mb
 		$str = new Text('いちりんしゃ');
 		$this->assertEquals('し', $str->charAt(4));
+	}
+
+	public function testChars() {
+		$str = new Text('Text');
+		$this->assertEquals(['T', 'e', 'x', 't'], $str->chars()->toArray());
+
+		// mb
+		$str = new Text('いちりんしゃ');
+		$this->assertEquals(['い', 'ち', 'り', 'ん', 'し', 'ゃ'], $str->chars()->toArray());
 	}
 
 	public function testLastIndexOf() {

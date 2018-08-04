@@ -324,17 +324,30 @@ class Text implements Comparable {
 	 *
 	 * <code>
 	 * $str = new Text('Hello World!');<br>
-	 * $str->charAt(6); // W
+	 * $str->at(6); // W
 	 *
 	 * $str = new Text('いちりんしゃ');<br>
-	 * $str->charAt(4) // し
+	 * $str->at(4) // し
 	 * </code>
 	 *
 	 * @param int $index zero-related index
 	 * @return string the found character
 	 */
-	public function charAt($index) {
+	public function at($index) {
 		return mb_substr($this->string, $index, 1, $this->encoding);
+	}
+
+	/**
+	 * Returns an ArrayObject consisting of the characters in the string.
+	 *
+	 * @return ArrayObject An ArrayObject of all chars
+	 */
+	public function chars() {
+		$chars = new ArrayObject();
+		for ($i = 0, $l = $this->length(); $i < $l; $i++) {
+			$chars->push($this->at($i));
+		}
+		return $chars;
 	}
 
 	/**
@@ -846,6 +859,30 @@ class Text implements Comparable {
 	}
 
 	/**
+	 * Converts each tab in the string to some number of spaces, as defined by
+	 * $tabLength. By default, each tab is converted to 4 consecutive spaces.
+	 *
+	 * @param int $tabLength Number of spaces to replace each tab with
+	 * @return Text text with tabs converted to spaces
+	 */
+	public function toSpaces($tabLength = 4) {
+		$spaces = str_repeat(' ', $tabLength);
+		return $this->replace("\t", $spaces);
+	}
+	/**
+	 * Converts each occurrence of some consecutive number of spaces, as
+	 * defined by $tabLength, to a tab. By default, each 4 consecutive spaces
+	 * are converted to a tab.
+	 *
+	 * @param int $tabLength Number of spaces to replace with a tab
+	 * @return Text text with spaces converted to tabs
+	 */
+	public function toTabs($tabLength = 4) {
+		$spaces = str_repeat(' ', $tabLength);
+		return $this->replace($spaces, "\t");
+	}
+
+	/**
 	 * Returns the native string
 	 *
 	 * @return string
@@ -861,10 +898,21 @@ class Text implements Comparable {
 	//
 
 	/**
+	 * Returns the character at the given zero-related index
+	 *
+	 * @param int $index zero-related index
+	 * @return string the found character
+	 * @deprecated use <code>at()</code> method instead
+	 */
+	public function charAt($index) {
+		return $this->at($index);
+	}
+
+	/**
 	 * Transforms the string to lowercase
 	 *
 	 * @return Text
-	 * @deprecated Use `toLowercase()` method instead.
+	 * @deprecated Use <code>toLowercase()</code> method instead.
 	 */
 	public function lower() {
 		return $this->toLowerCase();
@@ -874,7 +922,7 @@ class Text implements Comparable {
 	 * Transforms the string to first character lowercased
 	 *
 	 * @return Text
-	 * @deprecated Use `toLowerCaseFirst()` instead.
+	 * @deprecated Use <code>toLowerCaseFirst()</code> instead.
 	 */
 	public function lowerFirst() {
 		return $this->toLowerCaseFirst();
@@ -894,7 +942,7 @@ class Text implements Comparable {
 	 * Transforms the string to first character uppercased
 	 *
 	 * @return Text
-	 * @deprecated Use `toUpperCaseFirst` method instead.
+	 * @deprecated Use <code>toUpperCaseFirst()</code> method instead.
 	 */
 	public function upperFirst() {
 		return $this->toUpperCaseFirst();
@@ -904,7 +952,7 @@ class Text implements Comparable {
 	 * Transforms the string to first character of each word uppercased
 	 *
 	 * @return Text
-	 * @deprecated Use `toUpperCaseWords` instead.
+	 * @deprecated Use <code>toUpperCaseWords()</code> instead.
 	 */
 	public function upperWords() {
 		return $this->toUpperCaseWords();
@@ -914,7 +962,7 @@ class Text implements Comparable {
 	 * Transforms the string to only its first character capitalized.
 	 *
 	 * @return Text
-	 * @deprecated Use `toCapitalCase` method instead.
+	 * @deprecated Use <code>toCapitalCase()</code> method instead.
 	 */
 	public function capitalize() {
 		return $this->toCapitalCase();
@@ -924,7 +972,7 @@ class Text implements Comparable {
 	 * Transforms the string with the words capitalized.
 	 *
 	 * @return Text
-	 * @deprecated Use `toCapitalCaseWords()` method instead.
+	 * @deprecated Use <code>toCapitalCaseWords()</code> method instead.
 	 */
 	public function capitalizeWords() {
 		return $this->toCapitalCaseWords();
