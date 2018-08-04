@@ -97,6 +97,7 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 		$list = new ArrayObject($unsorted);
 
 		$this->assertEquals(range(1, 10), $list->sort()->toArray());
+		$this->assertEquals(range(10, 1), $list->reverse()->toArray());
 
 		$list = new ArrayObject($unsorted);
 		$cmp = function ($a, $b) {
@@ -257,6 +258,21 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 			return $elem->getContent() == 'banana';
 		});
 		$this->assertEquals(2, $bananas->count());
+	}
+
+	public function testSearch() {
+		$list = new ArrayObject(range(1, 10));
+		$search = function ($elem, $query) {return $elem == $query;};
+
+		$this->assertTrue($list->search(4, $search));
+		$this->assertFalse($list->search(20, $search));
+
+		$this->assertTrue($list->search(function ($elem) {
+			return $elem == 4;
+		}));
+		$this->assertFalse($list->search(function ($elem) {
+			return $elem == 20;
+		}));
 	}
 
 	public function testSome() {
