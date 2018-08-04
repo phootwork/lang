@@ -161,7 +161,7 @@ class Text implements Comparable {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
-		return $callback($this->string, '' . $compare);
+		return $callback($this->string, (string) $compare);
 	}
 
 	/**
@@ -387,7 +387,7 @@ class Text implements Comparable {
 
 		/* Converts $offset to a negative offset as strrpos has a different
 		 * behavior for positive offsets. */
-		return mb_strrpos($this, '' . $string, $offset - $this->length(), $this->encoding);
+		return mb_strrpos($this, (string) $string, $offset - $this->length(), $this->encoding);
 	}
 
 	/**
@@ -485,7 +485,7 @@ class Text implements Comparable {
 	 * @return Text
 	 */
 	public function trim($characters = " \t\n\r\v\0") {
-		return new Text(trim($this->string, '' . $characters), $this->encoding);
+		return new Text(trim($this->string, (string) $characters), $this->encoding);
 	}
 
 	/**
@@ -499,7 +499,7 @@ class Text implements Comparable {
 	 * @return Text
 	 */
 	public function trimStart($characters = " \t\n\r\v\0") {
-		return new Text(ltrim($this->string, '' . $characters), $this->encoding);
+		return new Text(ltrim($this->string, (string) $characters), $this->encoding);
 	}
 
 	/**
@@ -513,7 +513,7 @@ class Text implements Comparable {
 	 * @return Text
 	 */
 	public function trimEnd($characters = " \t\n\r\v\0") {
-		return new Text(rtrim($this->string, '' . $characters), $this->encoding);
+		return new Text(rtrim($this->string, (string) $characters), $this->encoding);
 	}
 
 	/**
