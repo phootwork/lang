@@ -27,6 +27,11 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 
 		$arr = new ArrayObject(['these', 'are', 'my', 'items']);
 		$this->assertEquals(new Text('these are my items'), $arr->join(' '));
+		$arr->clear();
+		$this->assertEquals(0, $arr->count());
+
+		$arr = new ArrayObject();
+		$this->assertTrue($arr->isEmpty());
 	}
 
 	public function testCount() {
