@@ -202,8 +202,8 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @return $this
 	 */
 	public function splice($offset, $length = null, $replacement = []) {
-		$length = $length ?: $this->count();
-		$this->array = array_splice($this->array, $length, $replacement);
+		$length = $length === null ? $this->count() : $length;
+		array_splice($this->array, $offset, $length, $replacement);
 		return $this;
 	}
 
