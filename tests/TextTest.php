@@ -116,22 +116,28 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 
 	public function testTrimming() {
 		$str = new Text('  let it go  ');
-		$this->assertEquals('let it go  ', $str->trimLeft());
-		$this->assertEquals('  let it go', $str->trimRight());
+		$this->assertEquals('let it go  ', $str->trimStart());
+		$this->assertEquals('  let it go', $str->trimEnd());
 		$this->assertEquals('let it go', $str->trim());
 
 		$str = new Text('  fòôbàř  ');
-		$this->assertEquals('fòôbàř  ', $str->trimLeft());
-		$this->assertEquals('  fòôbàř', $str->trimRight());
+		$this->assertEquals('fòôbàř  ', $str->trimStart());
+		$this->assertEquals('  fòôbàř', $str->trimEnd());
 		$this->assertEquals('fòôbàř', $str->trim());
 	}
 
 	public function testPadding() {
 		$str = new Text('let it go');
-		$this->assertEquals('-=let it go', $str->padLeft(11, '-='));
-		$this->assertEquals('-=let it go', $str->padLeft(11, new Text('-=')));
-		$this->assertEquals('let it go=-', $str->padRight(11, '=-'));
-		$this->assertEquals('let it go=-', $str->padRight(11, new Text('=-')));
+		$this->assertEquals('-=let it go', $str->padStart(11, '-='));
+		$this->assertEquals('-=let it go', $str->padStart(11, new Text('-=')));
+		$this->assertEquals('let it go=-', $str->padEnd(11, '=-'));
+		$this->assertEquals('let it go=-', $str->padEnd(11, new Text('=-')));
+		$this->assertEquals('==let it go==', $str->pad(13, '=='));
+
+		$str = new Text('fòôbàř');
+		$this->assertEquals('-=fòôbàř', $str->padStart(8, '-='));
+		$this->assertEquals('fòôbàř=-', $str->padEnd(8, '=-'));
+		$this->assertEquals('==fòôbàř==', $str->pad(10, '=='));
 	}
 
 	public function testIndexSearch() {
