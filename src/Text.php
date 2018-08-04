@@ -235,7 +235,7 @@ class Text implements Comparable {
 	/**
 	 * Count the number of substring occurrences.
 	 *
-	 * @param string|Text $string The substring to count the occurrencies
+	 * @param string|Text $substring The substring to count the occurrencies
 	 * @param boolean $caseSensitive Force case-sensitivity
 	 * @return int
 	 */
@@ -477,7 +477,7 @@ class Text implements Comparable {
 	/**
 	 * Strip whitespace (or other characters) from the beginning and end of the string
 	 *
-	 * @param string $mask
+	 * @param string $characters
 	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
 	 * 		range of characters.
@@ -491,7 +491,7 @@ class Text implements Comparable {
 	/**
 	 * Strip whitespace (or other characters) from the beginning of the string
 	 *
-	 * @param string $mask
+	 * @param string $characters
 	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
 	 * 		range of characters.
@@ -505,7 +505,7 @@ class Text implements Comparable {
 	/**
 	 * Strip whitespace (or other characters) from the end of the string
 	 *
-	 * @param string $mask
+	 * @param string $characters
 	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
 	 * 		range of characters.
@@ -946,7 +946,7 @@ class Text implements Comparable {
 	/**
 	 * Strip whitespace (or other characters) from the beginning of the string
 	 *
-	 * @param string $mask
+	 * @param string $characters
 	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
 	 * 		range of characters.
@@ -961,7 +961,7 @@ class Text implements Comparable {
 	/**
 	 * Strip whitespace (or other characters) from the end of the string
 	 *
-	 * @param string $mask
+	 * @param string $characters
 	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
 	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
 	 * 		range of characters.
@@ -1041,10 +1041,10 @@ class Text implements Comparable {
 	 * Transforms the string to first character of each word uppercased
 	 *
 	 * @return Text
-	 * @deprecated Use <code>toUpperCaseWords()</code> instead.
+	 * @deprecated Use <code>toCapitalCaseWords()</code> instead.
 	 */
 	public function upperWords() {
-		return $this->toUpperCaseWords();
+		return $this->toCapitalCaseWords();
 	}
 
 	/**
