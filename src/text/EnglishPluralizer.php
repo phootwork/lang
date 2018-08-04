@@ -146,7 +146,7 @@ class EnglishPluralizer implements Pluralizer {
 		$pluralForm = $root;
 
 		if (!is_string($root)) {
-			throw new \InvalidArgumentException("The pluralizer expects a string.");
+			throw new \InvalidArgumentException('The pluralizer expects a string.');
 		}
 
 		if (!in_array(strtolower($root), $this->uncountable)) {
@@ -177,7 +177,7 @@ class EnglishPluralizer implements Pluralizer {
 		$singularForm = $root;
 
 		if (!is_string($root)) {
-			throw new \InvalidArgumentException("The pluralizer expects a string.");
+			throw new \InvalidArgumentException('The pluralizer expects a string.');
 		}
 
 		if (!in_array(strtolower($root), $this->uncountable)) {
