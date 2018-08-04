@@ -569,7 +569,7 @@ class Text implements Comparable {
 		}
 
 		$leftPadding = mb_substr(str_repeat($padStr, ceil($left / $length)), 0, $left, $this->encoding);
-		$rightPadding = \mb_substr(str_repeat($padStr, ceil($right / $length)), 0, $right, $this->encoding);
+		$rightPadding = mb_substr(str_repeat($padStr, ceil($right / $length)), 0, $right, $this->encoding);
 		return new Text($leftPadding . $this->string . $rightPadding);
 	}
 
