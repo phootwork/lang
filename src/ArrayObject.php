@@ -261,7 +261,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 		if (is_callable($cmp)) {
 			$usort($array, $cmp);
 		} else if ($cmp instanceof Comparator) {
-			$usort($array, function($a, $b) use ($cmp) {
+			$usort($array, function ($a, $b) use ($cmp) {
 				return $cmp->compare($a, $b);
 			});
 		} else {
