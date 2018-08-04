@@ -498,7 +498,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function trimLeft($characters = " \t\n\r\v\0") {
+	public function trimStart($characters = " \t\n\r\v\0") {
 		return new Text(ltrim($this->string, ''.$characters), $this->encoding);
 	}
 
@@ -512,30 +512,65 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function trimRight($characters = " \t\n\r\v\0") {
+	public function trimEnd($characters = " \t\n\r\v\0") {
 		return new Text(rtrim($this->string, ''.$characters), $this->encoding);
 	}
 
 	/**
-	 * Adds padding to the left
+	 * Adds padding to the start and end
 	 *
 	 * @param int $length
 	 * @param string $padding
 	 * @return Text
 	 */
-	public function padLeft($length, $padding = ' ') {
-		return new Text(str_pad($this->string, $length, ''.$padding, STR_PAD_LEFT), $this->encoding);
+	public function pad($length, $padding = ' ') {
+		$len = $length - $this->length();
+		return $this->applyPadding(floor($len / 2), ceil($len / 2), $padding);
 	}
 
 	/**
-	 * Adds padding to the right
+	 * Adds padding to the start
 	 *
 	 * @param int $length
 	 * @param string $padding
 	 * @return Text
 	 */
-	public function padRight($length, $padding = ' ') {
-		return new Text(str_pad($this->string, $length, ''.$padding, STR_PAD_RIGHT), $this->encoding);
+	public function padStart($length, $padding = ' ') {
+		return $this->applyPadding($length - $this->length(), 0, $padding);
+	}
+
+	/**
+	 * Adds padding to the end
+	 *
+	 * @param int $length
+	 * @param string $padding
+	 * @return Text
+	 */
+	public function padEnd($length, $padding = ' ') {
+		return $this->applyPadding(0, $length - $this->length(), $padding);
+	}
+
+	/**
+	 * Adds the specified amount of left and right padding to the given string.
+	 * The default character used is a space.
+	 *
+	 * @see https://github.com/danielstjules/Stringy/blob/master/src/Stringy.php
+	 * @param int $left Length of left padding
+	 * @param int $right Length of right padding
+	 * @param string $padStr String used to pad
+	 * @return Text the padded string
+	 */
+	protected function applyPadding($left = 0, $right = 0, $padStr = ' ') {
+		$length = mb_strlen($padStr, $this->encoding);
+		$strLength = $this->length();
+		$paddedLength = $strLength + $left + $right;
+		if (!$length || $paddedLength <= $strLength) {
+			return $this;
+		}
+
+		$leftPadding = mb_substr(str_repeat($padStr, ceil($left / $length)), 0, $left, $this->encoding);
+		$rightPadding = \mb_substr(str_repeat($padStr, ceil($right / $length)), 0, $right, $this->encoding);
+		return new Text($leftPadding . $this->string . $rightPadding);
 	}
 
 	/**
@@ -544,7 +579,7 @@ class Text implements Comparable {
 	 * @param string $substring
 	 * @return Text
 	 */
-	public function ensureLeft($substring) {
+	public function ensureStart($substring) {
 		if (!$this->startsWith($substring)) {
 			return $this->prepend($substring);
 		}
@@ -557,7 +592,7 @@ class Text implements Comparable {
 	 * @param string $substring
 	 * @return Text
 	 */
-	public function ensureRight($substring) {
+	public function ensureEnd($substring) {
 		if (!$this->endsWith($substring)) {
 			return $this->append($substring);
 		}
@@ -906,6 +941,60 @@ class Text implements Comparable {
 	 */
 	public function charAt($index) {
 		return $this->at($index);
+	}
+
+	/**
+	 * Strip whitespace (or other characters) from the beginning of the string
+	 *
+	 * @param string $mask
+	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
+	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
+	 * 		range of characters.
+	 *
+	 * @return Text
+	 * @deprecated use <code>trimStart()</code> instead
+	 */
+	public function trimLeft($characters = " \t\n\r\v\0") {
+		return $this->trimStart($characters);
+	}
+
+	/**
+	 * Strip whitespace (or other characters) from the end of the string
+	 *
+	 * @param string $mask
+	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
+	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
+	 * 		range of characters.
+	 *
+	 * @return Text
+	 * @deprecated use <code>trimEnd()</code> instead
+	 */
+	public function trimRight($characters = " \t\n\r\v\0") {
+		return $this->trimEnd($characters);
+	}
+
+	/**
+	 * Adds padding to the left
+	 *
+	 * @param int $length
+	 * @param string $padding
+	 * @return Text
+	 * @deprecated Use <code>padStart()</code> instead
+	 */
+	public function padLeft($length, $padding = ' ') {
+		return $this->padStart($length, $padding);
+	}
+
+	/**
+	 * Adds padding to the right
+	 *
+	 * @param int $length
+	 * @param string $padding
+	 * @return Text
+	 * @deprecated use <code>padEnd()</code> instead
+	 */
+	public function padRight($length, $padding = ' ') {
+		return $this->padEnd($length, $padding);
 	}
 
 	/**
