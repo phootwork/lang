@@ -288,4 +288,37 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 		}));
 	}
 
+	public function testSlice() {
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+
+		$this->assertEquals(['banana', 'pine'], $fruits->slice(1, 2)->toArray());
+	}
+
+
+	public function testSplice() {
+		// delete
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+		$this->assertEquals(['apple', 'banana'], $fruits->splice(2)->toArray());
+
+		// cut
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+		$this->assertEquals(['apple', 'ananas'], $fruits->splice(1, -1)->toArray());
+
+		// replace to end
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+		$this->assertEquals(['apple', 'orange'], $fruits->splice(1, $fruits->count(), ['orange'])->toArray());
+
+		// replace
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+		$this->assertEquals(['apple', 'strawberry', 'blackberry', 'banana', 'ananas'], $fruits->splice(1, 2, ['strawberry', 'blackberry'])->toArray());
+
+		// insert array
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+		$this->assertEquals(['apple', 'banana', 'pine', 'orange', 'strawberry', 'banana', 'ananas'], $fruits->splice(3, 0, ['orange', 'strawberry'])->toArray());
+
+		// insert string
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+		$this->assertEquals(['apple', 'banana', 'pine', 'orange', 'banana', 'ananas'], $fruits->splice(3, 0, 'orange')->toArray());
+	}
+
 }
