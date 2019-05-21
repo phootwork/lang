@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace phootwork\lang;
 
 interface Comparator {
@@ -14,6 +14,6 @@ interface Comparator {
 	 * 		> 0 if the $a is greater than $b
 	 * 		0 if they are equal.
 	 */
-	public function compare($a, $b);
+	public function compare($a, $b): int;
 	
 }

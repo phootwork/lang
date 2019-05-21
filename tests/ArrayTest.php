@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace phootwork\lang\tests;
 
 use phootwork\lang\ArrayObject;
@@ -6,8 +6,9 @@ use phootwork\lang\Text;
 use phootwork\lang\tests\fixtures\Item;
 use phootwork\lang\ComparableComparator;
 use phootwork\lang\StringComparator;
+use PHPUnit\Framework\TestCase;
 
-class ArrayTest extends \PHPUnit_Framework_TestCase {
+class ArrayTest extends TestCase {
 
 	public function testArray() {
 		$base = ['a' => 'b', 'c' => 'd'];
@@ -218,8 +219,8 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 
 	public function testFind() {
 		$list = new ArrayObject(range(1, 10));
-		$list = $list->map(function ($item) {
-			return new Item($item);
+		$list = $list->map(function (int $item) {
+			return new Item((string) $item);
 		});
 
 		$search = function ($i, $query) {
@@ -339,7 +340,7 @@ class ArrayTest extends \PHPUnit_Framework_TestCase {
 
 		// insert string
 		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
-		$this->assertEquals(['apple', 'banana', 'pine', 'orange', 'banana', 'ananas'], $fruits->splice(3, 0, 'orange')->toArray());
+		$this->assertEquals(['apple', 'banana', 'pine', 'orange', 'banana', 'ananas'], $fruits->splice(3, 0, ['orange'])->toArray());
 	}
 
 }

@@ -102,9 +102,9 @@ class EnglishPluralizerTest extends TestCase {
 
 	/**
 	 * @dataProvider providerForWrongType
-	 * @expectedException \InvalidArgumentException
 	 */
 	public function testWrongTypeToPluralizeThrowsException($wrong) {
+		$this->expectException(\InvalidArgumentException::class);
 		$pluralizer = new EnglishPluralizer();
 		$pluralizer->getPluralForm($wrong);
 	}
@@ -119,9 +119,9 @@ class EnglishPluralizerTest extends TestCase {
 
 	/**
 	 * @dataProvider providerForWrongType
-	 * @expectedException \InvalidArgumentException
 	 */
 	public function testWrongTypeToSingularizeThrowsException($wrong) {
+		$this->expectException(\InvalidArgumentException::class);
 		$pluralizer = new EnglishPluralizer();
 		$pluralizer->getSingularForm($wrong);
 	}

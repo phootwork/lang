@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace phootwork\lang;
 
 use phootwork\lang\text\CheckerTrait;
@@ -14,7 +14,10 @@ class Text implements Comparable {
 
 	use CheckerTrait;
 
+	/** @var string */
 	private $string;
+
+	/** @var string */
 	private $encoding;
 
 	/**
@@ -28,7 +31,7 @@ class Text implements Comparable {
 	 * @param string $encoding The character encoding
 	 * @throws \InvalidArgumentException if an array or object without a __toString method is passed as the first argument
 	 */
-	public function __construct($string = '', $encoding = null) {
+	public function __construct($string = '', ?string $encoding = null) {
 		if (is_array($string)) {
 			throw new \InvalidArgumentException('Passed value cannot be an array');
 		} elseif (is_object($string) && !method_exists($string, '__toString')) {
@@ -51,7 +54,7 @@ class Text implements Comparable {
 	 * @param string $encoding
 	 * @return Text
 	 */
-	public static function create($string, $encoding = null) {
+	public static function create($string, ?string $encoding = null) {
 		return new Text($string, $encoding);
 	}
 
@@ -59,7 +62,7 @@ class Text implements Comparable {
 	 * Returns the used encoding
 	 * @return string
 	 */
-	public function getEncoding() {
+	public function getEncoding(): string {
 		return $this->encoding;
 	}
 
@@ -76,27 +79,27 @@ class Text implements Comparable {
 	 *
 	 * @return int Returns the length
 	 */
-	public function length() {
+	public function length(): int {
 		return mb_strlen($this->string, $this->encoding);
 	}
 
 	/**
 	 * Appends <code>$string</code> and returns as a new <code>Text</code>
 	 *
-	 * @param string $string
+	 * @param string|Text $string
 	 * @return Text
 	 */
-	public function append($string) {
+	public function append($string): Text {
 		return new Text($this->string . $string, $this->encoding);
 	}
 
 	/**
 	 * Prepends <code>$string</code> and returns as a new <code>Text</code>
 	 *
-	 * @param string $string
+	 * @param string|Text $string
 	 * @return Text
 	 */
-	public function prepend($string) {
+	public function prepend($string): Text {
 		return new Text($string . $this->string, $this->encoding);
 	}
 
@@ -112,7 +115,7 @@ class Text implements Comparable {
 	 * @param int $index
 	 * @return Text
 	 */
-	public function insert($substring, $index) {
+	public function insert($substring, int $index): Text {
 		if ($index <= 0) {
 			return $this->prepend($substring);
 		}
@@ -137,7 +140,7 @@ class Text implements Comparable {
 	 *
 	 * @see \phootwork\lang\Comparable::compareTo()
 	 */
-	public function compareTo($compare) {
+	public function compareTo($compare): int {
 		return $this->compare($compare);
 	}
 
@@ -150,18 +153,18 @@ class Text implements Comparable {
 	 *  	&gt; 0 if the object is greater than comparison<br>
 	 * 		0 if they are equal.
 	 */
-	public function compareCaseInsensitive($compare) {
+	public function compareCaseInsensitive($compare): int {
 		return $this->compare($compare, 'strcasecmp');
 	}
 
 	/**
 	 * Compares this string to another
 	 *
-	 * @param string $compare string to compare to
+	 * @param string|Text $compare string to compare to
 	 * @param callable $callback
 	 * @return int
 	 */
-	public function compare($compare, callable $callback = null) {
+	public function compare($compare, callable $callback = null): int {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
@@ -174,7 +177,7 @@ class Text implements Comparable {
 	 * @param mixed $string
 	 * @return boolean
 	 */
-	public function equals($string) {
+	public function equals($string): bool {
 		return $this->compareTo($string) === 0;
 	}
 
@@ -184,7 +187,7 @@ class Text implements Comparable {
 	 * @param mixed $string
 	 * @return boolean
 	 */
-	public function equalsIgnoreCase($string) {
+	public function equalsIgnoreCase($string): bool {
 		return $this->compareCaseInsensitive($string) === 0;
 	}
 
@@ -203,7 +206,7 @@ class Text implements Comparable {
 	 * @param int $length
 	 * @return Text
 	 */
-	public function slice($offset, $length = null) {
+	public function slice(int $offset, int $length = null) {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
 
@@ -223,7 +226,7 @@ class Text implements Comparable {
 	 * @param int $end
 	 * @return Text
 	 */
-	public function substring($start, $end = null) {
+	public function substring(int $start, int $end = null) {
 		$length = $this->length();
 		if ($end < 0) {
 			$end = $length + $end;
@@ -243,10 +246,10 @@ class Text implements Comparable {
 	 * @param boolean $caseSensitive Force case-sensitivity
 	 * @return int
 	 */
-	public function countSubstring($substring, $caseSensitive = true) {
+	public function countSubstring($substring, bool $caseSensitive = true) {
 		$this->verifyNotEmpty($substring, '$substring');
 		if ($caseSensitive) {
-			return mb_substr_count($this->string, $substring, $this->encoding);
+			return mb_substr_count($this->string, (string) $substring, $this->encoding);
 		}
 		$str = mb_strtoupper($this->string, $this->encoding);
 		$substring = mb_strtoupper($substring, $this->encoding);
@@ -272,7 +275,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function replace($search, $replace) {
+	public function replace($search, $replace): Text {
 		if ($search instanceof Text) {
 			$search = $search->toString();
 		} else if ($search instanceof Arrayable) {
@@ -294,7 +297,7 @@ class Text implements Comparable {
 	 * @param array $map the replacements. Keys will be replaced with its value.
 	 * @return Text
 	 */
-	public function supplant(array $map) {
+	public function supplant(array $map): Text {
 		return new Text(str_replace(array_keys($map), array_values($map), $this->string), $this->encoding);
 	}
 
@@ -307,7 +310,7 @@ class Text implements Comparable {
 	 * @return Text
 	 * @throws \InvalidArgumentException If $offset is greater then the string length or $length is too small.
 	 */
-	public function splice($replacement, $offset, $length = null) {
+	public function splice($replacement, int $offset, ?int $length = null) {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
 
@@ -337,7 +340,7 @@ class Text implements Comparable {
 	 * @param int $index zero-related index
 	 * @return string the found character
 	 */
-	public function at($index) {
+	public function at(int $index): string {
 		return mb_substr($this->string, $index, 1, $this->encoding);
 	}
 
@@ -346,7 +349,7 @@ class Text implements Comparable {
 	 *
 	 * @return ArrayObject An ArrayObject of all chars
 	 */
-	public function chars() {
+	public function chars(): ArrayObject {
 		$chars = new ArrayObject();
 		for ($i = 0, $l = $this->length(); $i < $l; $i++) {
 			$chars->push($this->at($i));
@@ -357,11 +360,11 @@ class Text implements Comparable {
 	/**
 	 * Returns the index of a given string, starting at the optional zero-related offset
 	 *
-	 * @param string $string
+	 * @param string|Text $string
 	 * @param int $offset zero-related offset
 	 * @return int|boolean int for the index or false if the given string doesn't occur
 	 */
-	public function indexOf($string, $offset = 0) {
+	public function indexOf($string, int $offset = 0) {
 		$offset = $this->prepareOffset($offset);
 
 		if ($string == '') {
@@ -374,11 +377,11 @@ class Text implements Comparable {
 	/**
 	 * Returns the last index of a given string, starting at the optional offset
 	 *
-	 * @param string $string
+	 * @param string|Text $string
 	 * @param int $offset
 	 * @return int|boolean int for the index or false if the given string doesn't occur
 	 */
-	public function lastIndexOf($string, $offset = null) {
+	public function lastIndexOf($string, int $offset = null) {
 		if (null === $offset) {
 			$offset = $this->length();
 		} else {
@@ -391,7 +394,7 @@ class Text implements Comparable {
 
 		/* Converts $offset to a negative offset as strrpos has a different
 		 * behavior for positive offsets. */
-		return mb_strrpos($this, (string) $string, $offset - $this->length(), $this->encoding);
+		return mb_strrpos($this->string, (string) $string, $offset - $this->length(), $this->encoding);
 	}
 
 	/**
@@ -401,8 +404,8 @@ class Text implements Comparable {
 	 * @param string|Text $substring The substring to look for
 	 * @return boolean
 	 */
-	public function startsWith($substring) {
-		$substringLength = mb_strlen($substring, $this->encoding);
+	public function startsWith($substring): bool {
+		$substringLength = mb_strlen((string) $substring, $this->encoding);
 		$startOfStr = mb_substr($this->string, 0, $substringLength, $this->encoding);
 
 		return (string) $substring === $startOfStr;
@@ -415,8 +418,8 @@ class Text implements Comparable {
 	 * @param string|Text $substring The substring to look for
 	 * @return boolean
 	 */
-	public function startsWithIgnoreCase($substring) {
-		$substring = mb_strtolower($substring, $this->encoding);
+	public function startsWithIgnoreCase($substring): bool {
+		$substring = mb_strtolower((string) $substring, $this->encoding);
 		$substringLength = mb_strlen($substring, $this->encoding);
 		$startOfStr = mb_strtolower(mb_substr($this->string, 0, $substringLength, $this->encoding));
 
@@ -430,8 +433,8 @@ class Text implements Comparable {
 	 * @param string|Text $substring The substring to look for
 	 * @return boolean
 	 */
-	public function endsWith($substring) {
-		$substringLength = mb_strlen($substring, $this->encoding);
+	public function endsWith($substring): bool {
+		$substringLength = mb_strlen((string) $substring, $this->encoding);
 		$endOfStr = mb_substr($this->string, $this->length() - $substringLength, $substringLength, $this->encoding);
 
 		return (string) $substring === $endOfStr;
@@ -444,8 +447,8 @@ class Text implements Comparable {
 	 * @param string|Text $substring The substring to look for
 	 * @return boolean
 	 */
-	public function endsWithIgnoreCase($substring) {
-		$substring = mb_strtolower($substring, $this->encoding);
+	public function endsWithIgnoreCase($substring): bool {
+		$substring = mb_strtolower((string) $substring, $this->encoding);
 		$substringLength = mb_strlen($substring, $this->encoding);
 		$endOfStr = mb_strtolower(mb_substr($this->string, $this->length() - $substringLength, $substringLength, $this->encoding));
 
@@ -455,10 +458,10 @@ class Text implements Comparable {
 	/**
 	 * Checks whether the given string occurs
 	 *
-	 * @param string $string
+	 * @param string|Text $string
 	 * @return boolean
 	 */
-	public function contains($string) {
+	public function contains($string): bool {
 		return $this->indexOf($string) !== false;
 	}
 
@@ -468,7 +471,7 @@ class Text implements Comparable {
 	 * @param string $regexp
 	 * @return boolean
 	 */
-	public function match($regexp) {
+	public function match(string $regexp): bool {
 		return (bool) preg_match($regexp, $this->string);
 	}
 
@@ -488,7 +491,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function trim($characters = " \t\n\r\v\0") {
+	public function trim(string $characters = " \t\n\r\v\0"): Text {
 		return new Text(trim($this->string, (string) $characters), $this->encoding);
 	}
 
@@ -502,7 +505,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function trimStart($characters = " \t\n\r\v\0") {
+	public function trimStart(string $characters = " \t\n\r\v\0"): Text {
 		return new Text(ltrim($this->string, (string) $characters), $this->encoding);
 	}
 
@@ -516,7 +519,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function trimEnd($characters = " \t\n\r\v\0") {
+	public function trimEnd(string $characters = " \t\n\r\v\0"): Text {
 		return new Text(rtrim($this->string, (string) $characters), $this->encoding);
 	}
 
@@ -527,30 +530,30 @@ class Text implements Comparable {
 	 * @param string $padding
 	 * @return Text
 	 */
-	public function pad($length, $padding = ' ') {
+	public function pad(int $length, string $padding = ' '): Text {
 		$len = $length - $this->length();
-		return $this->applyPadding(floor($len / 2), ceil($len / 2), $padding);
+		return $this->applyPadding((int) floor($len / 2), (int) ceil($len / 2), $padding);
 	}
 
 	/**
 	 * Adds padding to the start
 	 *
 	 * @param int $length
-	 * @param string $padding
+	 * @param string|Text $padding
 	 * @return Text
 	 */
-	public function padStart($length, $padding = ' ') {
-		return $this->applyPadding($length - $this->length(), 0, $padding);
+	public function padStart(int $length, $padding = ' '): Text {
+		return $this->applyPadding($length - $this->length(), 0, (string) $padding);
 	}
 
 	/**
 	 * Adds padding to the end
 	 *
 	 * @param int $length
-	 * @param string $padding
+	 * @param string|Text $padding
 	 * @return Text
 	 */
-	public function padEnd($length, $padding = ' ') {
+	public function padEnd(int $length, $padding = ' '): Text {
 		return $this->applyPadding(0, $length - $this->length(), $padding);
 	}
 
@@ -561,19 +564,19 @@ class Text implements Comparable {
 	 * @see https://github.com/danielstjules/Stringy/blob/master/src/Stringy.php
 	 * @param int $left Length of left padding
 	 * @param int $right Length of right padding
-	 * @param string $padStr String used to pad
+	 * @param string|Text $padStr String used to pad
 	 * @return Text the padded string
 	 */
-	protected function applyPadding($left = 0, $right = 0, $padStr = ' ') {
-		$length = mb_strlen($padStr, $this->encoding);
+	protected function applyPadding(int $left = 0, int $right = 0, $padStr = ' '): Text {
+		$length = mb_strlen((string) $padStr, $this->encoding);
 		$strLength = $this->length();
 		$paddedLength = $strLength + $left + $right;
 		if (!$length || $paddedLength <= $strLength) {
 			return $this;
 		}
 
-		$leftPadding = mb_substr(str_repeat($padStr, ceil($left / $length)), 0, $left, $this->encoding);
-		$rightPadding = mb_substr(str_repeat($padStr, ceil($right / $length)), 0, $right, $this->encoding);
+		$leftPadding = mb_substr(str_repeat((string) $padStr, (int) ceil($left / $length)), 0, $left, $this->encoding);
+		$rightPadding = mb_substr(str_repeat((string) $padStr, (int) ceil($right / $length)), 0, $right, $this->encoding);
 		return new Text($leftPadding . $this->string . $rightPadding);
 	}
 
@@ -583,7 +586,7 @@ class Text implements Comparable {
 	 * @param string $substring
 	 * @return Text
 	 */
-	public function ensureStart($substring) {
+	public function ensureStart(string $substring): Text {
 		if (!$this->startsWith($substring)) {
 			return $this->prepend($substring);
 		}
@@ -596,7 +599,7 @@ class Text implements Comparable {
 	 * @param string $substring
 	 * @return Text
 	 */
-	public function ensureEnd($substring) {
+	public function ensureEnd(string $substring): Text {
 		if (!$this->endsWith($substring)) {
 			return $this->append($substring);
 		}
@@ -613,7 +616,7 @@ class Text implements Comparable {
 	 * 		width. So if you have a word that is larger than the given width, it is broken apart.
 	 * @return Text Returns the string wrapped at the specified length.
 	 */
-	public function wrapWords($width = 75, $break = "\n", $cut = false) {
+	public function wrapWords(int $width = 75, string $break = "\n", bool $cut = false) {
 		return new Text(wordwrap($this->string, $width, $break, $cut), $this->encoding);
 	}
 
@@ -624,7 +627,7 @@ class Text implements Comparable {
 	 * @return Text
 	 * @throws \InvalidArgumentException If $times is negative.
 	 */
-	public function repeat($multiplier) {
+	public function repeat(int $multiplier): Text {
 		$this->verifyNotNegative($multiplier, 'Number of repetitions');
 		return new Text(str_repeat($this->string, $multiplier), $this->encoding);
 	}
@@ -634,7 +637,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function reverse() {
+	public function reverse(): Text {
 		return new Text(strrev($this->string), $this->encoding);
 	}
 
@@ -645,7 +648,7 @@ class Text implements Comparable {
 	 * @param string $substring
 	 * @return Text
 	 */
-	public function truncate($length, $substring = '') {
+	public function truncate(int $length, string $substring = ''): Text {
 		if ($this->length() <= $length) {
 			return new Text($this->string, $this->encoding);
 		}
@@ -689,7 +692,7 @@ class Text implements Comparable {
 	 *
 	 * @TODO: Maybe throw an exception or something on those odd delimiters?
 	 */
-	public function split($delimiter, $limit = PHP_INT_MAX) {
+	public function split(string $delimiter, int $limit = PHP_INT_MAX): ArrayObject {
 		return new ArrayObject(explode($delimiter, $this->string, $limit));
 	}
 
@@ -703,7 +706,7 @@ class Text implements Comparable {
 	 * 		Returns a string containing a string representation of all the array elements in the
 	 * 		same order, with the glue string between each element.
 	 */
-	public static function join(array $pieces, $glue = '', $encoding = null) {
+	public static function join(array $pieces, string $glue = '', ?string $encoding = null): Text {
 		return new Text(implode($pieces, $glue), $encoding);
 	}
 
@@ -720,7 +723,7 @@ class Text implements Comparable {
 	 *      as the first (and only) array element.
 	 * @throws \InvalidArgumentException If splitLength is less than 1.
 	 */
-	public function chunk($splitLength = 1) {
+	public function chunk(int $splitLength = 1): ArrayObject {
 		$this->verifyPositive($splitLength, 'The chunk length');
 
 		return new ArrayObject(str_split($this->string, $splitLength));
@@ -738,7 +741,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toLowerCase() {
+	public function toLowerCase(): Text {
 		return new Text(mb_strtolower($this->string, $this->encoding), $this->encoding);
 	}
 
@@ -747,11 +750,11 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toLowerCaseFirst() {
+	public function toLowerCaseFirst(): Text {
 		$first = $this->substring(0, 1);
 		$rest = $this->substring(1);
 
-		return new Text(mb_strtolower($first, $this->encoding) . $rest, $this->encoding);
+		return new Text(mb_strtolower((string) $first, $this->encoding) . $rest, $this->encoding);
 	}
 
 	/**
@@ -759,7 +762,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toUpperCase() {
+	public function toUpperCase(): Text {
 		return new Text(mb_strtoupper($this->string, $this->encoding), $this->encoding);
 	}
 
@@ -768,11 +771,11 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toUpperCaseFirst() {
+	public function toUpperCaseFirst(): Text {
 		$first = $this->substring(0, 1);
 		$rest = $this->substring(1);
 
-		return new Text(mb_strtoupper($first, $this->encoding) . $rest, $this->encoding);
+		return new Text(mb_strtoupper((string) $first, $this->encoding) . $rest, $this->encoding);
 	}
 
 	/**
@@ -780,7 +783,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toCapitalCase() {
+	public function toCapitalCase(): Text {
 		return $this->toLowerCase()->toUpperCaseFirst();
 	}
 
@@ -789,7 +792,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toCapitalCaseWords() {
+	public function toCapitalCaseWords(): Text {
 		$encoding = $this->encoding;
 		return $this->split(' ')->map(function ($str) use ($encoding) {
 			return Text::create($str, $encoding)->toCapitalCase();
@@ -809,7 +812,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toCamelCase() {
+	public function toCamelCase(): Text {
 		return $this->toStudlyCase()->toLowerCaseFirst();
 	}
 
@@ -826,7 +829,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toSnakeCase() {
+	public function toSnakeCase(): Text {
 		return $this->toKebabCase()->replace('-', '_');
 	}
 
@@ -843,7 +846,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toStudlyCase() {
+	public function toStudlyCase(): Text {
 		$input = $this->trim('-_');
 		if ($input->isEmpty()) {
 			return $input;
@@ -867,7 +870,7 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function toKebabCase() {
+	public function toKebabCase(): Text {
 		if ($this->contains('_')) {
 			return $this->replace('_', '-');
 		}
@@ -878,9 +881,11 @@ class Text implements Comparable {
 	/**
 	 * Get the plural form of the Text object.
 	 *
+	 * @param Pluralizer $pluralizer
+	 *
 	 * @return Text
 	 */
-	public function toPlural(Pluralizer $pluralizer = null) {
+	public function toPlural(Pluralizer $pluralizer = null): Text {
 		$pluralizer = $pluralizer ?: new EnglishPluralizer();
 
 		return new Text($pluralizer->getPluralForm($this->string), $this->encoding);
@@ -889,9 +894,11 @@ class Text implements Comparable {
 	/**
 	 * Get the singular form of the Text object.
 	 *
+	 * @param Pluralizer $pluralizer
+	 *
 	 * @return Text
 	 */
-	public function toSingular(Pluralizer $pluralizer = null) {
+	public function toSingular(Pluralizer $pluralizer = null): Text {
 		$pluralizer = $pluralizer ?: new EnglishPluralizer();
 
 		return new Text($pluralizer->getSingularForm($this->string), $this->encoding);
@@ -904,10 +911,11 @@ class Text implements Comparable {
 	 * @param int $tabLength Number of spaces to replace each tab with
 	 * @return Text text with tabs converted to spaces
 	 */
-	public function toSpaces($tabLength = 4) {
+	public function toSpaces(int $tabLength = 4): Text {
 		$spaces = str_repeat(' ', $tabLength);
 		return $this->replace("\t", $spaces);
 	}
+
 	/**
 	 * Converts each occurrence of some consecutive number of spaces, as
 	 * defined by $tabLength, to a tab. By default, each 4 consecutive spaces
@@ -916,7 +924,7 @@ class Text implements Comparable {
 	 * @param int $tabLength Number of spaces to replace with a tab
 	 * @return Text text with spaces converted to tabs
 	 */
-	public function toTabs($tabLength = 4) {
+	public function toTabs(int $tabLength = 4) {
 		$spaces = str_repeat(' ', $tabLength);
 		return $this->replace($spaces, "\t");
 	}
@@ -926,149 +934,8 @@ class Text implements Comparable {
 	 *
 	 * @return string
 	 */
-	public function toString() {
+	public function toString(): string {
 		return $this->string;
-	}
-
-	//
-	//
-	// DEPRECATIONS - Remove with 0.10
-	//
-	//
-
-	/**
-	 * Returns the character at the given zero-related index
-	 *
-	 * @param int $index zero-related index
-	 * @return string the found character
-	 * @deprecated use <code>at()</code> method instead
-	 */
-	public function charAt($index) {
-		return $this->at($index);
-	}
-
-	/**
-	 * Strip whitespace (or other characters) from the beginning of the string
-	 *
-	 * @param string $characters
-	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
-	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
-	 * 		range of characters.
-	 *
-	 * @return Text
-	 * @deprecated use <code>trimStart()</code> instead
-	 */
-	public function trimLeft($characters = " \t\n\r\v\0") {
-		return $this->trimStart($characters);
-	}
-
-	/**
-	 * Strip whitespace (or other characters) from the end of the string
-	 *
-	 * @param string $characters
-	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
-	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
-	 * 		range of characters.
-	 *
-	 * @return Text
-	 * @deprecated use <code>trimEnd()</code> instead
-	 */
-	public function trimRight($characters = " \t\n\r\v\0") {
-		return $this->trimEnd($characters);
-	}
-
-	/**
-	 * Adds padding to the left
-	 *
-	 * @param int $length
-	 * @param string $padding
-	 * @return Text
-	 * @deprecated Use <code>padStart()</code> instead
-	 */
-	public function padLeft($length, $padding = ' ') {
-		return $this->padStart($length, $padding);
-	}
-
-	/**
-	 * Adds padding to the right
-	 *
-	 * @param int $length
-	 * @param string $padding
-	 * @return Text
-	 * @deprecated use <code>padEnd()</code> instead
-	 */
-	public function padRight($length, $padding = ' ') {
-		return $this->padEnd($length, $padding);
-	}
-
-	/**
-	 * Transforms the string to lowercase
-	 *
-	 * @return Text
-	 * @deprecated Use <code>toLowercase()</code> method instead.
-	 */
-	public function lower() {
-		return $this->toLowerCase();
-	}
-
-	/**
-	 * Transforms the string to first character lowercased
-	 *
-	 * @return Text
-	 * @deprecated Use <code>toLowerCaseFirst()</code> instead.
-	 */
-	public function lowerFirst() {
-		return $this->toLowerCaseFirst();
-	}
-
-	/**
-	 * Transforms the string to uppercase
-	 *
-	 * @return Text
-	 * @deprecated Use <code>toUpperCase()</code> method instead.
-	 */
-	public function upper() {
-		return $this->toUpperCase();
-	}
-
-	/**
-	 * Transforms the string to first character uppercased
-	 *
-	 * @return Text
-	 * @deprecated Use <code>toUpperCaseFirst()</code> method instead.
-	 */
-	public function upperFirst() {
-		return $this->toUpperCaseFirst();
-	}
-
-	/**
-	 * Transforms the string to first character of each word uppercased
-	 *
-	 * @return Text
-	 * @deprecated Use <code>toCapitalCaseWords()</code> instead.
-	 */
-	public function upperWords() {
-		return $this->toCapitalCaseWords();
-	}
-
-	/**
-	 * Transforms the string to only its first character capitalized.
-	 *
-	 * @return Text
-	 * @deprecated Use <code>toCapitalCase()</code> method instead.
-	 */
-	public function capitalize() {
-		return $this->toCapitalCase();
-	}
-
-	/**
-	 * Transforms the string with the words capitalized.
-	 *
-	 * @return Text
-	 * @deprecated Use <code>toCapitalCaseWords()</code> method instead.
-	 */
-	public function capitalizeWords() {
-		return $this->toCapitalCaseWords();
 	}
 
 	//
@@ -1077,7 +944,7 @@ class Text implements Comparable {
 	//
 	//
 
-	public function __toString() {
+	public function __toString(): string {
 		return $this->string;
 	}
 
@@ -1087,7 +954,7 @@ class Text implements Comparable {
 	//
 	//
 
-	protected function prepareOffset($offset) {
+	protected function prepareOffset(int $offset): int {
 		$len = $this->length();
 		if ($offset < -$len || $offset > $len) {
 			throw new \InvalidArgumentException('Offset must be in range [-len, len]');
@@ -1100,7 +967,7 @@ class Text implements Comparable {
 		return $offset;
 	}
 
-	protected function prepareLength($offset, $length) {
+	protected function prepareLength(int $offset, ?int $length): int {
 		if ($length === null) {
 			return $this->length() - $offset;
 		}
@@ -1120,25 +987,34 @@ class Text implements Comparable {
 		return $length;
 	}
 
-	protected function verifyNotEmpty($string, $name) {
+	/**
+	 * @param string|Text $string
+	 * @param string $name
+	 */
+	protected function verifyNotEmpty($string, string $name): void {
 		if (empty($string)) {
 			throw new \InvalidArgumentException("$name cannot be empty");
 		}
 	}
 
-	protected function verifyPositive($value, $name) {
+	protected function verifyPositive(int $value, string $name): void {
 		if ($value <= 0) {
 			throw new \InvalidArgumentException("$name has to be positive");
 		}
 	}
 
-	protected function verifyNotNegative($value, $name) {
+	protected function verifyNotNegative(int $value, string $name): void {
 		if ($value < 0) {
 			throw new \InvalidArgumentException("$name can not be negative");
 		}
 	}
 
-	protected function replacePairs($replacements, $limit) {
+	/**
+	 * @param array|ArrayObject $replacements
+	 * @param int|null $limit
+	 * @return string
+	 */
+	protected function replacePairs($replacements, ?int $limit = null) {
 		if ($limit === null) {
 			return strtr($this->string, $replacements);
 		}
@@ -1154,11 +1030,11 @@ class Text implements Comparable {
 		return $str;
 	}
 
-	protected function replaceWithLimit($str, $from, $to, &$limit) {
+	protected function replaceWithLimit(Text $str, Text $from, Text $to, int &$limit) {
 		$lenDiff = $to->length() - $from->length();
 		$index = 0;
 
-		while (false !== $index = $str->indexOf($from, $index)) {
+		while (false !== $index = $str->indexOf($from->toString(), $index)) {
 			$str = $str->splice($to, $index, $to->length());
 			$index += $lenDiff;
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace phootwork\lang\tests\fixtures;
 
 use phootwork\lang\Comparable;
@@ -7,11 +7,11 @@ class Item implements Comparable {
 	
 	private $content;
 	
-	public function __construct($content = '') {
+	public function __construct(string $content = '') {
 		$this->content = $content;
 	}
 	
-	public function compareTo($comparison) {
+	public function compareTo($comparison): int {
 		return strcmp($this->content, $comparison->getContent());
 	}
 	
@@ -26,7 +26,7 @@ class Item implements Comparable {
 	 *
 	 * @param mixed $content        	
 	 */
-	public function setContent($content) {
+	public function setContent($content): self {
 		$this->content = $content;
 		return $this;
 	}

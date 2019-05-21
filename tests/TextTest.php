@@ -1,12 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 namespace phootwork\lang\tests;
 
 use phootwork\lang\ArrayObject;
 use phootwork\lang\tests\fixtures\Replace;
 use phootwork\lang\tests\fixtures\Search;
 use phootwork\lang\Text;
+use PHPUnit\Framework\TestCase;
 
-class TextTest extends \PHPUnit_Framework_TestCase {
+class TextTest extends TestCase {
 
 	public function testToText() {
 		$str = new Text('bla');
@@ -313,50 +314,46 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('Ο συγγραφέας wurst', $str->splice('wurst', -4, 4));
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Offset must be in range [-len, len]
-	 */
 	public function testSpliceWrongOffsetThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Offset must be in range [-len, len]');
+
 		$str = new Text('Text to splice');
 		$str->splice('', 25);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Offset must be in range [-len, len]
-	 */
 	public function testSpliceWrongNegativeOffsetThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Offset must be in range [-len, len]');
+
 		$str = new Text('Text to splice');
 		$str->splice('', -25);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Length too large
-	 */
 	public function testSpliceWrongLengthThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Length too large');
+
 		$str = new Text('Text to splice');
 		$str->splice('test', 4, 20);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Length too small
-	 */
 	public function testSpliceLengthSmallThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Length too small');
+
 		$str = new Text('Text to splice');
 		$str->splice('test', -4, -12);
 	}
 
 	public function testAt() {
 		$str = new Text('Text to splice');
-		$pos = $str->charAt(5);
+		$pos = $str->at(5);
 		$this->assertSame('t', $pos);
 
 		// mb
 		$str = new Text('いちりんしゃ');
-		$this->assertEquals('し', $str->charAt(4));
+		$this->assertEquals('し', $str->at(4));
 	}
 
 	public function testChars() {
@@ -381,20 +378,18 @@ class TextTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(5, $str->countSubstring(new Text('t')));
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage $substring cannot be empty
-	 */
 	public function testCountSubstringWithEmptyStringThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('$substring cannot be empty');
+
 		$str = new Text('Text to count total occurrencies');
 		$str->countSubstring('');
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Offset must be in range [-len, len]
-	 */
 	public function testCountWrongOffsetThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Offset must be in range [-len, len]');
+
 		$str = new Text('Text to count');
 		$str->splice('', 25);
 	}
@@ -486,11 +481,10 @@ id est laborum.";
 		$this->assertEquals('', $str->repeat(0));
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage Number of repetitions can not be negative
-	 */
 	public function testRepeatNegativeTimesThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('Number of repetitions can not be negative');
+
 		$str = new Text('repeat');
 		$str->repeat(-2);
 	}
@@ -527,20 +521,18 @@ id est laborum.";
 		$this->assertEquals(['Let it go'], $splitted->toArray());
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage The chunk length has to be positive
-	 */
 	public function testChunkNegativeLengthThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('The chunk length has to be positive');
+
 		$str = new Text('Let it go');
 		$str->chunk(-1);
 	}
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 * @expectedExceptionMessage The chunk length has to be positive
-	 */
 	public function testChunkZeroLengthThrowsException() {
+		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('The chunk length has to be positive');
+
 		$str = new Text('Let it go');
 		$str->chunk(0);
 	}

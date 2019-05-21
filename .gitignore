@@ -1,4 +1,5 @@
 .buildpath
+.phpunit.result.cache
 composer.phar
 composer.lock
 vendor/

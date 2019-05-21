@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace phootwork\lang;
 
 interface Comparable {
@@ -12,6 +12,6 @@ interface Comparable {
 	 *  	&gt; 0 if the object is greater than comparison<br>
 	 * 		0 if they are equal.
 	 */
-	public function compareTo($comparison);
+	public function compareTo($comparison): int;
 
 }
