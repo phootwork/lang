@@ -369,6 +369,8 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 		if (isset($this->array[$index])) {
 			return $this->array[$index];
 		}
+
+		return null;
 	}
 
 	/**

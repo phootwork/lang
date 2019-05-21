@@ -4,7 +4,7 @@ namespace phootwork\lang\tests\fixtures;
 use phootwork\lang\Comparable;
 
 class Item implements Comparable {
-	
+
 	private $content;
 	
 	public function __construct(string $content = '') {
@@ -23,10 +23,10 @@ class Item implements Comparable {
 	}
 	
 	/**
-	 *
-	 * @param mixed $content        	
+	 * @param string $content
+	 * @return $this
 	 */
-	public function setContent($content): self {
+	public function setContent(string $content): self {
 		$this->content = $content;
 		return $this;
 	}

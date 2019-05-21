@@ -170,6 +170,8 @@ class ArrayTest extends TestCase {
 		$this->assertEquals(['a', 'b', 'c', 'd'], $arr->toArray());
 		$this->assertEquals('a', $arr->shift());
 		$this->assertEquals($base, $arr->toArray());
+		$arr->unshift('a');
+		$this->assertEquals(['a', 'b', 'c', 'd'], $arr->toArray());
 	}
 
 	public function testEach() {
@@ -341,6 +343,33 @@ class ArrayTest extends TestCase {
 		// insert string
 		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
 		$this->assertEquals(['apple', 'banana', 'pine', 'orange', 'banana', 'ananas'], $fruits->splice(3, 0, ['orange'])->toArray());
+	}
+
+	public function testClone() {
+		$fruits = new ArrayObject(['apple', 'banana', 'pine', 'banana', 'ananas']);
+		$clonedFruits = clone $fruits;
+
+		$this->assertNotSame($fruits, $clonedFruits);
+		$this->assertSame($fruits->toArray(), $clonedFruits->toArray());
+	}
+
+	public function testAppend() {
+		$fruits = new ArrayObject(['apple', 'banana']);
+		$fruits->append('pine', 'ananas');
+		$this->assertEquals(['apple', 'banana', 'pine', 'ananas'], $fruits->toArray());
+
+		$fruits->append(['peach', 'pear']);
+		$this->assertEquals(['apple', 'banana', 'pine', 'ananas', ['peach', 'pear']], $fruits->toArray());
+
+		$fruits->append($obj = new ArrayObject(['wathermelon']));
+		$this->assertEquals(['apple', 'banana', 'pine', 'ananas', ['peach', 'pear'], $obj], $fruits->toArray());
+	}
+
+	public function testGetWithNotExistentIndex() {
+		$fruits = new ArrayObject(['apple', 'banana']);
+		$element = $fruits->get(4);
+
+		$this->assertNull($element);
 	}
 
 }

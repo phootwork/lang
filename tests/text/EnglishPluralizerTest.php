@@ -6,7 +6,6 @@ use phootwork\lang\text\EnglishPluralizer;
 
 /**
  * Tests for the StandardEnglishPluralizer class
- *
  */
 class EnglishPluralizerTest extends TestCase {
 	public function getPluralFormDataProvider() {
@@ -105,6 +104,8 @@ class EnglishPluralizerTest extends TestCase {
 	 */
 	public function testWrongTypeToPluralizeThrowsException($wrong) {
 		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('The pluralizer expects a string.');
+
 		$pluralizer = new EnglishPluralizer();
 		$pluralizer->getPluralForm($wrong);
 	}
@@ -122,6 +123,8 @@ class EnglishPluralizerTest extends TestCase {
 	 */
 	public function testWrongTypeToSingularizeThrowsException($wrong) {
 		$this->expectException(\InvalidArgumentException::class);
+		$this->expectExceptionMessage('The pluralizer expects a string.');
+
 		$pluralizer = new EnglishPluralizer();
 		$pluralizer->getSingularForm($wrong);
 	}

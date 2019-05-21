@@ -23,56 +23,117 @@ class TextTest extends TestCase {
 		$this->assertEquals(17, Text::create('Ο συγγραφέας είπε')->length());
 	}
 
-	public function testOccurences() {
+	public function testStartsWith() {
 		$str = new Text('let it go');
 
 		$this->assertTrue($str->startsWith('let'));
 		$this->assertTrue($str->startsWith(new Text('let')));
 		$this->assertFalse($str->startsWith('go'));
 		$this->assertFalse($str->startsWith(new Text('go')));
+	}
 
-		$this->assertTrue($str->endsWith('go'));
-		$this->assertTrue($str->endsWith(new Text('go')));
-		$this->assertFalse($str->endsWith('let'));
-		$this->assertFalse($str->endsWith(new Text('let')));
-
-		$this->assertTrue($str->contains('it'));
-		$this->assertTrue($str->contains(new Text('it')));
-		$this->assertFalse($str->contains('Hulk'));
-		$this->assertFalse($str->contains(new Text('Hulk')));
-
-		$this->assertTrue($str->equals('let it go'));
-		$this->assertTrue($str->equals(new Text('let it go')));
-		$this->assertFalse($str->equals('Let It Go'));
-		$this->assertTrue($str->equalsIgnoreCase('Let It Go'));
-		$this->assertTrue($str->equalsIgnoreCase(new Text('Let It Go')));
-
-		$this->assertFalse($str->isEmpty());
-
-		// mb
+	public function testMbStartsWith() {
 		$str = new Text('Ο συγγραφέας είπε');
 
 		$this->assertTrue($str->startsWith('Ο συγ'));
 		$this->assertTrue($str->startsWith(new Text('Ο συγ')));
 		$this->assertFalse($str->startsWith('ραφέ'));
 		$this->assertFalse($str->startsWith(new Text('ραφέ')));
+	}
+
+	public function testStartsWithIgnoreCase() {
+		$str = new Text('let it go');
+
+		$this->assertTrue($str->startsWithIgnoreCase('LET'));
+		$this->assertTrue($str->startsWithIgnoreCase(new Text('LET')));
+		$this->assertFalse($str->startsWithIgnoreCase('Go'));
+		$this->assertFalse($str->startsWithIgnoreCase(new Text('gO')));
+	}
+
+	public function testEndsWith() {
+		$str = new Text('let it go');
+
+		$this->assertTrue($str->endsWith('go'));
+		$this->assertTrue($str->endsWith(new Text('go')));
+		$this->assertFalse($str->endsWith('let'));
+		$this->assertFalse($str->endsWith(new Text('let')));
+	}
+
+	public function testMbEndsWith() {
+		$str = new Text('Ο συγγραφέας είπε');
 
 		$this->assertTrue($str->endsWith('είπε'));
 		$this->assertTrue($str->endsWith(new Text('είπε')));
 		$this->assertFalse($str->endsWith('ραφέ'));
 		$this->assertFalse($str->endsWith(new Text('ραφέ')));
+	}
+
+	public function testEndsWithIgnoreCase() {
+		$str = new Text('let it go');
+
+		$this->assertTrue($str->endsWithIgnoreCase('GO'));
+		$this->assertTrue($str->endsWithIgnoreCase(new Text('Go')));
+		$this->assertFalse($str->endsWithIgnoreCase('LeT'));
+		$this->assertFalse($str->endsWithIgnoreCase(new Text('LeT')));
+	}
+
+	public function testContains() {
+		$str = new Text('let it go');
+
+		$this->assertTrue($str->contains('it'));
+		$this->assertTrue($str->contains(new Text('it')));
+		$this->assertFalse($str->contains('Hulk'));
+		$this->assertFalse($str->contains(new Text('Hulk')));
+	}
+
+	public function testMbContains() {
+		$str = new Text('Ο συγγραφέας είπε');
 
 		$this->assertTrue($str->contains('συγγραφέας'));
 		$this->assertTrue($str->contains(new Text('συγγραφέας')));
 		$this->assertFalse($str->contains('いちりんしゃ'));
 		$this->assertFalse($str->contains(new Text('いちりんしゃ')));
+	}
+
+	public function testEquals() {
+		$str = new Text('let it go');
+
+		$this->assertTrue($str->equals('let it go'));
+		$this->assertTrue($str->equals(new Text('let it go')));
+		$this->assertFalse($str->equals('Let It Go'));
+	}
+
+	public function testMbEquals() {
+		$str = new Text('Ο συγγραφέας είπε');
 
 		$this->assertTrue($str->equals('Ο συγγραφέας είπε'));
 		$this->assertTrue($str->equals(new Text('Ο συγγραφέας είπε')));
 		$this->assertFalse($str->equals('いちりんしゃ'));
 		$this->assertFalse($str->equals(new Text('いちりんしゃ')));
+	}
+
+	public function testEqualsIgnoreCase() {
+		$str = new Text('let it go');
+
+		$this->assertTrue($str->equalsIgnoreCase('Let It Go'));
+		$this->assertTrue($str->equalsIgnoreCase(new Text('Let It Go')));
+	}
+
+	public function testMbEqualsIgnoreCase() {
+		$str = new Text('Ο συγγραφέας είπε');
+
 		$this->assertTrue($str->equalsIgnoreCase('Ο συγγραφέας είπε'));
 		$this->assertTrue($str->equalsIgnoreCase(new Text('Ο συγγραφέας είπε')));
+	}
+
+	public function testNotIsEmpty() {
+		$str = new Text('let it go');
+		$this->assertFalse($str->isEmpty());
+	}
+
+	public function testIsEmpty() {
+		$str = new Text();
+		$this->assertTrue($str->isEmpty());
 	}
 
 	public function testSlicing() {
@@ -113,6 +174,8 @@ class TextTest extends TestCase {
 		$this->assertEquals('it go', $str->append(' go'));
 		$this->assertEquals('it go', $str->append(new Text(' go')));
 		$this->assertEquals('iTTt', $str->insert('TT', 1));
+		$this->assertEquals('TTit', $str->insert('TT', -1));
+		$this->assertEquals('itTT', $str->insert('TT', 20));
 	}
 
 	public function testTrimming() {
@@ -139,6 +202,7 @@ class TextTest extends TestCase {
 		$this->assertEquals('-=fòôbàř', $str->padStart(8, '-='));
 		$this->assertEquals('fòôbàř=-', $str->padEnd(8, '=-'));
 		$this->assertEquals('==fòôbàř==', $str->pad(10, '=='));
+		$this->assertSame($str, $str->pad(0));
 	}
 
 	public function testIndexSearch() {
@@ -376,6 +440,12 @@ class TextTest extends TestCase {
 		$str = new Text('Text to count total occurrencies');
 		$this->assertEquals(2, $str->countSubstring('to'));
 		$this->assertEquals(5, $str->countSubstring(new Text('t')));
+	}
+
+	public function testCountSubstringCaseInsensitive() {
+		$str = new Text('Text text TEXT');
+		$this->assertEquals(1, $str->countSubstring('te'));
+		$this->assertEquals(3, $str->countSubstring('te', false));
 	}
 
 	public function testCountSubstringWithEmptyStringThrowsException() {
@@ -629,5 +699,41 @@ id est laborum.";
 		$this->assertEquals('', (new Text(''))->toSnakeCase());
 		$this->assertEquals('string-with3-numbers2', (new Text('StringWith3Numbers2'))->toKebabCase());
 		$this->assertEquals('string-with-3-numbers2', (new Text('string_with_3_numbers2'))->toKebabCase());
+	}
+
+	public function testEnsureStart() {
+		$text = new Text('phootwork');
+		$this->assertEquals('phootwork', $text->ensureStart('phoot'));
+
+		$text = new Text('work');
+		$this->assertEquals('phootwork', $text->ensureStart('phoot'));
+	}
+
+	public function testEnsureEnd() {
+		$text = new Text('phootwork');
+		$this->assertEquals('phootwork', $text->ensureEnd('work'));
+
+		$text = new Text('phoot');
+		$this->assertEquals('phootwork', $text->ensureEnd('work'));
+	}
+
+	public function testJoin() {
+		$array = ['Phootwork', 'is', 'a', 'collection', 'of', 'awesome', 'libraries'];
+		$expected = 'Phootwork is a collection of awesome libraries';
+		$this->assertEquals($expected, Text::join($array, ' '));
+	}
+
+	public function testToSpaces() {
+		$text = new Text("\n\tbeautiful\n\t\tstring\n");
+		$expected = "
+    beautiful
+        string
+";
+		$this->assertEquals($expected, $text->toSpaces());
+	}
+
+	public function testToTabs() {
+		$text = new Text("hello\n      world");
+		$this->assertEquals("hello\n\t  world", $text->toTabs());
 	}
 }
