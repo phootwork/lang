@@ -15,28 +15,16 @@
 		"comparator"
 	],
 	"support" : {
-		"issues" : "https://github.com/phootwork/lang/issues"
+		"issues" : "https://github.com/phootwork/phootwork/issues"
 	},
 	"autoload" : {
 		"psr-4" : {
-			"phootwork\\lang\\" : "src"
-		}
-	},
-	"autoload-dev" : {
-		"psr-4" : {
-			"phootwork\\lang\\tests\\" : "tests"
+			"phootwork\\lang\\" : ""
 		}
 	},
 	"require" : {
 		"php" : ">=5.6",
 		"symfony/polyfill-mbstring" : "~1.8"
 	},
-	"require-dev" : {
-		"phpunit/phpunit" : "^5.7",
-		"sami/sami" : "^4.1.0"
-	},
-	"scripts" : {
-		"test" : "phpunit",
-		"api" : "sami.php update sami.php"
-	}
+	"homepage" : "https://phootwork.github.io/lang/"
 }
