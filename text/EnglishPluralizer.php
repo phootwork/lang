@@ -1,4 +1,13 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Phootwork package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license MIT License
+ * @copyright Thomas Gossmann
+ */
+
 namespace phootwork\lang\text;
 
 /**
@@ -66,6 +75,9 @@ class EnglishPluralizer implements Pluralizer {
 		'life' => 'lives'
 	];
 
+	/**
+	 * @var array
+	 */
 	protected $irregular = [
 		'matrix' => 'matrices',
 		'leaf' => 'leaves',
@@ -88,6 +100,9 @@ class EnglishPluralizer implements Pluralizer {
 		'alias' => 'aliases',
 	];
 
+	/**
+	 * @var array
+	 */
 	protected $uncountable = [
 		'sheep',
 		'fish',
@@ -142,12 +157,8 @@ class EnglishPluralizer implements Pluralizer {
 	 * @return string The plural form of $root (e.g. Authors).
 	 * @throws \InvalidArgumentException If the parameter is not a string.
 	 */
-	public function getPluralForm($root) {
+	public function getPluralForm(string $root): string {
 		$pluralForm = $root;
-
-		if (!is_string($root)) {
-			throw new \InvalidArgumentException('The pluralizer expects a string.');
-		}
 
 		if (!in_array(strtolower($root), $this->uncountable)) {
 			// This check must be run before `checkIrregularForm` call
@@ -173,12 +184,8 @@ class EnglishPluralizer implements Pluralizer {
 	 * @return string The singular form of $root (e.g. Authors).
 	 * @throws \InvalidArgumentException If the parameter is not a string.
 	 */
-	public function getSingularForm($root) {
+	public function getSingularForm(string $root): string {
 		$singularForm = $root;
-
-		if (!is_string($root)) {
-			throw new \InvalidArgumentException('The pluralizer expects a string.');
-		}
 
 		if (!in_array(strtolower($root), $this->uncountable)) {
 			if (null !== $replacement = $this->checkIrregularForm($root, array_flip($this->irregular))) {
@@ -201,7 +208,7 @@ class EnglishPluralizer implements Pluralizer {
 	 *
 	 * @return bool
 	 */
-	public function isPlural($root) {
+	public function isPlural(string $root): bool {
 		$out = false;
 
 		if ('' !== $root) {
@@ -230,7 +237,7 @@ class EnglishPluralizer implements Pluralizer {
 	 *
 	 * @return bool
 	 */
-	public function isSingular($root) {
+	public function isSingular(string $root): bool {
 		$out = false;
 
 		if ('' === $root) {
@@ -260,7 +267,7 @@ class EnglishPluralizer implements Pluralizer {
 	 *
 	 * @return null|string
 	 */
-	private function checkIrregularForm($root, $irregular) {
+	private function checkIrregularForm(string $root, array $irregular): ?string {
 		foreach ($irregular as $pattern => $result) {
 			$searchPattern = '/' . $pattern . '$/i';
 			if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
@@ -283,7 +290,7 @@ class EnglishPluralizer implements Pluralizer {
 	 *
 	 * @return null|string
 	 */
-	private function checkIrregularSuffix($root, $irregular) {
+	private function checkIrregularSuffix(string $root, array $irregular): ?string {
 		foreach ($irregular as $pattern => $result) {
 			$searchPattern = '/' . $pattern . '$/i';
 			if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
@@ -299,7 +306,7 @@ class EnglishPluralizer implements Pluralizer {
 	 *
 	 * @return bool
 	 */
-	private function isAmbiguousPlural($root) {
+	private function isAmbiguousPlural(string $root): bool {
 		foreach ($this->ambiguous as $pattern) {
 			if (preg_match('/' . $pattern . '$/i', $root)) {
 				return true;
@@ -311,11 +318,11 @@ class EnglishPluralizer implements Pluralizer {
 
 	/**
 	 * @param array $irregular
-	 * @param $root
+	 * @param string $root
 	 *
 	 * @return bool
 	 */
-	private function isIrregular($irregular, $root) {
+	private function isIrregular(array $irregular, string $root): bool {
 		foreach ($irregular as $pattern) {
 			if (preg_match('/' . $pattern . '$/i', $root)) {
 				return true;
