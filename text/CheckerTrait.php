@@ -1,4 +1,13 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Phootwork package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license MIT License
+ * @copyright Thomas Gossmann
+ */
+
 namespace phootwork\lang\text;
 
 trait CheckerTrait {
@@ -8,7 +17,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isEmpty() {
+	public function isEmpty(): bool {
 		return empty($this->string);
 	}
 
@@ -17,7 +26,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isAlphanumeric() {
+	public function isAlphanumeric(): bool {
 		return ctype_alnum($this->string);
 	}
 
@@ -26,7 +35,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isAlphabetic() {
+	public function isAlphabetic(): bool {
 		return ctype_alpha($this->string);
 	}
 
@@ -35,7 +44,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isNumeric() {
+	public function isNumeric(): bool {
 		return ctype_digit($this->string);
 	}
 
@@ -44,7 +53,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isPunctuation() {
+	public function isPunctuation(): bool {
 		return ctype_punct($this->string);
 	}
 
@@ -53,7 +62,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isSpace() {
+	public function isSpace(): bool {
 		return ctype_space($this->string);
 	}
 
@@ -70,7 +79,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isLowerCase() {
+	public function isLowerCase(): bool {
 		return ctype_lower($this->string);
 	}
 
@@ -87,7 +96,7 @@ trait CheckerTrait {
 	 *
 	 * @return boolean
 	 */
-	public function isUpperCase() {
+	public function isUpperCase(): bool {
 		return ctype_upper($this->string);
 	}
 
@@ -98,8 +107,8 @@ trait CheckerTrait {
 	 *        	A custom pluralizer. Default is the EnglishPluralizer
 	 * @return boolean
 	 */
-	public function isSingular(Pluralizer $pluralizer = null) {
-		$pluralizer = $pluralizer ?: new EnglishPluralizer();
+	public function isSingular(?Pluralizer $pluralizer = null): bool {
+		$pluralizer = $pluralizer ?? new EnglishPluralizer();
 
 		return $pluralizer->isSingular($this->string);
 	}
@@ -111,10 +120,9 @@ trait CheckerTrait {
 	 *        	A custom pluralizer. Default is the EnglishPluralizer
 	 * @return boolean
 	 */
-	public function isPlural(Pluralizer $pluralizer = null) {
-		$pluralizer = $pluralizer ?: new EnglishPluralizer();
+	public function isPlural(?Pluralizer $pluralizer = null): bool {
+		$pluralizer = $pluralizer ?? new EnglishPluralizer();
 
 		return $pluralizer->isPlural($this->string);
 	}
-
 }
