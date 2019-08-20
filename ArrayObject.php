@@ -1,11 +1,21 @@
-<?php
+<?php declare(strict_types=1);
+/**
+ * This file is part of the Phootwork package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license MIT License
+ * @copyright Thomas Gossmann
+ */
+
 namespace phootwork\lang;
 
 class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Serializable, Arrayable {
 
+	/** @var array */
 	protected $array;
 
-	public function __construct($contents = []) {
+	public function __construct(array $contents = []) {
 		$this->array = $contents;
 	}
 
@@ -18,19 +28,24 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return int the amount of items
 	 */
-	public function count() {
+	public function count(): int {
 		return count($this->array);
 	}
 
-	public function getIterator() {
+	public function getIterator(): \ArrayIterator {
 		return new \ArrayIterator($this->array);
 	}
 
-	public function serialize() {
+	public function serialize(): string {
 		return serialize($this->array);
 	}
 
-	public function unserialize($serialized) {
+	/**
+	 * @psalm-suppress ImplementedReturnTypeMismatch
+	 * @psalm-suppress InvalidReturnType The return type should be `void` for consistency with \Serializable interface,
+	 *                                   but we want fluid interface.
+	 */
+	public function unserialize($serialized): self {
 		$this->array = unserialize($serialized);
 
 		return $this;
@@ -41,7 +56,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return $this
 	 */
-	public function clear() {
+	public function clear(): self {
 		$this->array = [];
 		return $this;
 	}
@@ -51,7 +66,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return boolean
 	 */
-	public function isEmpty() {
+	public function isEmpty(): bool {
 		return $this->count() === 0;
 	}
 
@@ -62,31 +77,17 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	//
 
 	/**
-	 * Push one or more elements onto the end of array
-	 *
-	 * @param mixed $_ values
-	 * @return $this
-	 */
-	public function push() {
-		// @TODO php7 $this->append(...$values);
-		// das ist doch behindi!
-		foreach (func_get_args() as $v) {
-			array_push($this->array, $v);
-		}
-		return $this;
-	}
-
-	/**
 	 * Append one or more elements onto the end of array
 	 *
-	 * @param mixed $_ values
+	 * @param array $elements
 	 * @return $this
 	 */
-	public function append() {
+	public function append(...$elements): self {
 		// das ist doch behindi!
-		foreach (func_get_args() as $v) {
-			array_push($this->array, $v);
+		foreach ($elements as $element) {
+			array_push($this->array, $element);
 		}
+
 		return $this;
 	}
 
@@ -97,7 +98,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param int $index
 	 * @return $this
 	 */
-	public function add($element, $index = null) {
+	public function add($element, ?int $index = null): self {
 		if ($index === null) {
 			$this->array[$this->count()] = $element;
 		} else {
@@ -113,7 +114,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param array|\Iterator $array
 	 * @return $this
 	 */
-	public function addAll($array) {
+	public function addAll($array): self {
 		foreach ($array as $element) {
 			$this->add($element);
 		}
@@ -133,28 +134,13 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	/**
 	 * Prepend one or more elements to the beginning of the array
 	 *
-	 * @param mixed $_ values
+	 * @param array $elements
 	 * @return $this
 	 */
-	public function unshift() {
-		// @TODO php7 $this->prepend(...$values);
+	public function prepend(...$elements): self {
 		// das ist doch auch behindi!
-		foreach (func_get_args() as $v) {
-			array_unshift($this->array, $v);
-		}
-		return $this;
-	}
-
-	/**
-	 * Prepend one or more elements to the beginning of the array
-	 *
-	 * @param mixed $_ values
-	 * @return $this
-	 */
-	public function prepend() {
-		// das ist doch auch behindi!
-		foreach (func_get_args() as $v) {
-			array_unshift($this->array, $v);
+		foreach ($elements as $element) {
+			array_unshift($this->array, $element);
 		}
 		return $this;
 	}
@@ -174,9 +160,9 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param mixed $element
 	 * @return $this
 	 */
-	public function remove($element) {
+	public function remove($element): self {
 		$index = array_search($element, $this->array, true);
-		if ($index !== null) {
+		if ($index !== false) {
 			unset($this->array[$index]);
 		}
 
@@ -189,7 +175,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param array|\Iterator $array
 	 * @return $this
 	 */
-	public function removeAll($array) {
+	public function removeAll($array): self {
 		foreach ($array as $element) {
 			$this->remove($element);
 		}
@@ -205,7 +191,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param array $replacement If replacement array is specified, then the removed elements are replaced with elements from this array. If offset and length are such that nothing is removed, then the elements from the replacement array are inserted in the place specified by the offset. Note that keys in replacement array are not preserved. If replacement is just one element it is not necessary to put array() around it, unless the element is an array itself, an object or NULL.
 	 * @return $this
 	 */
-	public function splice($offset, $length = null, $replacement = []) {
+	public function splice(int $offset, ?int $length = null, array $replacement = []) {
 		$length = $length === null ? $this->count() : $length;
 		array_splice($this->array, $offset, $length, $replacement);
 		return $this;
@@ -223,8 +209,8 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param Comparator|callable $cmp
 	 * @return $this
 	 */
-	public function sort($cmp = null) {
-		$this->doSort($this->array, $cmp, 'usort', 'sort');
+	public function sort($cmp = null): self {
+		$this->doSort($this->array, 'usort', 'sort', $cmp);
 
 		return $this;
 	}
@@ -235,8 +221,8 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param Comparator|callable $cmp
 	 * @return $this
 	 */
-	public function sortAssoc($cmp = null) {
-		$this->doSort($this->array, $cmp, 'uasort', 'asort');
+	public function sortAssoc($cmp = null): self {
+		$this->doSort($this->array, 'uasort', 'asort', $cmp);
 
 		return $this;
 	}
@@ -247,8 +233,8 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param Comparator|callable $cmp
 	 * @return $this
 	 */
-	public function sortKeys($cmp = null) {
-		$this->doSort($this->array, $cmp, 'uksort', 'ksort');
+	public function sortKeys($cmp = null): self {
+		$this->doSort($this->array, 'uksort', 'ksort', $cmp);
 
 		return $this;
 	}
@@ -257,17 +243,25 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * Internal sort function
 	 *
 	 * @param array $array the array on which is operated on
-	 * @param Comparator|callable $cmp the compare function
 	 * @param callable $usort the sort function for user passed $cmd
 	 * @param callable $sort the default sort function
+	 * @param Comparator|callable $cmp the compare function
 	 */
-	protected function doSort(&$array, $cmp, callable $usort, callable $sort) {
+	protected function doSort(array &$array, callable $usort, callable $sort, $cmp = null): void {
 		if (is_callable($cmp)) {
 			$usort($array, $cmp);
 		} else if ($cmp instanceof Comparator) {
-			$usort($array, function ($a, $b) use ($cmp) {
-				return $cmp->compare($a, $b);
-			});
+			$usort(
+				$array,
+				/**
+				 * @param mixed $a
+				 * @param mixed $b
+				 * @return int
+				 */
+				function ($a, $b) use ($cmp): int {
+					return $cmp->compare($a, $b);
+				}
+			);
 		} else {
 			$sort($array);
 		}
@@ -278,7 +272,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return $this
 	 */
-	public function reverse() {
+	public function reverse(): self {
 		$this->array = array_reverse($this->array);
 		return $this;
 	}
@@ -297,7 +291,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param callable $callback
 	 * @return boolean
 	 */
-	public function every(callable $callback) {
+	public function every(callable $callback): bool {
 		$match = true;
 		foreach ($this->array as $element) {
 			$match = $match && $callback($element);
@@ -314,7 +308,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param callable $callback
 	 * @return boolean
 	 */
-	public function some(callable $callback) {
+	public function some(callable $callback): bool {
 		$match = false;
 		foreach ($this->array as $element) {
 			$match = $match || $callback($element);
@@ -336,7 +330,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param callable $callback
 	 * @return boolean
 	 */
-	public function search() {
+	public function search(): bool {
 		if (func_num_args() == 1) {
 			$callback = func_get_arg(0);
 		} else {
@@ -355,15 +349,17 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	}
 
 	/**
-	 * Returns the element at the given index (or nothing if the index isn't present)
+	 * Returns the element at the given index (or null if the index isn't present)
 	 *
 	 * @param int $index
 	 * @return mixed
 	 */
-	public function get($index) {
+	public function get(int $index) {
 		if (isset($this->array[$index])) {
 			return $this->array[$index];
 		}
+
+		return null;
 	}
 
 	/**
@@ -470,8 +466,10 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param mixed $element
 	 * @return int the index for the given element
 	 */
-	public function indexOf($element) {
-		return array_search($element, $this->array, true);
+	public function indexOf($element): ?int {
+		$out = array_search($element, $this->array, true);
+
+		return false === $out ? null : $out;
 	}
 
 	/**
@@ -487,15 +485,13 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param callable $callback the callback function
 	 * @return int|null the index or null if it hasn't been found
 	 */
-	public function findIndex() {
+	public function findIndex(): ?int {
 		if (func_num_args() == 1) {
-			$callback = func_get_arg(0);
+			$index = $this->find(func_get_arg(0));
 		} else {
-			$query = func_get_arg(0);
-			$callback = func_get_arg(1);
+			$index = $this->find(func_get_arg(0), func_get_arg(1));
 		}
 
-		$index = func_num_args() == 1 ? $this->find($callback) : $this->find($query, $callback);
 		if ($index !== null) {
 			$index = $this->indexOf($index);
 		}
@@ -516,15 +512,13 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param callable $callback the callback function
 	 * @return int|null the index or null if it hasn't been found
 	 */
-	public function findLastIndex() {
+	public function findLastIndex(): ?int {
 		if (func_num_args() == 1) {
-			$callback = func_get_arg(0);
+			$index = $this->findLast(func_get_arg(0));
 		} else {
-			$query = func_get_arg(0);
-			$callback = func_get_arg(1);
+			$index = $this->findLast(func_get_arg(0), func_get_arg(1));
 		}
 
-		$index = func_num_args() == 1 ? $this->findLast($callback) : $this->findLast($query, $callback);
 		if ($index !== null) {
 			$index = $this->indexOf($index);
 		}
@@ -538,7 +532,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param mixed $element
 	 * @return boolean
 	 */
-	public function contains($element) {
+	public function contains($element): bool {
 		return in_array($element, $this->array, true);
 	}
 
@@ -556,7 +550,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * 		Returns a string containing a string representation of all the array elements in the
 	 * 		same order, with the glue string between each element.
 	 */
-	public function join($glue = '') {
+	public function join(string $glue = ''): Text {
 		return new Text(implode($this->array, $glue));
 	}
 
@@ -568,7 +562,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param boolean $preserveKeys
 	 * @return ArrayObject
 	 */
-	public function slice($offset, $length = null, $preserveKeys = false) {
+	public function slice(int $offset, ?int $length = null, bool $preserveKeys = false): ArrayObject {
 		return new ArrayObject(array_slice($this->array, $offset, $length, $preserveKeys));
 	}
 
@@ -578,7 +572,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param callable $callback Callback function to run for each element in each array.
 	 * @return ArrayObject
 	 */
-	public function map(callable $callback) {
+	public function map(callable $callback): ArrayObject {
 		return new ArrayObject(array_map($callback, $this->array));
 	}
 
@@ -589,7 +583,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * 		If no callback is supplied, all entries of array equal to false will be removed.
 	 * @return ArrayObject
 	 */
-	public function filter(callable $callback) {
+	public function filter(callable $callback): ArrayObject {
 		return new ArrayObject(array_filter($this->array, $callback));
 	}
 
@@ -612,7 +606,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @param callable $callback
 	 */
-	public function each(callable $callback) {
+	public function each(callable $callback): void {
 		foreach ($this->array as $item) {
 			$callback($item);
 		}
@@ -624,7 +618,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param mixed ... Variable list of arrays to merge.
 	 * @return ArrayObject $this
 	 */
-	public function merge() {
+	public function merge(): self {
 		$this->array = array_merge($this->array, func_get_args());
 		return $this;
 	}
@@ -634,7 +628,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return ArrayObject the keys
 	 */
-	public function keys() {
+	public function keys(): ArrayObject {
 		return new ArrayObject(array_keys($this->array));
 	}
 
@@ -643,7 +637,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return ArrayObject the values
 	 */
-	public function values() {
+	public function values(): ArrayObject {
 		return new ArrayObject(array_values($this->array));
 	}
 
@@ -652,7 +646,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return ArrayObject $this
 	 */
-	public function flip() {
+	public function flip(): self {
 		$this->array = array_flip($this->array);
 		return $this;
 	}
@@ -662,7 +656,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 *
 	 * @return array
 	 */
-	public function toArray() {
+	public function toArray(): array {
 		return $this->array;
 	}
 
@@ -699,7 +693,6 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @internal
 	 */
 	public function offsetGet($offset) {
-		return isset($this->array[$offset]) ? $this->array[$offset] : null;
+		return $this->array[$offset] ?? null;
 	}
-
 }
