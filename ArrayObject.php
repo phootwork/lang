@@ -191,9 +191,10 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * @param array $replacement If replacement array is specified, then the removed elements are replaced with elements from this array. If offset and length are such that nothing is removed, then the elements from the replacement array are inserted in the place specified by the offset. Note that keys in replacement array are not preserved. If replacement is just one element it is not necessary to put array() around it, unless the element is an array itself, an object or NULL.
 	 * @return $this
 	 */
-	public function splice(int $offset, ?int $length = null, array $replacement = []) {
+	public function splice(int $offset, ?int $length = null, array $replacement = []): self {
 		$length = $length === null ? $this->count() : $length;
 		array_splice($this->array, $offset, $length, $replacement);
+
 		return $this;
 	}
 
@@ -551,7 +552,7 @@ class ArrayObject implements \ArrayAccess, \Countable, \IteratorAggregate, \Seri
 	 * 		same order, with the glue string between each element.
 	 */
 	public function join(string $glue = ''): Text {
-		return new Text(implode($this->array, $glue));
+		return new Text(implode($glue, $this->array));
 	}
 
 	/**

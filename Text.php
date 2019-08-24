@@ -737,7 +737,7 @@ class Text implements Comparable {
 	 * 		same order, with the glue string between each element.
 	 */
 	public static function join(array $pieces, string $glue = '', ?string $encoding = null): Text {
-		return new Text(implode($pieces, $glue), $encoding);
+		return new Text(implode($glue, $pieces), $encoding);
 	}
 
 	/**
