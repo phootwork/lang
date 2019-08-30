@@ -8,7 +8,7 @@
  * @copyright Thomas Gossmann
  */
 
-namespace phootwork\lang\text;
+namespace phootwork\lang\inflector;
 
 /**
  * The generic interface to create a plural form of a name.
@@ -16,7 +16,7 @@ namespace phootwork\lang\text;
  * @author Hans Lellelid <hans@xmpl.org>
  * @author Cristiano Cinotti <cristianocinotti@gmail.com>
  */
-interface Pluralizer {
+interface InflectorInterface {
 	/**
 	 * Generate a plural name based on the passed in root.
 	 *
