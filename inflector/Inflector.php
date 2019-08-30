@@ -8,7 +8,7 @@
  * @copyright Thomas Gossmann
  */
 
-namespace phootwork\lang\text;
+namespace phootwork\lang\inflector;
 
 /**
  * Standard replacement English pluralizer class. Based on the links below
@@ -20,7 +20,7 @@ namespace phootwork\lang\text;
  * @author paul.hanssen
  * @author Cristiano Cinotti
  */
-class EnglishPluralizer implements Pluralizer {
+class Inflector implements InflectorInterface {
 	/**
 	 * @var array
 	 */

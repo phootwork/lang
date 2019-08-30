@@ -8,9 +8,12 @@
  * @copyright Thomas Gossmann
  */
 
-namespace phootwork\lang\text;
+namespace phootwork\lang\parts;
 
-trait CheckerTrait {
+use phootwork\lang\inflector\Inflector;
+use phootwork\lang\inflector\InflectorInterface;
+
+trait CheckerPart {
 
 	/**
 	 * Checks if the string is empty
@@ -103,12 +106,12 @@ trait CheckerTrait {
 	/**
 	 * Check if a string is singular form.
 	 *
-	 * @param Pluralizer $pluralizer
-	 *        	A custom pluralizer. Default is the EnglishPluralizer
+	 * @param InflectorInterface $pluralizer
+	 *        	A custom pluralizer. Default is the Inflector
 	 * @return boolean
 	 */
-	public function isSingular(?Pluralizer $pluralizer = null): bool {
-		$pluralizer = $pluralizer ?? new EnglishPluralizer();
+	public function isSingular(?InflectorInterface $pluralizer = null): bool {
+		$pluralizer = $pluralizer ?? new Inflector();
 
 		return $pluralizer->isSingular($this->string);
 	}
@@ -116,12 +119,12 @@ trait CheckerTrait {
 	/**
 	 * Check if a string is plural form.
 	 *
-	 * @param Pluralizer $pluralizer
-	 *        	A custom pluralizer. Default is the EnglishPluralizer
+	 * @param InflectorInterface $pluralizer
+	 *        	A custom pluralizer. Default is the Inflector
 	 * @return boolean
 	 */
-	public function isPlural(?Pluralizer $pluralizer = null): bool {
-		$pluralizer = $pluralizer ?? new EnglishPluralizer();
+	public function isPlural(?InflectorInterface $pluralizer = null): bool {
+		$pluralizer = $pluralizer ?? new Inflector();
 
 		return $pluralizer->isPlural($this->string);
 	}

@@ -10,9 +10,9 @@
 
 namespace phootwork\lang;
 
-use phootwork\lang\text\CheckerTrait;
-use phootwork\lang\text\EnglishPluralizer;
-use phootwork\lang\text\Pluralizer;
+use phootwork\lang\parts\CheckerPart;
+use phootwork\lang\inflector\Inflector;
+use phootwork\lang\inflector\InflectorInterface;
 
 /**
  * Object representation of an immutable String
@@ -21,7 +21,7 @@ use phootwork\lang\text\Pluralizer;
  */
 class Text implements Comparable {
 
-	use CheckerTrait;
+	use CheckerPart;
 
 	/** @var string */
 	private $string;
@@ -913,11 +913,11 @@ class Text implements Comparable {
 	/**
 	 * Get the plural form of the Text object.
 	 *
-	 * @param Pluralizer|null $pluralizer
+	 * @param InflectorInterface|null $pluralizer
 	 * @return Text
 	 */
-	public function toPlural(?Pluralizer $pluralizer = null): Text {
-		$pluralizer = $pluralizer ?: new EnglishPluralizer();
+	public function toPlural(?InflectorInterface $pluralizer = null): Text {
+		$pluralizer = $pluralizer ?: new Inflector();
 
 		return new Text($pluralizer->getPluralForm($this->string), $this->encoding);
 	}
@@ -925,11 +925,11 @@ class Text implements Comparable {
 	/**
 	 * Get the singular form of the Text object.
 	 *
-	 * @param Pluralizer|null $pluralizer
+	 * @param InflectorInterface|null $pluralizer
 	 * @return Text
 	 */
-	public function toSingular(?Pluralizer $pluralizer = null): Text {
-		$pluralizer = $pluralizer ?: new EnglishPluralizer();
+	public function toSingular(?InflectorInterface $pluralizer = null): Text {
+		$pluralizer = $pluralizer ?: new Inflector();
 
 		return new Text($pluralizer->getSingularForm($this->string), $this->encoding);
 	}
