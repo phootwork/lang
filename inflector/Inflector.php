@@ -211,25 +211,18 @@ class Inflector implements InflectorInterface {
 	 * @return bool
 	 */
 	public function isPlural(string $root): bool {
-		$out = false;
-
-		if ('' !== $root) {
-			if (in_array(strtolower($root), $this->uncountable)) {
-				$out = true;
-			} else {
-				$out = $this->isIrregular($this->irregular, $root);
-
-				if (!$out) {
-					$out = $this->isIrregular(array_keys($this->singular), $root);
-				}
-
-				if (!$out && 's' == $root[strlen($root) - 1]) {
-					$out = true;
-				}
-			}
+		if ('' === $root) {
+			return false;
 		}
 
-		return $out;
+		if (in_array(strtolower($root), $this->uncountable) ||
+			$this->isIrregular($this->irregular, $root) ||
+			$this->isIrregular(array_keys($this->singular), $root) ||
+			's' == $root[strlen($root) - 1]) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -240,25 +233,21 @@ class Inflector implements InflectorInterface {
 	 * @return bool
 	 */
 	public function isSingular(string $root): bool {
-		$out = false;
-
-		if ('' === $root) {
-			$out = true;
-		} elseif (in_array(strtolower($root), $this->uncountable)) {
-			$out = true;
-		} elseif (!$this->isAmbiguousPlural($root)) {
-			$out = $this->isIrregular($this->irregular, $root);
-
-			if (!$out) {
-				$out = $this->isIrregular(array_keys($this->plural), $root);
-			}
-
-			if (!$out && 's' !== $root[strlen($root) - 1]) {
-				$out = true;
-			}
+		if ('' === $root || in_array(strtolower($root), $this->uncountable)) {
+			return true;
 		}
 
-		return $out;
+		if ($this->isAmbiguousPlural($root)) {
+			return false;
+		}
+
+		if ($this->isIrregular($this->irregular, $root) ||
+			$this->isIrregular(array_keys($this->plural), $root) ||
+			's' !== $root[strlen($root) - 1]) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
