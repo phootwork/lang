@@ -13,6 +13,7 @@ use phootwork\lang\inflector\Inflector;
 use phootwork\lang\inflector\InflectorInterface;
 
 trait CheckerPart {
+	abstract protected function getString(): string;
 
 	/**
 	 * Checks if the string is empty
@@ -20,7 +21,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isEmpty(): bool {
-		return empty($this->string);
+		return empty($this->getString());
 	}
 
 	/**
@@ -29,7 +30,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isAlphanumeric(): bool {
-		return ctype_alnum($this->string);
+		return ctype_alnum($this->getString());
 	}
 
 	/**
@@ -38,7 +39,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isAlphabetic(): bool {
-		return ctype_alpha($this->string);
+		return ctype_alpha($this->getString());
 	}
 
 	/**
@@ -47,7 +48,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isNumeric(): bool {
-		return ctype_digit($this->string);
+		return ctype_digit($this->getString());
 	}
 
 	/**
@@ -56,7 +57,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isPunctuation(): bool {
-		return ctype_punct($this->string);
+		return ctype_punct($this->getString());
 	}
 
 	/**
@@ -65,7 +66,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isSpace(): bool {
-		return ctype_space($this->string);
+		return ctype_space($this->getString());
 	}
 
 	/**
@@ -82,7 +83,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isLowerCase(): bool {
-		return ctype_lower($this->string);
+		return ctype_lower($this->getString());
 	}
 
 	/**
@@ -99,7 +100,7 @@ trait CheckerPart {
 	 * @return bool
 	 */
 	public function isUpperCase(): bool {
-		return ctype_upper($this->string);
+		return ctype_upper($this->getString());
 	}
 
 	/**
@@ -113,7 +114,7 @@ trait CheckerPart {
 	public function isSingular(?InflectorInterface $pluralizer = null): bool {
 		$pluralizer = $pluralizer ?? new Inflector();
 
-		return $pluralizer->isSingular($this->string);
+		return $pluralizer->isSingular($this->getString());
 	}
 
 	/**
@@ -127,6 +128,6 @@ trait CheckerPart {
 	public function isPlural(?InflectorInterface $pluralizer = null): bool {
 		$pluralizer = $pluralizer ?? new Inflector();
 
-		return $pluralizer->isPlural($this->string);
+		return $pluralizer->isPlural($this->getString());
 	}
 }
