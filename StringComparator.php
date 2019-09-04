@@ -7,16 +7,13 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang;
 
 /**
  * String comparison
  */
 class StringComparator implements Comparator {
-	
-	public function compare($a, $b): int {
-		return strcmp($a, $b);
-	}
-
+    public function compare($a, $b): int {
+        return strcmp($a, $b);
+    }
 }

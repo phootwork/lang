@@ -7,7 +7,6 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 trait ReducePart {
@@ -19,9 +18,10 @@ trait ReducePart {
 	 *
 	 * @param callable $callback the callback function
 	 * @param mixed $fallback the default value, that will be returned when the list is empty
+	 *
 	 * @return mixed
 	 */
-	public function reduce(callable $callback, $fallback = null) {
-		return array_reduce($this->array, $callback, $fallback);
-	}
+    public function reduce(callable $callback, $fallback = null) {
+        return array_reduce($this->array, $callback, $fallback);
+    }
 }

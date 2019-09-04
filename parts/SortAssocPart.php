@@ -7,7 +7,6 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 use phootwork\lang\Comparator;
@@ -18,23 +17,25 @@ trait SortAssocPart {
 	 * Sorts the array and persisting key-value pairs
 	 *
 	 * @param Comparator|callable $cmp
-	 * @return $this
-	 */
-	public function sortAssoc($cmp = null): self {
-		$this->doSort($this->array, 'uasort', 'asort', $cmp);
-
-		return $this;
-	}
-
-	/**
-	 * Sorts the array by keys
 	 *
-	 * @param Comparator|callable $cmp
 	 * @return $this
 	 */
-	public function sortKeys($cmp = null): self {
-		$this->doSort($this->array, 'uksort', 'ksort', $cmp);
+    public function sortAssoc($cmp = null): self {
+        $this->doSort($this->array, 'uasort', 'asort', $cmp);
 
-		return $this;
-	}
+        return $this;
+    }
+
+    /**
+     * Sorts the array by keys
+     *
+     * @param Comparator|callable $cmp
+     *
+     * @return $this
+     */
+    public function sortKeys($cmp = null): self {
+        $this->doSort($this->array, 'uksort', 'ksort', $cmp);
+
+        return $this;
+    }
 }

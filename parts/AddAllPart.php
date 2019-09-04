@@ -7,24 +7,23 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 trait AddAllPart {
+    abstract public function add($element);
 
-	abstract public function add($element);
+    /**
+     * Adds all elements to the array
+     *
+     * @param array|\Iterator $array
+     *
+     * @return $this
+     */
+    public function addAll($array): self {
+        foreach ($array as $element) {
+            $this->add($element);
+        }
 
-	/**
-	 * Adds all elements to the array
-	 *
-	 * @param array|\Iterator $array
-	 * @return $this
-	 */
-	public function addAll($array): self {
-		foreach ($array as $element) {
-			$this->add($element);
-		}
-
-		return $this;
-	}
+        return $this;
+    }
 }

@@ -7,17 +7,15 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 trait PopPart {
-	/**
-	 * Pop the element off the end of array
-	 *
-	 * @return mixed the popped element
-	 */
-	public function pop() {
-		return array_pop($this->array);
-	}
+    /**
+     * Pop the element off the end of array
+     *
+     * @return mixed the popped element
+     */
+    public function pop() {
+        return array_pop($this->array);
+    }
 }
-

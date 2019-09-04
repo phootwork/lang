@@ -7,36 +7,37 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 trait RemovePart {
-	/**
-	 * Removes an element from the array
-	 *
-	 * @param mixed $element
-	 * @return $this
-	 */
-	public function remove($element): self {
-		$index = array_search($element, $this->array, true);
-		if ($index !== false) {
-			unset($this->array[$index]);
-		}
+    /**
+     * Removes an element from the array
+     *
+     * @param mixed $element
+     *
+     * @return $this
+     */
+    public function remove($element): self {
+        $index = array_search($element, $this->array, true);
+        if ($index !== false) {
+            unset($this->array[$index]);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Removes all elements from the array
-	 *
-	 * @param array|\Iterator $array
-	 * @return $this
-	 */
-	public function removeAll($array): self {
-		foreach ($array as $element) {
-			$this->remove($element);
-		}
+    /**
+     * Removes all elements from the array
+     *
+     * @param array|\Iterator $array
+     *
+     * @return $this
+     */
+    public function removeAll($array): self {
+        foreach ($array as $element) {
+            $this->remove($element);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 }

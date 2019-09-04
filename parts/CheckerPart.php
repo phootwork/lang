@@ -7,7 +7,6 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 use phootwork\lang\inflector\Inflector;
@@ -18,114 +17,116 @@ trait CheckerPart {
 	/**
 	 * Checks if the string is empty
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public function isEmpty(): bool {
-		return empty($this->string);
-	}
+    public function isEmpty(): bool {
+        return empty($this->string);
+    }
 
-	/**
-	 * Check if the string contains only alphanumeric characters.
-	 *
-	 * @return boolean
-	 */
-	public function isAlphanumeric(): bool {
-		return ctype_alnum($this->string);
-	}
+    /**
+     * Check if the string contains only alphanumeric characters.
+     *
+     * @return bool
+     */
+    public function isAlphanumeric(): bool {
+        return ctype_alnum($this->string);
+    }
 
-	/**
-	 * Check if the string contains only alphanumeric characters.
-	 *
-	 * @return boolean
-	 */
-	public function isAlphabetic(): bool {
-		return ctype_alpha($this->string);
-	}
+    /**
+     * Check if the string contains only alphanumeric characters.
+     *
+     * @return bool
+     */
+    public function isAlphabetic(): bool {
+        return ctype_alpha($this->string);
+    }
 
-	/**
-	 * Check if the string contains only numeric characters.
-	 *
-	 * @return boolean
-	 */
-	public function isNumeric(): bool {
-		return ctype_digit($this->string);
-	}
+    /**
+     * Check if the string contains only numeric characters.
+     *
+     * @return bool
+     */
+    public function isNumeric(): bool {
+        return ctype_digit($this->string);
+    }
 
-	/**
-	 * Check if the string contains only characters which are not whitespace or an alphanumeric.
-	 *
-	 * @return boolean
-	 */
-	public function isPunctuation(): bool {
-		return ctype_punct($this->string);
-	}
+    /**
+     * Check if the string contains only characters which are not whitespace or an alphanumeric.
+     *
+     * @return bool
+     */
+    public function isPunctuation(): bool {
+        return ctype_punct($this->string);
+    }
 
-	/**
-	 * Check if the string contains only space characters.
-	 *
-	 * @return boolean
-	 */
-	public function isSpace(): bool {
-		return ctype_space($this->string);
-	}
+    /**
+     * Check if the string contains only space characters.
+     *
+     * @return bool
+     */
+    public function isSpace(): bool {
+        return ctype_space($this->string);
+    }
 
-	/**
-	 * Check if the string contains only lower case characters.
-	 *
-	 * Spaces are considered non-lowercase characters, so lowercase strings with multiple words, separated by spaces,
-	 * return false. E.g.:
-	 *
-	 * <code>
-	 * $text = new Text('lowercase multi words string');<br>
-	 * var_dump($text->isLowercase()); // false
-	 * </code>
-	 *
-	 * @return boolean
-	 */
-	public function isLowerCase(): bool {
-		return ctype_lower($this->string);
-	}
+    /**
+     * Check if the string contains only lower case characters.
+     *
+     * Spaces are considered non-lowercase characters, so lowercase strings with multiple words, separated by spaces,
+     * return false. E.g.:
+     *
+     * <code>
+     * $text = new Text('lowercase multi words string');<br>
+     * var_dump($text->isLowercase()); // false
+     * </code>
+     *
+     * @return bool
+     */
+    public function isLowerCase(): bool {
+        return ctype_lower($this->string);
+    }
 
-	/**
-	 * Check if the string contains only upper case characters.
-	 *
-	 * Spaces are considered non-uppercase characters, so uppercase strings with multiple words, separated by spaces,
-	 * return false. E.g.:
-	 *
-	 * <code>
-	 * $text = new Text('UPPERCASE MULTI WORDS STRING'); <br>
-	 * var_dump($text->isUppercase()); // false
-	 * </code>
-	 *
-	 * @return boolean
-	 */
-	public function isUpperCase(): bool {
-		return ctype_upper($this->string);
-	}
+    /**
+     * Check if the string contains only upper case characters.
+     *
+     * Spaces are considered non-uppercase characters, so uppercase strings with multiple words, separated by spaces,
+     * return false. E.g.:
+     *
+     * <code>
+     * $text = new Text('UPPERCASE MULTI WORDS STRING'); <br>
+     * var_dump($text->isUppercase()); // false
+     * </code>
+     *
+     * @return bool
+     */
+    public function isUpperCase(): bool {
+        return ctype_upper($this->string);
+    }
 
-	/**
-	 * Check if a string is singular form.
-	 *
-	 * @param InflectorInterface $pluralizer
-	 *        	A custom pluralizer. Default is the Inflector
-	 * @return boolean
-	 */
-	public function isSingular(?InflectorInterface $pluralizer = null): bool {
-		$pluralizer = $pluralizer ?? new Inflector();
+    /**
+     * Check if a string is singular form.
+     *
+     * @param InflectorInterface $pluralizer
+     *        	A custom pluralizer. Default is the Inflector
+     *
+     * @return bool
+     */
+    public function isSingular(?InflectorInterface $pluralizer = null): bool {
+        $pluralizer = $pluralizer ?? new Inflector();
 
-		return $pluralizer->isSingular($this->string);
-	}
+        return $pluralizer->isSingular($this->string);
+    }
 
-	/**
-	 * Check if a string is plural form.
-	 *
-	 * @param InflectorInterface $pluralizer
-	 *        	A custom pluralizer. Default is the Inflector
-	 * @return boolean
-	 */
-	public function isPlural(?InflectorInterface $pluralizer = null): bool {
-		$pluralizer = $pluralizer ?? new Inflector();
+    /**
+     * Check if a string is plural form.
+     *
+     * @param InflectorInterface $pluralizer
+     *        	A custom pluralizer. Default is the Inflector
+     *
+     * @return bool
+     */
+    public function isPlural(?InflectorInterface $pluralizer = null): bool {
+        $pluralizer = $pluralizer ?? new Inflector();
 
-		return $pluralizer->isPlural($this->string);
-	}
+        return $pluralizer->isPlural($this->string);
+    }
 }
