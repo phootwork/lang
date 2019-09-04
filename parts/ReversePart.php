@@ -7,7 +7,6 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 trait ReversePart {
@@ -17,8 +16,9 @@ trait ReversePart {
 	 *
 	 * @return $this
 	 */
-	public function reverse(): self {
-		$this->array = array_reverse($this->array);
-		return $this;
-	}
+    public function reverse(): self {
+        $this->array = array_reverse($this->array);
+
+        return $this;
+    }
 }

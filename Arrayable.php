@@ -7,16 +7,14 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang;
 
 interface Arrayable {
-	
+
 	/**
 	 * Array representation of the object
 	 * 
 	 * @return array
 	 */
-	public function toArray(): array;
-	
+    public function toArray(): array;
 }

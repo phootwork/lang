@@ -7,7 +7,6 @@
  * @license MIT License
  * @copyright Thomas Gossmann
  */
-
 namespace phootwork\lang\parts;
 
 trait EachPart {
@@ -17,9 +16,9 @@ trait EachPart {
 	 *
 	 * @param callable $callback
 	 */
-	public function each(callable $callback): void {
-		foreach ($this->array as $item) {
-			$callback($item);
-		}
-	}
+    public function each(callable $callback): void {
+        foreach ($this->array as $item) {
+            $callback($item);
+        }
+    }
 }
