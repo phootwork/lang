@@ -16,9 +16,9 @@ trait ReversePart {
 	 *
 	 * @return $this
 	 */
-    public function reverse(): self {
-        $this->array = array_reverse($this->array);
+	public function reverse(): self {
+		$this->array = array_reverse($this->array);
 
-        return $this;
-    }
+		return $this;
+	}
 }

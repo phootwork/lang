@@ -20,10 +20,10 @@ namespace phootwork\lang\inflector;
  * @author Cristiano Cinotti
  */
 class Inflector implements InflectorInterface {
-    /**
-     * @var array
-     */
-    protected $plural = [
+	/**
+	 * @var array
+	 */
+	protected $plural = [
 		'(ind|vert)ex' => '\1ices',
 		'(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us' => '\1i',
 		'(buffal|tomat)o' => '\1oes',
@@ -74,10 +74,10 @@ class Inflector implements InflectorInterface {
 		'life' => 'lives'
 	];
 
-    /**
-     * @var array
-     */
-    protected $irregular = [
+	/**
+	 * @var array
+	 */
+	protected $irregular = [
 		'matrix' => 'matrices',
 		'leaf' => 'leaves',
 		'loaf' => 'loaves',
@@ -99,10 +99,10 @@ class Inflector implements InflectorInterface {
 		'alias' => 'aliases',
 	];
 
-    /**
-     * @var array
-     */
-    protected $uncountable = [
+	/**
+	 * @var array
+	 */
+	protected $uncountable = [
 		'sheep',
 		'fish',
 		'deer',
@@ -116,221 +116,221 @@ class Inflector implements InflectorInterface {
 		'people',
 	];
 
-    /** @var array */
-    protected $singular;
+	/** @var array */
+	protected $singular;
 
-    /**
-     * Array of words that could be ambiguously interpreted. Eg:
-     * `isPlural` method can't recognize 'menus' as plural, because it considers 'menus' as the
-     * singular of 'menuses'.
-     *
-     * @var array
-     */
-    protected $ambiguous = [
+	/**
+	 * Array of words that could be ambiguously interpreted. Eg:
+	 * `isPlural` method can't recognize 'menus' as plural, because it considers 'menus' as the
+	 * singular of 'menuses'.
+	 *
+	 * @var array
+	 */
+	protected $ambiguous = [
 		'menu' => 'menus'
 	];
 
-    public function __construct() {
-        // Create the $singular array
-        $this->singular = array_flip($this->plural);
-        $this->singular = array_slice($this->singular, 3);
+	public function __construct() {
+		// Create the $singular array
+		$this->singular = array_flip($this->plural);
+		$this->singular = array_slice($this->singular, 3);
 
-        $reg = [
+		$reg = [
 			'(ind|vert)ices' => '\1ex',
 			'(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)i' => '\1us',
 			'(buffal|tomat)oes' => '\1o'
 		];
 
-        $this->singular = array_merge($reg, $this->singular);
+		$this->singular = array_merge($reg, $this->singular);
 
-        // We have an ambiguity: -xes is the plural form of -x or -xis. By now, we choose -x. Words with -xis suffix
-        // should be added to the $ambiguous array.
-        $this->singular['xes'] = 'x';
-    }
+		// We have an ambiguity: -xes is the plural form of -x or -xis. By now, we choose -x. Words with -xis suffix
+		// should be added to the $ambiguous array.
+		$this->singular['xes'] = 'x';
+	}
 
-    /**
-     * Generate a plural name based on the passed in root.
-     *
-     * @param  string $root The root that needs to be pluralized (e.g. Author)
-     *
-     * @throws \InvalidArgumentException If the parameter is not a string.
-     *
-     * @return string The plural form of $root (e.g. Authors).
-     */
-    public function getPluralForm(string $root): string {
-        $pluralForm = $root;
+	/**
+	 * Generate a plural name based on the passed in root.
+	 *
+	 * @param  string $root The root that needs to be pluralized (e.g. Author)
+	 *
+	 * @throws \InvalidArgumentException If the parameter is not a string.
+	 *
+	 * @return string The plural form of $root (e.g. Authors).
+	 */
+	public function getPluralForm(string $root): string {
+		$pluralForm = $root;
 
-        if (!in_array(strtolower($root), $this->uncountable)) {
-            // This check must be run before `checkIrregularForm` call
-            if (!$this->isAmbiguousPlural($root)) {
-                if (null !== $replacement = $this->checkIrregularForm($root, $this->irregular)) {
-                    $pluralForm = $replacement;
-                } elseif (null !== $replacement = $this->checkIrregularSuffix($root, $this->plural)) {
-                    $pluralForm = $replacement;
-                } elseif (!$this->isPlural($root)) {
-                    // fallback to naive pluralization
-                    $pluralForm = $root . 's';
-                }
-            }
-        }
+		if (!in_array(strtolower($root), $this->uncountable)) {
+			// This check must be run before `checkIrregularForm` call
+			if (!$this->isAmbiguousPlural($root)) {
+				if (null !== $replacement = $this->checkIrregularForm($root, $this->irregular)) {
+					$pluralForm = $replacement;
+				} elseif (null !== $replacement = $this->checkIrregularSuffix($root, $this->plural)) {
+					$pluralForm = $replacement;
+				} elseif (!$this->isPlural($root)) {
+					// fallback to naive pluralization
+					$pluralForm = $root . 's';
+				}
+			}
+		}
 
-        return $pluralForm;
-    }
+		return $pluralForm;
+	}
 
-    /**
-     * Generate a singular name based on the passed in root.
-     *
-     * @param  string $root The root that needs to be pluralized (e.g. Author)
-     *
-     * @throws \InvalidArgumentException If the parameter is not a string.
-     *
-     * @return string The singular form of $root (e.g. Authors).
-     */
-    public function getSingularForm(string $root): string {
-        $singularForm = $root;
+	/**
+	 * Generate a singular name based on the passed in root.
+	 *
+	 * @param  string $root The root that needs to be pluralized (e.g. Author)
+	 *
+	 * @throws \InvalidArgumentException If the parameter is not a string.
+	 *
+	 * @return string The singular form of $root (e.g. Authors).
+	 */
+	public function getSingularForm(string $root): string {
+		$singularForm = $root;
 
-        if (!in_array(strtolower($root), $this->uncountable)) {
-            if (null !== $replacement = $this->checkIrregularForm($root, array_flip($this->irregular))) {
-                $singularForm = $replacement;
-            } elseif (null !== $replacement = $this->checkIrregularSuffix($root, $this->singular)) {
-                $singularForm = $replacement;
-            } elseif (!$this->isSingular($root)) {
-                // fallback to naive singularization
-                return substr($root, 0, -1);
-            }
-        }
+		if (!in_array(strtolower($root), $this->uncountable)) {
+			if (null !== $replacement = $this->checkIrregularForm($root, array_flip($this->irregular))) {
+				$singularForm = $replacement;
+			} elseif (null !== $replacement = $this->checkIrregularSuffix($root, $this->singular)) {
+				$singularForm = $replacement;
+			} elseif (!$this->isSingular($root)) {
+				// fallback to naive singularization
+				return substr($root, 0, -1);
+			}
+		}
 
-        return $singularForm;
-    }
+		return $singularForm;
+	}
 
-    /**
-     * Check if $root word is plural.
-     *
-     * @param string $root
-     *
-     * @return bool
-     */
-    public function isPlural(string $root): bool {
-        $out = false;
+	/**
+	 * Check if $root word is plural.
+	 *
+	 * @param string $root
+	 *
+	 * @return bool
+	 */
+	public function isPlural(string $root): bool {
+		$out = false;
 
-        if ('' !== $root) {
-            if (in_array(strtolower($root), $this->uncountable)) {
-                $out = true;
-            } else {
-                $out = $this->isIrregular($this->irregular, $root);
+		if ('' !== $root) {
+			if (in_array(strtolower($root), $this->uncountable)) {
+				$out = true;
+			} else {
+				$out = $this->isIrregular($this->irregular, $root);
 
-                if (!$out) {
-                    $out = $this->isIrregular(array_keys($this->singular), $root);
-                }
+				if (!$out) {
+					$out = $this->isIrregular(array_keys($this->singular), $root);
+				}
 
-                if (!$out && 's' == $root[strlen($root) - 1]) {
-                    $out = true;
-                }
-            }
-        }
+				if (!$out && 's' == $root[strlen($root) - 1]) {
+					$out = true;
+				}
+			}
+		}
 
-        return $out;
-    }
+		return $out;
+	}
 
-    /**
-     * Check if $root word is singular.
-     *
-     * @param $root
-     *
-     * @return bool
-     */
-    public function isSingular(string $root): bool {
-        $out = false;
+	/**
+	 * Check if $root word is singular.
+	 *
+	 * @param $root
+	 *
+	 * @return bool
+	 */
+	public function isSingular(string $root): bool {
+		$out = false;
 
-        if ('' === $root) {
-            $out = true;
-        } elseif (in_array(strtolower($root), $this->uncountable)) {
-            $out = true;
-        } elseif (!$this->isAmbiguousPlural($root)) {
-            $out = $this->isIrregular($this->irregular, $root);
+		if ('' === $root) {
+			$out = true;
+		} elseif (in_array(strtolower($root), $this->uncountable)) {
+			$out = true;
+		} elseif (!$this->isAmbiguousPlural($root)) {
+			$out = $this->isIrregular($this->irregular, $root);
 
-            if (!$out) {
-                $out = $this->isIrregular(array_keys($this->plural), $root);
-            }
+			if (!$out) {
+				$out = $this->isIrregular(array_keys($this->plural), $root);
+			}
 
-            if (!$out && 's' !== $root[strlen($root) - 1]) {
-                $out = true;
-            }
-        }
+			if (!$out && 's' !== $root[strlen($root) - 1]) {
+				$out = true;
+			}
+		}
 
-        return $out;
-    }
+		return $out;
+	}
 
-    /**
-     * Pluralize/Singularize irregular forms.
-     *
-     * @param string $root The string to pluralize/singularize
-     * @param array $irregular Array of irregular forms
-     *
-     * @return null|string
-     */
-    private function checkIrregularForm(string $root, array $irregular): ?string {
-        foreach ($irregular as $pattern => $result) {
-            $searchPattern = '/' . $pattern . '$/i';
-            if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
-                // look at the first char and see if it's upper case
-                // I know it won't handle more than one upper case char here (but I'm OK with that)
-                if (preg_match('/^[A-Z]/', $root)) {
-                    $replacement = ucfirst($replacement);
-                }
+	/**
+	 * Pluralize/Singularize irregular forms.
+	 *
+	 * @param string $root The string to pluralize/singularize
+	 * @param array $irregular Array of irregular forms
+	 *
+	 * @return null|string
+	 */
+	private function checkIrregularForm(string $root, array $irregular): ?string {
+		foreach ($irregular as $pattern => $result) {
+			$searchPattern = '/' . $pattern . '$/i';
+			if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
+				// look at the first char and see if it's upper case
+				// I know it won't handle more than one upper case char here (but I'm OK with that)
+				if (preg_match('/^[A-Z]/', $root)) {
+					$replacement = ucfirst($replacement);
+				}
 
-                return $replacement;
-            }
-        }
+				return $replacement;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * @param string $root
-     * @param array $irregular Array of irregular suffixes
-     *
-     * @return null|string
-     */
-    private function checkIrregularSuffix(string $root, array $irregular): ?string {
-        foreach ($irregular as $pattern => $result) {
-            $searchPattern = '/' . $pattern . '$/i';
-            if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
-                return $replacement;
-            }
-        }
+	/**
+	 * @param string $root
+	 * @param array $irregular Array of irregular suffixes
+	 *
+	 * @return null|string
+	 */
+	private function checkIrregularSuffix(string $root, array $irregular): ?string {
+		foreach ($irregular as $pattern => $result) {
+			$searchPattern = '/' . $pattern . '$/i';
+			if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
+				return $replacement;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * @param $root
-     *
-     * @return bool
-     */
-    private function isAmbiguousPlural(string $root): bool {
-        foreach ($this->ambiguous as $pattern) {
-            if (preg_match('/' . $pattern . '$/i', $root)) {
-                return true;
-            }
-        }
+	/**
+	 * @param $root
+	 *
+	 * @return bool
+	 */
+	private function isAmbiguousPlural(string $root): bool {
+		foreach ($this->ambiguous as $pattern) {
+			if (preg_match('/' . $pattern . '$/i', $root)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * @param array $irregular
-     * @param string $root
-     *
-     * @return bool
-     */
-    private function isIrregular(array $irregular, string $root): bool {
-        foreach ($irregular as $pattern) {
-            if (preg_match('/' . $pattern . '$/i', $root)) {
-                return true;
-            }
-        }
+	/**
+	 * @param array $irregular
+	 * @param string $root
+	 *
+	 * @return bool
+	 */
+	private function isIrregular(array $irregular, string $root): bool {
+		foreach ($irregular as $pattern) {
+			if (preg_match('/' . $pattern . '$/i', $root)) {
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

@@ -26,12 +26,12 @@ class ComparableComparator implements Comparator {
 	 *
 	 * @return int
 	 */
-    public function compare($a, $b): int {
-        if (! $a instanceof Comparable) {
-            throw new \InvalidArgumentException(
+	public function compare($a, $b): int {
+		if (! $a instanceof Comparable) {
+			throw new \InvalidArgumentException(
 				"ComparableComparator can compare only objects implementing phootwork\lang\Comparable interface");
-        }
+		}
 
-        return $a->compareTo($b);
-    }
+		return $a->compareTo($b);
+	}
 }

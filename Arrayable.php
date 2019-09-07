@@ -16,5 +16,5 @@ interface Arrayable {
 	 * 
 	 * @return array
 	 */
-    public function toArray(): array;
+	public function toArray(): array;
 }

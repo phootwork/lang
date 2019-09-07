@@ -18,11 +18,11 @@ trait AccessorsPart {
 	 *
 	 * @return mixed
 	 */
-    public function get(int $index) {
-        if (isset($this->array[$index])) {
-            return $this->array[$index];
-        }
+	public function get(int $index) {
+		if (isset($this->array[$index])) {
+			return $this->array[$index];
+		}
 
-        return null;
-    }
+		return null;
+	}
 }
