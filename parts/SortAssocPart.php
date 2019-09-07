@@ -20,22 +20,22 @@ trait SortAssocPart {
 	 *
 	 * @return $this
 	 */
-    public function sortAssoc($cmp = null): self {
-        $this->doSort($this->array, 'uasort', 'asort', $cmp);
+	public function sortAssoc($cmp = null): self {
+		$this->doSort($this->array, 'uasort', 'asort', $cmp);
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /**
-     * Sorts the array by keys
-     *
-     * @param Comparator|callable $cmp
-     *
-     * @return $this
-     */
-    public function sortKeys($cmp = null): self {
-        $this->doSort($this->array, 'uksort', 'ksort', $cmp);
+	/**
+	 * Sorts the array by keys
+	 *
+	 * @param Comparator|callable $cmp
+	 *
+	 * @return $this
+	 */
+	public function sortKeys($cmp = null): self {
+		$this->doSort($this->array, 'uksort', 'ksort', $cmp);
 
-        return $this;
-    }
+		return $this;
+	}
 }

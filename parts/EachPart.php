@@ -16,9 +16,9 @@ trait EachPart {
 	 *
 	 * @param callable $callback
 	 */
-    public function each(callable $callback): void {
-        foreach ($this->array as $item) {
-            $callback($item);
-        }
-    }
+	public function each(callable $callback): void {
+		foreach ($this->array as $item) {
+			$callback($item);
+		}
+	}
 }
