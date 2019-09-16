@@ -10,6 +10,9 @@
 namespace phootwork\lang\parts;
 
 trait IndexFindersPart {
+	abstract public function find(...$arguments);
+
+	abstract public function findLast(...$arguments);
 
 	/**
 	 * Returns the index of the given element or false if the element can't be found
@@ -21,7 +24,7 @@ trait IndexFindersPart {
 	public function indexOf($element): ?int {
 		$out = array_search($element, $this->array, true);
 
-		return false === $out ? null : $out;
+		return false === $out ? null : (int) $out;
 	}
 
 	/**
