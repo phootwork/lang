@@ -164,14 +164,12 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	/**
 	 * Merges in other values
 	 *
-	 * @param mixed ...$toMerges Variable list of arrays to merge.
+	 * @param mixed ...$toMerge Variable list of arrays to merge.
 	 *
 	 * @return ArrayObject $this
 	 */
-	public function merge(...$toMerges): self {
-		foreach ($toMerges as $toMerge) {
-			$this->array = array_merge($this->array, $toMerge);
-		}
+	public function merge(...$toMerge): self {
+		$this->array = array_merge($this->array, ...$toMerge);
 
 		return $this;
 	}
@@ -179,14 +177,12 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	/**
 	 * Merges in other values, recursively
 	 *
-	 * @param mixed ...$toMerges Variable list of arrays to merge.
+	 * @param mixed ...$toMerge Variable list of arrays to merge.
 	 *
 	 * @return ArrayObject $this
 	 */
-	public function mergeRecursive(...$toMerges): self {
-		foreach ($toMerges as $toMerge) {
-			$this->array = array_merge_recursive($this->array, $toMerge);
-		}
+	public function mergeRecursive(...$toMerge): self {
+		$this->array = array_merge_recursive($this->array, ...$toMerge);
 
 		return $this;
 	}
