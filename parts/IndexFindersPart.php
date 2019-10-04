@@ -15,16 +15,16 @@ trait IndexFindersPart {
 	abstract public function findLast(...$arguments);
 
 	/**
-	 * Returns the index of the given element or false if the element can't be found
+	 * Returns the index of the given element or null if the element can't be found
 	 *
 	 * @param mixed $element
 	 *
-	 * @return int the index for the given element
+	 * @return int|string|null the index for the given element
 	 */
-	public function indexOf($element): ?int {
+	public function indexOf($element) {
 		$out = array_search($element, $this->array, true);
 
-		return false === $out ? null : (int) $out;
+		return $out === false ? null : $out;
 	}
 
 	/**
@@ -42,9 +42,9 @@ trait IndexFindersPart {
 	 *
 	 * @param array $arguments
 	 *
-	 * @return int|null the index or null if it hasn't been found
+	 * @return int|string|null the index or null if it hasn't been found
 	 */
-	public function findLastIndex(...$arguments): ?int {
+	public function findLastIndex(...$arguments) {
 		$index = count($arguments) === 1 ?
 			$this->findLast($arguments[0]) : $this->findLast($arguments[0], $arguments[1]);
 
@@ -66,9 +66,9 @@ trait IndexFindersPart {
 	 *
 	 * @param array $arguments
 	 *
-	 * @return int|null the index or null if it hasn't been found
+	 * @return int|string|null the index or null if it hasn't been found
 	 */
-	public function findIndex(...$arguments): ?int {
+	public function findIndex(...$arguments) {
 		$index = count($arguments) === 1 ? $this->find($arguments[0]) : $this->find($arguments[0], $arguments[1]);
 
 		return $this->indexOf($index);

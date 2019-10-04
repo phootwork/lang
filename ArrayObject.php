@@ -10,10 +10,10 @@
 namespace phootwork\lang;
 
 use phootwork\lang\parts\AccessorsPart;
-use phootwork\lang\parts\AddAllPart;
 use phootwork\lang\parts\AddPart;
 use phootwork\lang\parts\EachPart;
 use phootwork\lang\parts\IndexFindersPart;
+use phootwork\lang\parts\InsertPart;
 use phootwork\lang\parts\PopPart;
 use phootwork\lang\parts\ReducePart;
 use phootwork\lang\parts\RemovePart;
@@ -22,10 +22,10 @@ use phootwork\lang\parts\SortAssocPart;
 
 class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \IteratorAggregate, \Serializable, Arrayable {
 	use AccessorsPart;
-	use AddAllPart;
 	use AddPart;
 	use EachPart;
 	use IndexFindersPart;
+	use InsertPart;
 	use PopPart;
 	use ReducePart;
 	use RemovePart;
