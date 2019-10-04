@@ -11,31 +11,18 @@ namespace phootwork\lang\parts;
 
 trait RemovePart {
 	/**
-	 * Removes an element from the array
+	 * Removes one or more elements from the array
 	 *
-	 * @param mixed $element
-	 *
-	 * @return $this
-	 */
-	public function remove($element): self {
-		$index = array_search($element, $this->array, true);
-		if ($index !== false) {
-			unset($this->array[$index]);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Removes all elements from the array
-	 *
-	 * @param array|\Iterator $array
+	 * @param mixed ...$elements
 	 *
 	 * @return $this
 	 */
-	public function removeAll($array): self {
-		foreach ($array as $element) {
-			$this->remove($element);
+	public function remove(...$elements): self {
+		foreach ($elements as $element) {
+			$index = array_search($element, $this->array, true);
+			if ($index !== false) {
+				unset($this->array[$index]);
+			}
 		}
 
 		return $this;

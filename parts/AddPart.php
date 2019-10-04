@@ -11,18 +11,15 @@ namespace phootwork\lang\parts;
 
 trait AddPart {
 	/**
-	 * Adds an element to that array
+	 * Adds one or more elements to that array
 	 *
-	 * @param mixed $element
-	 * @param int $index
+	 * @param mixed ...$elements
 	 *
 	 * @return $this
 	 */
-	public function add($element, ?int $index = null): self {
-		if ($index === null) {
+	public function add(...$elements): self {
+		foreach ($elements as $element) {
 			$this->array[count($this->array)] = $element;
-		} else {
-			array_splice($this->array, $index, 0, $element);
 		}
 
 		return $this;

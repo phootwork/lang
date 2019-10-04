@@ -14,11 +14,11 @@ trait AccessorsPart {
 	/**
 	 * Returns the element at the given index (or null if the index isn't present)
 	 *
-	 * @param int $index
+	 * @param mixed $index
 	 *
 	 * @return mixed
 	 */
-	public function get(int $index) {
+	public function get($index) {
 		if (isset($this->array[$index])) {
 			return $this->array[$index];
 		}
