@@ -15,7 +15,7 @@ namespace phootwork\lang;
  *
  * @author Cristiano Cinotti
  */
-abstract class AbstractArray {
+abstract class AbstractArray implements \Countable {
 
 	/** @var array */
 	protected $array = [];
