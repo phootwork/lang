@@ -14,6 +14,8 @@ namespace phootwork\lang;
  * `phootwork\lang\ArrayObject` and `phootwork\class\AbstractCollection`
  *
  * @author Cristiano Cinotti
+ *
+ * @psalm-consistent-constructor
  */
 abstract class AbstractArray implements \Countable {
 

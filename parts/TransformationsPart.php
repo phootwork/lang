@@ -189,7 +189,6 @@ trait TransformationsPart {
 	 * @psalm-suppress InvalidArgument argument 2 of preg_replace_callback CAN BE closure, too (see https://www.php.net/manual/en/function.preg-replace-callback.php)
 	 */
 	public function toStudlyCase(): Text {
-		/** @var Text $input */
 		$input = $this->trim('-_');
 		if ($input->isEmpty()) {
 			return $input;
@@ -197,7 +196,7 @@ trait TransformationsPart {
 		$encoding = $this->encoding;
 
 		return Text::create(preg_replace_callback('/([A-Z-_][a-z0-9]+)/', function (array $matches) use ($encoding) {
-			return Text::create($matches[0], $encoding)->replace(['-', '_'], '')->toUpperCaseFirst();
+			return Text::create($matches[0], $encoding)->replace(['-', '_'], '')->toUpperCaseFirst()->toString();
 		}, $input->toString()), $this->encoding)->toUpperCaseFirst();
 	}
 
