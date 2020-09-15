@@ -185,19 +185,18 @@ trait TransformationsPart {
 	 * </code>
 	 *
 	 * @return Text
-	 *
-	 * @psalm-suppress InvalidArgument argument 2 of preg_replace_callback CAN BE closure, too (see https://www.php.net/manual/en/function.preg-replace-callback.php)
 	 */
 	public function toStudlyCase(): Text {
 		$input = $this->trim('-_');
 		if ($input->isEmpty()) {
 			return $input;
 		}
+		$normString = preg_replace('/\s+/', ' ', $input->toString());
 		$encoding = $this->encoding;
 
-		return Text::create(preg_replace_callback('/([A-Z-_][a-z0-9]+)/', function (array $matches) use ($encoding) {
-			return Text::create($matches[0], $encoding)->replace(['-', '_'], '')->toUpperCaseFirst()->toString();
-		}, $input->toString()), $this->encoding)->toUpperCaseFirst();
+		return Text::create(preg_replace_callback('/([A-Z-_\s][a-z0-9]+)/', function (array $matches) use ($encoding) {
+			return ucfirst(str_replace(['-', '_', ' '], '', $matches[0]));
+		}, $normString), $encoding)->toUpperCaseFirst();
 	}
 
 	/**
@@ -214,11 +213,10 @@ trait TransformationsPart {
 	 * @return Text
 	 */
 	public function toKebabCase(): Text {
-		if ($this->contains('_')) {
-			return $this->replace('_', '-');
-		}
+		$input = $this->trim('-_');
+		$normString = str_replace([' ', '_'], '-', preg_replace('/\s+/', ' ', $input->toString()));
 
-		return new Text(mb_strtolower(preg_replace('/([a-z0-9])([A-Z])/', '$1-$2', $this->getString())), $this->encoding);
+		return new Text(mb_strtolower(preg_replace('/([a-z0-9])([A-Z])/', '$1-$2', $normString)), $this->encoding);
 	}
 
 	/**
