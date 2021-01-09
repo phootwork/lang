@@ -20,7 +20,7 @@ namespace phootwork\lang;
 abstract class AbstractArray implements \Countable {
 
 	/** @var array */
-	protected $array = [];
+	protected array $array = [];
 
 	abstract public function __construct(array $contents = []);
 
@@ -54,7 +54,7 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @return bool
 	 */
-	public function contains($element): bool {
+	public function contains(mixed $element): bool {
 		return in_array($element, $this->array, true);
 	}
 
@@ -84,7 +84,7 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @return mixed|null the found element or null if it hasn't been found
 	 */
-	public function find(...$arguments) {
+	public function find(mixed ...$arguments) {
 		foreach ($this->array as $element) {
 			$return = count($arguments) === 1 ? $arguments[0]($element) : $arguments[1]($element, $arguments[0]);
 
@@ -113,7 +113,7 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @return mixed|null the found element or null if it hasn't been found
 	 */
-	public function findLast(...$arguments) {
+	public function findLast(mixed ...$arguments) {
 		$reverse = array_reverse($this->array, true);
 		foreach ($reverse as $element) {
 			$return = count($arguments) === 1 ? $arguments[0]($element) : $arguments[1]($element, $arguments[0]);
@@ -143,7 +143,7 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @return mixed|null the found element or null if it hasn't been found
 	 */
-	public function findAll(...$arguments) {
+	public function findAll(mixed ...$arguments) {
 		$array = [];
 		foreach ($this->array as $k => $element) {
 			$return = count($arguments) === 1 ? $arguments[0]($element) : $arguments[1]($element, $arguments[0]);
@@ -173,7 +173,7 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @return bool
 	 */
-	public function search(...$arguments): bool {
+	public function search(mixed ...$arguments): bool {
 		foreach ($this->array as $element) {
 			$return = count($arguments) === 1 ? $arguments[0]($element) : $arguments[1]($element, $arguments[0]);
 
@@ -197,11 +197,11 @@ abstract class AbstractArray implements \Countable {
 	/**
 	 * Sorts the array
 	 *
-	 * @param Comparator|callable $cmp
+	 * @param Comparator|callable|null $cmp
 	 *
 	 * @return $this
 	 */
-	public function sort($cmp = null): self {
+	public function sort(Comparator | callable $cmp = null): self {
 		$this->doSort($this->array, 'usort', 'sort', $cmp);
 
 		return $this;
@@ -210,24 +210,18 @@ abstract class AbstractArray implements \Countable {
 	/**
 	 * Internal sort function
 	 *
-	 * @param array $array the array on which is operated on
-	 * @param callable $usort the sort function for user passed $cmd
-	 * @param callable $sort the default sort function
-	 * @param Comparator|callable $cmp the compare function
+	 * @param array                    $array the array on which is operated on
+	 * @param callable                 $usort the sort function for user passed $cmd
+	 * @param callable                 $sort  the default sort function
+	 * @param Comparator|callable|null $cmp   the compare function
 	 */
-	protected function doSort(array &$array, callable $usort, callable $sort, $cmp = null): void {
+	protected function doSort(array &$array, callable $usort, callable $sort, Comparator | callable $cmp = null): void {
 		if (is_callable($cmp)) {
 			$usort($array, $cmp);
 		} elseif ($cmp instanceof Comparator) {
 			$usort(
 				$array,
-				/**
-				 * @param mixed $a
-				 * @param mixed $b
-				 *
-				 * @return int
-				 */
-				function ($a, $b) use ($cmp): int {
+				function (mixed $a, mixed $b) use ($cmp): int {
 					return $cmp->compare($a, $b);
 				}
 			);

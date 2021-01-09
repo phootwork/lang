@@ -14,6 +14,7 @@ use phootwork\lang\ArrayObject;
 use phootwork\lang\inflector\Inflector;
 use phootwork\lang\inflector\InflectorInterface;
 use phootwork\lang\Text;
+use Stringable;
 
 /**
  * Text transformation methods
@@ -55,25 +56,25 @@ trait TransformationsPart {
 	abstract public function trim(string $characters): Text;
 
 	/**
-	 * @param string|Text $text
+	 * @param string|Stringable $text
 	 *
 	 * @return bool
 	 */
-	abstract public function contains($text): bool;
+	abstract public function contains(Stringable | string $text): bool;
 
 	/**
 	 * Replace all occurrences of the search string with the replacement string
 	 *
-	 * @param Arrayable|Text|array|string $search
-	 * 		The value being searched for, otherwise known as the needle. An array may be used
-	 * 		to designate multiple needles.
-	 * @param Arrayable|Text|array|string $replace
-	 * 		The replacement value that replaces found search values. An array may be used to
-	 * 		designate multiple replacements.
+	 * @param Arrayable|Stringable|array|string $search
+	 *        The value being searched for, otherwise known as the needle. An array may be used
+	 *        to designate multiple needles.
+	 * @param Arrayable|Stringable|array|string $replace
+	 *        The replacement value that replaces found search values. An array may be used to
+	 *        designate multiple replacements.
 	 *
 	 * @return Text
 	 */
-	abstract public function replace($search, $replace): Text;
+	abstract public function replace(Arrayable | Stringable | array | string $search, Arrayable | Stringable | array | string $replace): Text;
 
 	/**
 	 * Transforms the string to lowercase

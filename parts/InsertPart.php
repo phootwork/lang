@@ -10,7 +10,7 @@
 namespace phootwork\lang\parts;
 
 trait InsertPart {
-	abstract public function add(...$elements);
+	abstract public function add(mixed ...$elements);
 
 	/**
 	 * Insert one element at the given index
@@ -20,18 +20,13 @@ trait InsertPart {
 	 *
 	 * @return $this
 	 */
-	public function insert($element, $index): self {
+	public function insert(mixed $element, int | string | null $index): self {
 		if (null === $index) {
 			return $this->add($element);
 		}
 
-		if (is_int($index)) {
-			array_splice($this->array, $index, 0, [$element]);
-		}
-
-		if (is_string($index)) {
-			$this->array[$index] = $element;
-		}
+		is_int($index) ? array_splice($this->array, $index, 0, [$element])
+			: $this->array[$index] = $element;
 
 		return $this;
 	}

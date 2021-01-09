@@ -9,6 +9,7 @@
  */
 namespace phootwork\lang\parts;
 
+use InvalidArgumentException;
 use phootwork\lang\ArrayObject;
 use phootwork\lang\Text;
 
@@ -27,7 +28,7 @@ trait ArrayConversionsPart {
 	 * @param int    $value
 	 * @param string $name
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws InvalidArgumentException
 	 */
 	abstract protected function verifyPositive(int $value, string $name): void;
 
@@ -44,7 +45,7 @@ trait ArrayConversionsPart {
 	 *
 	 * 		If the limit parameter is zero, then this is treated as 1.
 	 *
-	 * @throws \InvalidArgumentException If the delimiter is an empty string.
+	 * @throws InvalidArgumentException If the delimiter is an empty string.
 	 *
 	 * @return ArrayObject
 	 * 		Returns an array of strings created by splitting the string parameter on boundaries
@@ -56,7 +57,7 @@ trait ArrayConversionsPart {
 	 */
 	public function split(string $delimiter, int $limit = PHP_INT_MAX): ArrayObject {
 		if ('' === $delimiter) {
-			throw new \InvalidArgumentException("The delimiter can't be an empty string");
+			throw new InvalidArgumentException("The delimiter can't be an empty string");
 		}
 
 		return new ArrayObject(explode($delimiter, $this->getString(), $limit));
@@ -65,13 +66,13 @@ trait ArrayConversionsPart {
 	/**
 	 * Join array elements with a string
 	 *
-	 * @param array $pieces The array of strings to join.
-	 * @param string $glue Defaults to an empty string.
-	 * @param string $encoding the desired encoding
+	 * @param array       $pieces   The array of strings to join.
+	 * @param string      $glue     Defaults to an empty string.
+	 * @param string|null $encoding the desired encoding
 	 *
 	 * @return Text
-	 * 		Returns a string containing a string representation of all the array elements in the
-	 * 		same order, with the glue string between each element.
+	 *        Returns a string containing a string representation of all the array elements in the
+	 *        same order, with the glue string between each element.
 	 */
 	public static function join(array $pieces, string $glue = '', ?string $encoding = null): Text {
 		return new Text(implode($glue, $pieces), $encoding);
@@ -82,7 +83,7 @@ trait ArrayConversionsPart {
 	 *
 	 * @param int $splitLength Maximum length of the chunk.
 	 *
-	 * @throws \InvalidArgumentException If splitLength is less than 1.
+	 * @throws InvalidArgumentException If splitLength is less than 1.
 	 *
 	 * @return ArrayObject
 	 * 		If the optional splitLength parameter is specified, the returned array will be
@@ -90,6 +91,9 @@ trait ArrayConversionsPart {
 	 * 		will be one character in length.
 	 *      If the split_length length exceeds the length of string, the entire string is returned
 	 *      as the first (and only) array element.
+	 *
+	 * @psalm-suppress PossiblyFalseArgument The method `verifyPositive`always ensures that
+	 *                                       SplitLength >= 1 so `str_split()` never returns false.
 	 */
 	public function chunk(int $splitLength = 1): ArrayObject {
 		$this->verifyPositive($splitLength, 'The chunk length');

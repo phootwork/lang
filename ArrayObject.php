@@ -45,11 +45,9 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	}
 
 	/**
-	 * @psalm-suppress ImplementedReturnTypeMismatch
-	 * @psalm-suppress InvalidReturnType The return type should be `void` for consistency with \Serializable interface,
-	 *                                   but we want fluid interface.
+	 * @psalm-suppress MethodSignatureMismatch
 	 */
-	public function unserialize($serialized): self {
+	public function unserialize(string $serialized): self {
 		$this->array = unserialize($serialized);
 
 		return $this;
@@ -79,8 +77,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 *
 	 * @return $this
 	 */
-	public function append(...$elements): self {
-		// das ist doch behindi!
+	public function append(mixed ...$elements): self {
 		foreach ($elements as $element) {
 			array_push($this->array, $element);
 		}
@@ -95,8 +92,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 *
 	 * @return $this
 	 */
-	public function prepend(...$elements): self {
-		// das ist doch auch behindi!
+	public function prepend(mixed ...$elements): self {
 		foreach ($elements as $element) {
 			array_unshift($this->array, $element);
 		}
@@ -109,16 +105,16 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 *
 	 * @return mixed the shifted element
 	 */
-	public function shift() {
+	public function shift(): mixed {
 		return array_shift($this->array);
 	}
 
 	/**
 	 * Remove a portion of the array and replace it with something else
 	 *
-	 * @param int $offset If offset is positive then the start of removed portion is at that offset from the beginning of the input array. If offset is negative then it starts that far from the end of the input array.
-	 * @param int $length If length is omitted, removes everything from offset to the end of the array. If length is specified and is positive, then that many elements will be removed. If length is specified and is negative then the end of the removed portion will be that many elements from the end of the array. If length is specified and is zero, no elements will be removed.
-	 * @param array $replacement If replacement array is specified, then the removed elements are replaced with elements from this array. If offset and length are such that nothing is removed, then the elements from the replacement array are inserted in the place specified by the offset. Note that keys in replacement array are not preserved. If replacement is just one element it is not necessary to put array() around it, unless the element is an array itself, an object or NULL.
+	 * @param int      $offset      If offset is positive then the start of removed portion is at that offset from the beginning of the input array. If offset is negative then it starts that far from the end of the input array.
+	 * @param int|null $length      If length is omitted, removes everything from offset to the end of the array. If length is specified and is positive, then that many elements will be removed. If length is specified and is negative then the end of the removed portion will be that many elements from the end of the array. If length is specified and is zero, no elements will be removed.
+	 * @param array    $replacement If replacement array is specified, then the removed elements are replaced with elements from this array. If offset and length are such that nothing is removed, then the elements from the replacement array are inserted in the place specified by the offset. Note that keys in replacement array are not preserved. If replacement is just one element it is not necessary to put array() around it, unless the element is an array itself, an object or NULL.
 	 *
 	 * @return $this
 	 */
@@ -151,9 +147,9 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	/**
 	 * Extract a slice of the array
 	 *
-	 * @param int $offset
-	 * @param int $length
-	 * @param bool $preserveKeys
+	 * @param int      $offset
+	 * @param int|null $length
+	 * @param bool     $preserveKeys
 	 *
 	 * @return ArrayObject
 	 */
@@ -168,7 +164,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 *
 	 * @return ArrayObject $this
 	 */
-	public function merge(...$toMerge): self {
+	public function merge(mixed ...$toMerge): self {
 		$this->array = array_merge($this->array, ...$toMerge);
 
 		return $this;
@@ -181,7 +177,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 *
 	 * @return ArrayObject $this
 	 */
-	public function mergeRecursive(...$toMerge): self {
+	public function mergeRecursive(mixed ...$toMerge): self {
 		$this->array = array_merge_recursive($this->array, ...$toMerge);
 
 		return $this;
@@ -223,32 +219,45 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	//
 
 	/**
+	 * @param mixed $offset
+	 * @param mixed $value
+	 *
 	 * @internal
 	 */
-	public function offsetSet($offset, $value) {
+	public function offsetSet(mixed $offset, mixed $value): void {
 		if (!is_null($offset)) {
 			$this->array[$offset] = $value;
 		}
 	}
 
 	/**
+	 * @param mixed $offset
+	 *
+	 * @return bool
+	 *
 	 * @internal
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists(mixed $offset): bool {
 		return isset($this->array[$offset]);
 	}
 
 	/**
+	 * @param mixed $offset
+	 *
 	 * @internal
 	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset(mixed $offset): void {
 		unset($this->array[$offset]);
 	}
 
 	/**
+	 * @param mixed $offset
+	 *
+	 * @return mixed
+	 *
 	 * @internal
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet(mixed $offset): mixed {
 		return $this->array[$offset] ?? null;
 	}
 }

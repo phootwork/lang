@@ -15,7 +15,7 @@ trait PopPart {
 	 *
 	 * @return mixed the popped element
 	 */
-	public function pop() {
+	public function pop(): mixed {
 		return array_pop($this->array);
 	}
 }

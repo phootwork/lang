@@ -21,5 +21,5 @@ interface Comparable {
 	 *  	&gt; 0 if the object is greater than comparison<br>
 	 * 		0 if they are equal.
 	 */
-	public function compareTo($comparison): int;
+	public function compareTo(mixed $comparison): int;
 }

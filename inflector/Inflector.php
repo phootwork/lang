@@ -23,7 +23,7 @@ class Inflector implements InflectorInterface {
 	/**
 	 * @var array
 	 */
-	protected $plural = [
+	protected array $plural = [
 		'(ind|vert)ex' => '\1ices',
 		'(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us' => '\1i',
 		'(buffal|tomat)o' => '\1oes',
@@ -77,7 +77,7 @@ class Inflector implements InflectorInterface {
 	/**
 	 * @var array
 	 */
-	protected $irregular = [
+	protected array $irregular = [
 		'matrix' => 'matrices',
 		'leaf' => 'leaves',
 		'loaf' => 'loaves',
@@ -102,7 +102,7 @@ class Inflector implements InflectorInterface {
 	/**
 	 * @var array
 	 */
-	protected $uncountable = [
+	protected array $uncountable = [
 		'sheep',
 		'fish',
 		'deer',
@@ -117,7 +117,7 @@ class Inflector implements InflectorInterface {
 	];
 
 	/** @var array */
-	protected $singular;
+	protected array $singular;
 
 	/**
 	 * Array of words that could be ambiguously interpreted. Eg:
@@ -126,7 +126,7 @@ class Inflector implements InflectorInterface {
 	 *
 	 * @var array
 	 */
-	protected $ambiguous = [
+	protected array $ambiguous = [
 		'menu' => 'menus'
 	];
 

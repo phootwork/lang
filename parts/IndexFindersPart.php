@@ -10,9 +10,9 @@
 namespace phootwork\lang\parts;
 
 trait IndexFindersPart {
-	abstract public function find(...$arguments);
+	abstract public function find(mixed ...$arguments);
 
-	abstract public function findLast(...$arguments);
+	abstract public function findLast(mixed ...$arguments);
 
 	/**
 	 * Returns the index of the given element or null if the element can't be found
@@ -21,7 +21,7 @@ trait IndexFindersPart {
 	 *
 	 * @return int|string|null the index for the given element
 	 */
-	public function indexOf($element) {
+	public function indexOf(mixed $element): int | string | null {
 		$out = array_search($element, $this->array, true);
 
 		return $out === false ? null : $out;
@@ -44,7 +44,7 @@ trait IndexFindersPart {
 	 *
 	 * @return int|string|null the index or null if it hasn't been found
 	 */
-	public function findLastIndex(...$arguments) {
+	public function findLastIndex(mixed ...$arguments): int | string | null {
 		$index = count($arguments) === 1 ?
 			$this->findLast($arguments[0]) : $this->findLast($arguments[0], $arguments[1]);
 
@@ -68,7 +68,7 @@ trait IndexFindersPart {
 	 *
 	 * @return int|string|null the index or null if it hasn't been found
 	 */
-	public function findIndex(...$arguments) {
+	public function findIndex(mixed ...$arguments): int | string | null {
 		$index = count($arguments) === 1 ? $this->find($arguments[0]) : $this->find($arguments[0], $arguments[1]);
 
 		return $this->indexOf($index);

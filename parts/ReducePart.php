@@ -21,7 +21,7 @@ trait ReducePart {
 	 *
 	 * @return mixed
 	 */
-	public function reduce(callable $callback, $fallback = null) {
+	public function reduce(callable $callback, mixed $fallback = null) {
 		return array_reduce($this->array, $callback, $fallback);
 	}
 }

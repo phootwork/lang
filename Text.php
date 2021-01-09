@@ -15,13 +15,14 @@ use phootwork\lang\parts\ComparisonPart;
 use phootwork\lang\parts\InternalPart;
 use phootwork\lang\parts\SearchPart;
 use phootwork\lang\parts\TransformationsPart;
+use Stringable;
 
 /**
  * Object representation of an immutable String
  *
  * @author gossi
  */
-class Text implements Comparable {
+class Text implements Comparable, Stringable {
 	use ArrayConversionsPart;
 	use CheckerPart;
 	use ComparisonPart;
@@ -30,10 +31,10 @@ class Text implements Comparable {
 	use TransformationsPart;
 
 	/** @var string */
-	private $string;
+	private string $string;
 
 	/** @var string */
-	private $encoding;
+	private string $encoding;
 
 	/**
 	 * Initializes a String object ad assigns both string and encoding properties
@@ -42,39 +43,28 @@ class Text implements Comparable {
 	 * an InvalidArgumentException if the first argument is an array or object
 	 * without a __toString method.
 	 *
-	 * @param mixed $string Value to modify, after being cast to string
-	 * @param string $encoding The character encoding
-	 *
-	 * @throws \InvalidArgumentException if an array or object without a __toString method is passed as the first argument
+	 * @param string|Stringable $string   Value to modify, after being cast to string
+	 * @param string|null $encoding The character encoding
 	 *
 	 * @psalm-suppress PossiblyInvalidPropertyAssignmentValue mb_internal_encoding always return string when called as getter
 	 */
-	public function __construct($string = '', ?string $encoding = null) {
-		if (is_array($string)) {
-			throw new \InvalidArgumentException('The constructor parameter cannot be an array');
-		} elseif (is_object($string) && !method_exists($string, '__toString')) {
-			throw new \InvalidArgumentException('Passed object must implement  `__toString` method');
-		}
-
+	public function __construct(string | Stringable $string = '', ?string $encoding = null) {
 		$this->string = (string) $string;
 		$this->encoding = $encoding ?? mb_internal_encoding();
-	}
-
-	public function __clone() {
-		return new self($this->string, $this->encoding);
 	}
 
 	/**
 	 * Static initializing a String object.
 	 *
-	 * @see Text::__construct()
-	 *
-	 * @param mixed $string
-	 * @param string $encoding
+	 * @param string|Stringable       $string
+	 * @param string|null $encoding
 	 *
 	 * @return Text
+	 *
+	 * @see Text::__construct()
+	 *
 	 */
-	public static function create($string, ?string $encoding = null) {
+	public static function create(string | Stringable $string, ?string $encoding = null) {
 		return new self($string, $encoding);
 	}
 
@@ -107,22 +97,22 @@ class Text implements Comparable {
 	/**
 	 * Appends <code>$string</code> and returns as a new <code>Text</code>
 	 *
-	 * @param string|Text $string
+	 * @param string|Stringable $string
 	 *
 	 * @return Text
 	 */
-	public function append($string): self {
+	public function append(string | Stringable $string): self {
 		return new self($this->string . $string, $this->encoding);
 	}
 
 	/**
 	 * Prepends <code>$string</code> and returns as a new <code>Text</code>
 	 *
-	 * @param string|Text $string
+	 * @param string|Stringable $string $string
 	 *
 	 * @return Text
 	 */
-	public function prepend($string): self {
+	public function prepend(string | Stringable $string): self {
 		return new self($string . $this->string, $this->encoding);
 	}
 
@@ -134,12 +124,12 @@ class Text implements Comparable {
 	 * $str->insert('to this ', 5); // Hello to this World!
 	 * </code>
 	 *
-	 * @param string|Text $substring
-	 * @param int $index
+	 * @param string|Stringable $substring
+	 * @param int               $index
 	 *
 	 * @return Text
 	 */
-	public function insert($substring, int $index): self {
+	public function insert(string | Stringable $substring, int $index): self {
 		if ($index <= 0) {
 			return $this->prepend($substring);
 		}
@@ -166,8 +156,8 @@ class Text implements Comparable {
 	 *
 	 * @see #substring
 	 *
-	 * @param int $offset
-	 * @param int $length
+	 * @param int      $offset
+	 * @param int|null $length
 	 *
 	 * @return Text
 	 */
@@ -188,8 +178,8 @@ class Text implements Comparable {
 	 *
 	 * @see #slice
 	 *
-	 * @param int $start
-	 * @param int $end
+	 * @param int      $start
+	 * @param int|null $end
 	 *
 	 * @return Text
 	 */
@@ -215,12 +205,12 @@ class Text implements Comparable {
 	/**
 	 * Count the number of substring occurrences.
 	 *
-	 * @param string|Text $substring The substring to count the occurrencies
-	 * @param bool $caseSensitive Force case-sensitivity
+	 * @param string|Stringable $substring     The substring to count the occurrencies
+	 * @param bool              $caseSensitive Force case-sensitivity
 	 *
 	 * @return int
 	 */
-	public function countSubstring($substring, bool $caseSensitive = true): int {
+	public function countSubstring(string | Stringable $substring, bool $caseSensitive = true): int {
 		$this->verifyNotEmpty($substring, '$substring');
 		if ($caseSensitive) {
 			return mb_substr_count($this->string, (string) $substring, $this->encoding);
@@ -251,15 +241,15 @@ class Text implements Comparable {
 	 *
 	 * @return Text
 	 */
-	public function replace($search, $replace): self {
-		if ($search instanceof self) {
-			$search = $search->toString();
+	public function replace(Arrayable | Stringable | array | string $search, Arrayable | Stringable | array | string $replace): self {
+		if ($search instanceof Stringable) {
+			$search = (string) $search;
 		} elseif ($search instanceof Arrayable) {
 			$search = $search->toArray();
 		}
 
-		if ($replace instanceof self) {
-			$replace = $replace->toString();
+		if ($replace instanceof Stringable) {
+			$replace = (string) $replace;
 		} elseif ($replace instanceof Arrayable) {
 			$replace = $replace->toArray();
 		}
@@ -281,15 +271,13 @@ class Text implements Comparable {
 	/**
 	 * Replace text within a portion of a string.
 	 *
-	 * @param string|Text $replacement
-	 * @param int $offset
-	 * @param int|null $length
-	 *
-	 * @throws \InvalidArgumentException If $offset is greater then the string length or $length is too small.
+	 * @param string|Stringable $replacement
+	 * @param int               $offset
+	 * @param int|null          $length
 	 *
 	 * @return Text
 	 */
-	public function splice($replacement, int $offset, ?int $length = null): self {
+	public function splice(string | Stringable $replacement, int $offset, ?int $length = null): self {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
 
@@ -308,54 +296,54 @@ class Text implements Comparable {
 	/**
 	 * Strip whitespace (or other characters) from the beginning and end of the string
 	 *
-	 * @param string $characters
-	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
-	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
-	 * 		range of characters.
+	 * @param string|Stringable $characters
+	 *        Optionally, the stripped characters can also be specified using the mask parameter.
+	 *        Simply list all characters that you want to be stripped. With .. you can specify a
+	 *        range of characters.
 	 *
 	 * @return Text
 	 */
-	public function trim(string $characters = " \t\n\r\v\0"): self {
+	public function trim(string | Stringable $characters = " \t\n\r\v\0"): self {
 		return new self(trim($this->string, (string) $characters), $this->encoding);
 	}
 
 	/**
 	 * Strip whitespace (or other characters) from the beginning of the string
 	 *
-	 * @param string $characters
-	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
-	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
-	 * 		range of characters.
+	 * @param string|Stringable $characters
+	 *        Optionally, the stripped characters can also be specified using the mask parameter.
+	 *        Simply list all characters that you want to be stripped. With .. you can specify a
+	 *        range of characters.
 	 *
 	 * @return Text
 	 */
-	public function trimStart(string $characters = " \t\n\r\v\0"): self {
+	public function trimStart(string | Stringable $characters = " \t\n\r\v\0"): self {
 		return new self(ltrim($this->string, (string) $characters), $this->encoding);
 	}
 
 	/**
 	 * Strip whitespace (or other characters) from the end of the string
 	 *
-	 * @param string $characters
-	 * 		Optionally, the stripped characters can also be specified using the mask parameter.
-	 * 		Simply list all characters that you want to be stripped. With .. you can specify a
-	 * 		range of characters.
+	 * @param string|Stringable $characters
+	 *        Optionally, the stripped characters can also be specified using the mask parameter.
+	 *        Simply list all characters that you want to be stripped. With .. you can specify a
+	 *        range of characters.
 	 *
 	 * @return Text
 	 */
-	public function trimEnd(string $characters = " \t\n\r\v\0"): self {
+	public function trimEnd(string | Stringable $characters = " \t\n\r\v\0"): self {
 		return new self(rtrim($this->string, (string) $characters), $this->encoding);
 	}
 
 	/**
 	 * Adds padding to the start and end
 	 *
-	 * @param int $length
-	 * @param string $padding
+	 * @param int               $length
+	 * @param string|Stringable $padding
 	 *
 	 * @return Text
 	 */
-	public function pad(int $length, string $padding = ' '): self {
+	public function pad(int $length, string | Stringable $padding = ' '): self {
 		$len = $length - $this->length();
 
 		return $this->applyPadding(floor($len / 2), ceil($len / 2), $padding);
@@ -364,24 +352,24 @@ class Text implements Comparable {
 	/**
 	 * Adds padding to the start
 	 *
-	 * @param int $length
-	 * @param string|Text $padding
+	 * @param int               $length
+	 * @param string|Stringable $padding
 	 *
 	 * @return Text
 	 */
-	public function padStart(int $length, $padding = ' ') {
+	public function padStart(int $length, string | Stringable $padding = ' ') {
 		return $this->applyPadding($length - $this->length(), 0, $padding);
 	}
 
 	/**
 	 * Adds padding to the end
 	 *
-	 * @param int $length
-	 * @param string|Text $padding
+	 * @param int               $length
+	 * @param string|Stringable $padding
 	 *
 	 * @return Text
 	 */
-	public function padEnd(int $length, $padding = ' '): self {
+	public function padEnd(int $length, string | Stringable $padding = ' '): self {
 		return $this->applyPadding(0, $length - $this->length(), $padding);
 	}
 
@@ -393,11 +381,11 @@ class Text implements Comparable {
 	 *
 	 * @param int|float $left Length of left padding
 	 * @param int|float $right Length of right padding
-	 * @param string|Text $padStr String used to pad
+	 * @param string|Stringable $padStr String used to pad
 	 *
 	 * @return Text the padded string
 	 */
-	protected function applyPadding($left = 0, $right = 0, $padStr = ' ') {
+	protected function applyPadding(int | float $left = 0, int | float $right = 0, string | Stringable $padStr = ' '): self {
 		$length = mb_strlen((string) $padStr, $this->encoding);
 		$strLength = $this->length();
 		$paddedLength = $strLength + $left + $right;

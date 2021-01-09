@@ -9,6 +9,8 @@
  */
 namespace phootwork\lang;
 
+use InvalidArgumentException;
+
 /**
  * Class ComparableComparator
  *
@@ -22,13 +24,13 @@ class ComparableComparator implements Comparator {
 	 * @param mixed $a
 	 * @param mixed $b
 	 *
-	 * @throws \InvalidArgumentException If the objects don't implement phootwork\lang\Comparable interface.
+	 * @throws InvalidArgumentException If the objects don't implement phootwork\lang\Comparable interface.
 	 *
 	 * @return int
 	 */
-	public function compare($a, $b): int {
+	public function compare(mixed $a, mixed $b): int {
 		if (! $a instanceof Comparable) {
-			throw new \InvalidArgumentException(
+			throw new InvalidArgumentException(
 				"ComparableComparator can compare only objects implementing phootwork\lang\Comparable interface");
 		}
 

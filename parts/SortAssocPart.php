@@ -16,11 +16,11 @@ trait SortAssocPart {
 	/**
 	 * Sorts the array and persisting key-value pairs
 	 *
-	 * @param Comparator|callable $cmp
+	 * @param Comparator|callable|null $cmp
 	 *
 	 * @return $this
 	 */
-	public function sortAssoc($cmp = null): self {
+	public function sortAssoc(Comparator | callable $cmp = null): self {
 		$this->doSort($this->array, 'uasort', 'asort', $cmp);
 
 		return $this;
@@ -29,11 +29,11 @@ trait SortAssocPart {
 	/**
 	 * Sorts the array by keys
 	 *
-	 * @param Comparator|callable $cmp
+	 * @param Comparator|callable|null $cmp
 	 *
 	 * @return $this
 	 */
-	public function sortKeys($cmp = null): self {
+	public function sortKeys(Comparator | callable $cmp = null): self {
 		$this->doSort($this->array, 'uksort', 'ksort', $cmp);
 
 		return $this;

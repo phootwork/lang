@@ -17,7 +17,7 @@ trait AddPart {
 	 *
 	 * @return $this
 	 */
-	public function add(...$elements): self {
+	public function add(mixed ...$elements): self {
 		foreach ($elements as $element) {
 			$this->array[count($this->array)] = $element;
 		}

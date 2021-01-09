@@ -11,6 +11,7 @@ namespace phootwork\lang\parts;
 
 use phootwork\lang\ArrayObject;
 use phootwork\lang\Text;
+use Stringable;
 
 /**
  * Text searching methods
@@ -61,14 +62,14 @@ trait SearchPart {
 	/**
 	 * Returns the index of a given string, starting at the optional zero-related offset
 	 *
-	 * @param string|Text $string
-	 * @param int $offset zero-related offset
+	 * @param string|Stringable $string
+	 * @param int               $offset zero-related offset
 	 *
 	 * @return int|null int for the index or null if the given string doesn't occur
 	 */
-	public function indexOf($string, int $offset = 0): ?int {
+	public function indexOf(string | Stringable $string, int $offset = 0): ?int {
 		$offset = $this->prepareOffset($offset);
-		if ($string == '') {
+		if ((string) $string == '') {
 			return $offset;
 		}
 		$output = mb_strpos($this->getString(), (string) $string, $offset, $this->encoding);
@@ -79,12 +80,12 @@ trait SearchPart {
 	/**
 	 * Returns the last index of a given string, starting at the optional offset
 	 *
-	 * @param string $string
-	 * @param int $offset
+	 * @param string|Stringable $string $string
+	 * @param int|null          $offset
 	 *
 	 * @return int|null int for the index or null if the given string doesn't occur
 	 */
-	public function lastIndexOf(string $string, ?int $offset = null): ?int {
+	public function lastIndexOf(string | Stringable $string, ?int $offset = null): ?int {
 		if (null === $offset) {
 			$offset = $this->length();
 		} else {
@@ -105,78 +106,68 @@ trait SearchPart {
 	/**
 	 * Checks whether the string starts with the given string. Case sensitive!
 	 *
-	 * @see Text::startsWithIgnoreCase()
-	 *
-	 * @param string|Text $substring The substring to look for
+	 * @param string|Stringable $substring The substring to look for
 	 *
 	 * @return bool
+	 *
+	 * @see Text::startsWithIgnoreCase()
+	 *
 	 */
-	public function startsWith($substring): bool {
-		$substringLength = mb_strlen((string) $substring, $this->encoding);
-		$startOfStr = mb_substr($this->getString(), 0, $substringLength, $this->encoding);
-
-		return (string) $substring === $startOfStr;
+	public function startsWith(string | Stringable $substring): bool {
+		return str_starts_with($this->getString(), (string) $substring);
 	}
 
 	/**
 	 * Checks whether the string starts with the given string. Ignores case.
 	 *
-	 * @see Text::startsWith()
-	 *
-	 * @param string|Text $substring The substring to look for
+	 * @param string|Stringable $substring The substring to look for
 	 *
 	 * @return bool
+	 *
+	 * @see Text::startsWith()
+	 *
 	 */
-	public function startsWithIgnoreCase($substring): bool {
-		$substring = mb_strtolower((string) $substring, $this->encoding);
-		$substringLength = mb_strlen($substring, $this->encoding);
-		$startOfStr = mb_strtolower(mb_substr($this->getString(), 0, $substringLength, $this->encoding));
-
-		return (string) $substring === $startOfStr;
+	public function startsWithIgnoreCase(string | Stringable $substring): bool {
+		return str_starts_with($this->toUpperCase()->getString(), strtoupper((string) $substring));
 	}
 
 	/**
 	 * Checks whether the string ends with the given string. Case sensitive!
 	 *
-	 * @see Text::endsWithIgnoreCase()
-	 *
-	 * @param string|Text $substring The substring to look for
+	 * @param string|Stringable $substring The substring to look for
 	 *
 	 * @return bool
+	 *
+	 * @see Text::endsWithIgnoreCase()
+	 *
 	 */
-	public function endsWith($substring): bool {
-		$substringLength = mb_strlen((string) $substring, $this->encoding);
-		$endOfStr = mb_substr($this->getString(), $this->length() - $substringLength, $substringLength, $this->encoding);
-
-		return (string) $substring === $endOfStr;
+	public function endsWith(string | Stringable $substring): bool {
+		return str_ends_with($this->getString(), (string) $substring);
 	}
 
 	/**
 	 * Checks whether the string ends with the given string. Ingores case.
 	 *
-	 * @see Text::endsWith()
-	 *
-	 * @param string|Text $substring The substring to look for
+	 * @param string|Stringable $substring The substring to look for
 	 *
 	 * @return bool
+	 *
+	 * @see Text::endsWith()
+	 *
 	 */
-	public function endsWithIgnoreCase($substring): bool {
-		$substring = mb_strtolower((string) $substring, $this->encoding);
-		$substringLength = mb_strlen($substring, $this->encoding);
-		$endOfStr = mb_strtolower(mb_substr($this->getString(), $this->length() - $substringLength, $substringLength, $this->encoding));
-
-		return (string) $substring === $endOfStr;
+	public function endsWithIgnoreCase(string | Stringable $substring): bool {
+		return str_ends_with($this->toUpperCase()->getString(), strtoupper((string) $substring));
 	}
 
 	/**
 	 * Checks whether the given string occurs
 	 *
-	 * @param string|Text $string
+	 * @param string|Stringable $text
 	 *
 	 * @return bool
 	 */
-	public function contains($string): bool {
-		return $this->indexOf($string) !== null;
+	public function contains(Stringable | string $text): bool {
+		return str_contains($this->getString(), (string) $text);
 	}
 
 	/**

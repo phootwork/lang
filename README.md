@@ -1,11 +1,11 @@
 # phootwork/lang
 
-[![Build Status](https://travis-ci.org/phootwork/phootwork.svg?branch=master)](https://travis-ci.org/phootwork/phootwork)
+![Tests](https://github.com/phootwork/phootwork/workflows/Tests/badge.svg)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phootwork/phootwork/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phootwork/phootwork/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/phootwork/phootwork/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/phootwork/phootwork/?branch=master)
 [![License](https://img.shields.io/github/license/phootwork/lang.svg?style=flat-square)](https://packagist.org/packages/phootwork/lang)
 [![Latest Stable Version](https://img.shields.io/packagist/v/phootwork/lang.svg?style=flat-square)](https://packagist.org/packages/phootwork/lang)
-[![Total Downloads](https://img.shields.io/packagist/dt/phootwork/lang.svg?style=flat-square&colorB=007ec6)](https://packagist.org/packages/phootwork/lang)<br>
+[![Total Downloads](https://img.shields.io/packagist/dt/phootwork/lang.svg?style=flat-square&colorB=007ec6)](https://packagist.org/packages/phootwork/lang)
 
 Missing PHP language constructs
 

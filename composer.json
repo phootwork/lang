@@ -23,7 +23,7 @@
 		}
 	},
 	"require" : {
-		"php" : ">=7.2",
+		"php" : ">=8.0",
 		"symfony/polyfill-mbstring" : "^1.12"
 	},
 	"homepage" : "https://phootwork.github.io/lang/"

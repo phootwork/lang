@@ -29,33 +29,33 @@ trait ComparisonPart {
 	 *
 	 * @see \phootwork\lang\Comparable::compareTo()
 	 */
-	public function compareTo($compare): int {
+	public function compareTo(mixed $compare): int {
 		return $this->compare($compare);
 	}
 
 	/**
 	 * Compares this string to another string, ignoring the case
 	 *
-	 * @param mixed $compare
+	 * @param string|Text $compare
 	 *
 	 * @return int Return Values:<br>
 	 * 		&lt; 0 if the object is less than comparison<br>
 	 *  	&gt; 0 if the object is greater than comparison<br>
 	 * 		0 if they are equal.
 	 */
-	public function compareCaseInsensitive($compare): int {
+	public function compareCaseInsensitive(string | Text $compare): int {
 		return $this->compare($compare, 'strcasecmp');
 	}
 
 	/**
 	 * Compares this string to another
 	 *
-	 * @param string|Text $compare string to compare to
-	 * @param callable $callback
+	 * @param string|Text   $compare string to compare to
+	 * @param callable|null $callback
 	 *
 	 * @return int
 	 */
-	public function compare($compare, callable $callback = null): int {
+	public function compare(string | Text $compare, callable $callback = null): int {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
@@ -66,22 +66,22 @@ trait ComparisonPart {
 	/**
 	 * Checks whether the string and the given object are equal
 	 *
-	 * @param mixed $string
+	 * @param string|Text $string
 	 *
 	 * @return bool
 	 */
-	public function equals($string): bool {
+	public function equals(string | Text $string): bool {
 		return $this->compareTo($string) === 0;
 	}
 
 	/**
 	 * Checks whether the string and the given object are equal ignoring the case
 	 *
-	 * @param mixed $string
+	 * @param mixed|Text $string
 	 *
 	 * @return bool
 	 */
-	public function equalsIgnoreCase($string): bool {
+	public function equalsIgnoreCase(string | Text $string): bool {
 		return $this->compareCaseInsensitive($string) === 0;
 	}
 }

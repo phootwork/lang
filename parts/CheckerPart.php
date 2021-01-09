@@ -106,8 +106,8 @@ trait CheckerPart {
 	/**
 	 * Check if a string is singular form.
 	 *
-	 * @param InflectorInterface $pluralizer
-	 *        	A custom pluralizer. Default is the Inflector
+	 * @param InflectorInterface|null $pluralizer
+	 *            A custom pluralizer. Default is the Inflector
 	 *
 	 * @return bool
 	 */
@@ -120,8 +120,8 @@ trait CheckerPart {
 	/**
 	 * Check if a string is plural form.
 	 *
-	 * @param InflectorInterface $pluralizer
-	 *        	A custom pluralizer. Default is the Inflector
+	 * @param InflectorInterface|null $pluralizer
+	 *            A custom pluralizer. Default is the Inflector
 	 *
 	 * @return bool
 	 */
