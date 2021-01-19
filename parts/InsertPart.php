@@ -26,7 +26,7 @@ trait InsertPart {
 		}
 
 		if (is_int($index)) {
-			array_splice($this->array, $index, 0, $element);
+			array_splice($this->array, $index, 0, [$element]);
 		}
 
 		if (is_string($index)) {
