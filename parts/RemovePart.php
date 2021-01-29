@@ -22,9 +22,21 @@ trait RemovePart {
 			$index = array_search($element, $this->array, true);
 			if ($index !== false) {
 				unset($this->array[$index]);
+				$this->reorderList();
 			}
 		}
 
 		return $this;
+	}
+
+	private function reorderList(): void {
+		if (count(array_filter(array_keys($this->array), 'is_string')) > 0) {
+			//it's an associative array: do nothing
+			return;
+		}
+
+		if (!array_is_list($this->array)) {
+			$this->array = array_values($this->array);
+		}
 	}
 }
