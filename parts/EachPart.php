@@ -17,8 +17,6 @@ trait EachPart {
 	 * @param callable $callback
 	 */
 	public function each(callable $callback): void {
-		foreach ($this->array as $item) {
-			$callback($item);
-		}
+		array_map($callback, $this->array);
 	}
 }

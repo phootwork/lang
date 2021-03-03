@@ -18,7 +18,7 @@ trait AccessorsPart {
 	 *
 	 * @return mixed
 	 */
-	public function get(int | string $index): mixed {
+	public function get(int|string $index): mixed {
 		return $this->array[$index] ?? null;
 	}
 }

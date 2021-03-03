@@ -21,7 +21,7 @@ trait IndexFindersPart {
 	 *
 	 * @return int|string|null the index for the given element
 	 */
-	public function indexOf(mixed $element): int | string | null {
+	public function indexOf(mixed $element): int|string|null {
 		$out = array_search($element, $this->array, true);
 
 		return $out === false ? null : $out;
@@ -44,7 +44,8 @@ trait IndexFindersPart {
 	 *
 	 * @return int|string|null the index or null if it hasn't been found
 	 */
-	public function findLastIndex(mixed ...$arguments): int | string | null {
+	public function findLastIndex(mixed ...$arguments): int|string|null {
+		/** @var mixed $index */
 		$index = count($arguments) === 1 ?
 			$this->findLast($arguments[0]) : $this->findLast($arguments[0], $arguments[1]);
 
@@ -68,7 +69,8 @@ trait IndexFindersPart {
 	 *
 	 * @return int|string|null the index or null if it hasn't been found
 	 */
-	public function findIndex(mixed ...$arguments): int | string | null {
+	public function findIndex(mixed ...$arguments): int|string|null {
+		/** @var mixed $index */
 		$index = count($arguments) === 1 ? $this->find($arguments[0]) : $this->find($arguments[0], $arguments[1]);
 
 		return $this->indexOf($index);

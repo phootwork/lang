@@ -20,8 +20,10 @@ trait ReducePart {
 	 * @param mixed $fallback the default value, that will be returned when the list is empty
 	 *
 	 * @return mixed
+	 *
+	 * @psalm-suppress MixedArgumentTypeCoercion $callback is a callback
 	 */
-	public function reduce(callable $callback, mixed $fallback = null) {
+	public function reduce(callable $callback, mixed $fallback = null): mixed {
 		return array_reduce($this->array, $callback, $fallback);
 	}
 }

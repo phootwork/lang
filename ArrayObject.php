@@ -45,7 +45,9 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	}
 
 	/**
-	 * @psalm-suppress MethodSignatureMismatch
+	 * @psalm-suppress MethodSignatureMismatch `\Serializable::unserialize` return `void` but we want fluid interface.
+	 * @psalm-suppress MixedAssignment if `unserialize($serialized)` can't return an array, this assignment throws
+	 *                 a TypeError exception, which is ok for us
 	 */
 	public function unserialize(string $serialized): self {
 		$this->array = unserialize($serialized);
@@ -78,9 +80,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 * @return $this
 	 */
 	public function append(mixed ...$elements): self {
-		foreach ($elements as $element) {
-			array_push($this->array, $element);
-		}
+		array_push($this->array, ...$elements);
 
 		return $this;
 	}
@@ -93,9 +93,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 * @return $this
 	 */
 	public function prepend(mixed ...$elements): self {
-		foreach ($elements as $element) {
-			array_unshift($this->array, $element);
-		}
+		array_unshift($this->array, ...$elements);
 
 		return $this;
 	}
@@ -117,9 +115,10 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 * @param array    $replacement If replacement array is specified, then the removed elements are replaced with elements from this array. If offset and length are such that nothing is removed, then the elements from the replacement array are inserted in the place specified by the offset. Note that keys in replacement array are not preserved. If replacement is just one element it is not necessary to put array() around it, unless the element is an array itself, an object or NULL.
 	 *
 	 * @return $this
+	 *
+	 * @psalm-suppress PossiblyNullArgument third argument of `array_splice` CAN be null
 	 */
 	public function splice(int $offset, ?int $length = null, array $replacement = []): self {
-		$length = $length === null ? $this->count() : $length;
 		array_splice($this->array, $offset, $length, $replacement);
 
 		return $this;
@@ -160,7 +159,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	/**
 	 * Merges in other values
 	 *
-	 * @param mixed ...$toMerge Variable list of arrays to merge.
+	 * @param array ...$toMerge Variable list of arrays to merge.
 	 *
 	 * @return ArrayObject $this
 	 */
@@ -173,7 +172,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	/**
 	 * Merges in other values, recursively
 	 *
-	 * @param mixed ...$toMerge Variable list of arrays to merge.
+	 * @param array ...$toMerge Variable list of arrays to merge.
 	 *
 	 * @return ArrayObject $this
 	 */
@@ -219,7 +218,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	//
 
 	/**
-	 * @param mixed $offset
+	 * @param int|string|null $offset
 	 * @param mixed $value
 	 *
 	 * @internal
@@ -231,7 +230,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	}
 
 	/**
-	 * @param mixed $offset
+	 * @param int|string $offset
 	 *
 	 * @return bool
 	 *
@@ -242,7 +241,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	}
 
 	/**
-	 * @param mixed $offset
+	 * @param int|string $offset
 	 *
 	 * @internal
 	 */
@@ -251,7 +250,7 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	}
 
 	/**
-	 * @param mixed $offset
+	 * @param int|string $offset
 	 *
 	 * @return mixed
 	 *

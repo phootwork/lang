@@ -23,16 +23,6 @@ trait ArrayConversionsPart {
 	abstract protected function getString(): string;
 
 	/**
-	 * Verify that $value is positive, otherwise throws an exception.
-	 *
-	 * @param int    $value
-	 * @param string $name
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	abstract protected function verifyPositive(int $value, string $name): void;
-
-	/**
 	 * Splits the string by string
 	 *
 	 * @param string $delimiter The boundary string.
@@ -91,13 +81,12 @@ trait ArrayConversionsPart {
 	 * 		will be one character in length.
 	 *      If the split_length length exceeds the length of string, the entire string is returned
 	 *      as the first (and only) array element.
-	 *
-	 * @psalm-suppress PossiblyFalseArgument The method `verifyPositive`always ensures that
-	 *                                       SplitLength >= 1 so `str_split()` never returns false.
 	 */
 	public function chunk(int $splitLength = 1): ArrayObject {
-		$this->verifyPositive($splitLength, 'The chunk length');
+		if (false === $array = str_split($this->getString(), $splitLength)) {
+			throw new InvalidArgumentException('The chunk length has to be positive');
+		}
 
-		return new ArrayObject(str_split($this->getString(), $splitLength));
+		return new ArrayObject($array);
 	}
 }

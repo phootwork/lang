@@ -10,8 +10,6 @@
 namespace phootwork\lang\parts;
 
 use InvalidArgumentException;
-use phootwork\lang\Text;
-use Stringable;
 
 /**
  * Internal Text methods
@@ -32,7 +30,7 @@ trait InternalPart {
 	protected function prepareOffset(int $offset): int {
 		$len = $this->length();
 		if ($offset < -$len || $offset > $len) {
-			throw new InvalidArgumentException('Offset must be in range [-len, len]');
+			throw new InvalidArgumentException("Offset must be in range [-$len, $len]");
 		}
 
 		if ($offset < 0) {
@@ -64,46 +62,5 @@ trait InternalPart {
 		}
 
 		return $length;
-	}
-
-	/**
-	 * @param string|Stringable $string |Text $string
-	 * @param string            $name
-	 *
-	 * @internal
-	 *
-	 */
-	protected function verifyNotEmpty(string | Stringable $string, string $name): void {
-		if (empty($string)) {
-			throw new InvalidArgumentException("$name cannot be empty");
-		}
-	}
-
-	/**
-	 * @internal
-	 *
-	 * @param int $value
-	 * @param string $name
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	protected function verifyPositive(int $value, string $name): void {
-		if ($value <= 0) {
-			throw new InvalidArgumentException("$name has to be positive");
-		}
-	}
-
-	/**
-	 * @internal
-	 *
-	 * @param int $value
-	 * @param string $name
-	 *
-	 * @throws InvalidArgumentException
-	 */
-	protected function verifyNotNegative(int $value, string $name): void {
-		if ($value < 0) {
-			throw new InvalidArgumentException("$name can not be negative");
-		}
 	}
 }

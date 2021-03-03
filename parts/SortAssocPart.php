@@ -20,7 +20,7 @@ trait SortAssocPart {
 	 *
 	 * @return $this
 	 */
-	public function sortAssoc(Comparator | callable $cmp = null): self {
+	public function sortAssoc(Comparator|callable $cmp = null): self {
 		$this->doSort($this->array, 'uasort', 'asort', $cmp);
 
 		return $this;
@@ -33,7 +33,7 @@ trait SortAssocPart {
 	 *
 	 * @return $this
 	 */
-	public function sortKeys(Comparator | callable $cmp = null): self {
+	public function sortKeys(Comparator|callable $cmp = null): self {
 		$this->doSort($this->array, 'uksort', 'ksort', $cmp);
 
 		return $this;

@@ -20,7 +20,7 @@ trait InsertPart {
 	 *
 	 * @return $this
 	 */
-	public function insert(mixed $element, int | string | null $index): self {
+	public function insert(mixed $element, int|string|null $index): self {
 		if (null === $index) {
 			return $this->add($element);
 		}

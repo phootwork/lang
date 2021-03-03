@@ -30,7 +30,11 @@ trait ComparisonPart {
 	 * @see \phootwork\lang\Comparable::compareTo()
 	 */
 	public function compareTo(mixed $compare): int {
-		return $this->compare($compare);
+		if (is_string($compare) || $compare instanceof Text) {
+			return $this->compare($compare);
+		}
+
+		throw new \InvalidArgumentException('`compareTo` method can accept only strings or Text objects.');
 	}
 
 	/**
@@ -43,7 +47,7 @@ trait ComparisonPart {
 	 *  	&gt; 0 if the object is greater than comparison<br>
 	 * 		0 if they are equal.
 	 */
-	public function compareCaseInsensitive(string | Text $compare): int {
+	public function compareCaseInsensitive(string|Text $compare): int {
 		return $this->compare($compare, 'strcasecmp');
 	}
 
@@ -54,8 +58,10 @@ trait ComparisonPart {
 	 * @param callable|null $callback
 	 *
 	 * @return int
+	 *
+	 * @psalm-suppress MixedInferredReturnType
 	 */
-	public function compare(string | Text $compare, callable $callback = null): int {
+	public function compare(string|Text $compare, callable $callback = null): int {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
@@ -70,18 +76,18 @@ trait ComparisonPart {
 	 *
 	 * @return bool
 	 */
-	public function equals(string | Text $string): bool {
+	public function equals(string|Text $string): bool {
 		return $this->compareTo($string) === 0;
 	}
 
 	/**
 	 * Checks whether the string and the given object are equal ignoring the case
 	 *
-	 * @param mixed|Text $string
+	 * @param string|Text $string
 	 *
 	 * @return bool
 	 */
-	public function equalsIgnoreCase(string | Text $string): bool {
+	public function equalsIgnoreCase(string|Text $string): bool {
 		return $this->compareCaseInsensitive($string) === 0;
 	}
 }

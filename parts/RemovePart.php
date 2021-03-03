@@ -18,6 +18,7 @@ trait RemovePart {
 	 * @return $this
 	 */
 	public function remove(mixed ...$elements): self {
+		/** @var mixed $element */
 		foreach ($elements as $element) {
 			$index = array_search($element, $this->array, true);
 			if ($index !== false) {

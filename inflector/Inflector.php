@@ -20,9 +20,6 @@ namespace phootwork\lang\inflector;
  * @author Cristiano Cinotti
  */
 class Inflector implements InflectorInterface {
-	/**
-	 * @var array
-	 */
 	protected array $plural = [
 		'(ind|vert)ex' => '\1ices',
 		'(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us' => '\1i',
@@ -74,9 +71,6 @@ class Inflector implements InflectorInterface {
 		'life' => 'lives'
 	];
 
-	/**
-	 * @var array
-	 */
 	protected array $irregular = [
 		'matrix' => 'matrices',
 		'leaf' => 'leaves',
@@ -99,9 +93,6 @@ class Inflector implements InflectorInterface {
 		'alias' => 'aliases',
 	];
 
-	/**
-	 * @var array
-	 */
 	protected array $uncountable = [
 		'sheep',
 		'fish',
@@ -116,7 +107,6 @@ class Inflector implements InflectorInterface {
 		'people',
 	];
 
-	/** @var array */
 	protected array $singular;
 
 	/**
@@ -124,7 +114,7 @@ class Inflector implements InflectorInterface {
 	 * `isPlural` method can't recognize 'menus' as plural, because it considers 'menus' as the
 	 * singular of 'menuses'.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected array $ambiguous = [
 		'menu' => 'menus'
@@ -209,6 +199,8 @@ class Inflector implements InflectorInterface {
 	 * @param string $root
 	 *
 	 * @return bool
+	 *
+	 * @psalm-suppress MixedArgumentTypeCoercion `array_keys($this->singular)` is an array of strings
 	 */
 	public function isPlural(string $root): bool {
 		if ('' === $root) {
@@ -231,6 +223,8 @@ class Inflector implements InflectorInterface {
 	 * @param $root
 	 *
 	 * @return bool
+	 *
+	 * @psalm-suppress MixedArgumentTypeCoercion `array_keys($this->plural)` is an array of strings
 	 */
 	public function isSingular(string $root): bool {
 		if ('' === $root || in_array(strtolower($root), $this->uncountable)) {
@@ -259,6 +253,10 @@ class Inflector implements InflectorInterface {
 	 * @return null|string
 	 */
 	private function checkIrregularForm(string $root, array $irregular): ?string {
+		/**
+		 * @var string $pattern
+		 * @var  string $result
+		 */
 		foreach ($irregular as $pattern => $result) {
 			$searchPattern = '/' . $pattern . '$/i';
 			if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
@@ -282,6 +280,10 @@ class Inflector implements InflectorInterface {
 	 * @return null|string
 	 */
 	private function checkIrregularSuffix(string $root, array $irregular): ?string {
+		/**
+		 * @var string $pattern
+		 * @var  string $result
+		 */
 		foreach ($irregular as $pattern => $result) {
 			$searchPattern = '/' . $pattern . '$/i';
 			if ($root !== $replacement = preg_replace($searchPattern, $result, $root)) {
@@ -308,7 +310,7 @@ class Inflector implements InflectorInterface {
 	}
 
 	/**
-	 * @param array $irregular
+	 * @param string[] $irregular
 	 * @param string $root
 	 *
 	 * @return bool

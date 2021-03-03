@@ -24,8 +24,6 @@ trait SearchPart {
 
 	abstract public function length(): int;
 
-	abstract protected function prepareOffset(int $offset): int;
-
 	/**
 	 * Returns the character at the given zero-related index
 	 *
@@ -51,12 +49,7 @@ trait SearchPart {
 	 * @return ArrayObject An ArrayObject of all chars
 	 */
 	public function chars(): ArrayObject {
-		$chars = new ArrayObject();
-		for ($i = 0, $l = $this->length(); $i < $l; $i++) {
-			$chars->append($this->at($i));
-		}
-
-		return $chars;
+		return new ArrayObject(mb_str_split($this->getString(), 1, $this->encoding));
 	}
 
 	/**
@@ -67,11 +60,7 @@ trait SearchPart {
 	 *
 	 * @return int|null int for the index or null if the given string doesn't occur
 	 */
-	public function indexOf(string | Stringable $string, int $offset = 0): ?int {
-		$offset = $this->prepareOffset($offset);
-		if ((string) $string == '') {
-			return $offset;
-		}
+	public function indexOf(string|Stringable $string, int $offset = 0): ?int {
 		$output = mb_strpos($this->getString(), (string) $string, $offset, $this->encoding);
 
 		return false === $output ? null : $output;
@@ -85,19 +74,13 @@ trait SearchPart {
 	 *
 	 * @return int|null int for the index or null if the given string doesn't occur
 	 */
-	public function lastIndexOf(string | Stringable $string, ?int $offset = null): ?int {
+	public function lastIndexOf(string|Stringable $string, ?int $offset = null): ?int {
 		if (null === $offset) {
 			$offset = $this->length();
-		} else {
-			$offset = $this->prepareOffset($offset);
 		}
 
-		if ($string === '') {
-			return $offset;
-		}
-
-		/* Converts $offset to a negative offset as strrpos has a different
-		 * behavior for positive offsets. */
+		// Converts $offset to a negative offset as strrpos has a different
+		// behavior for positive offsets.
 		$output = mb_strrpos($this->getString(), (string) $string, $offset - $this->length(), $this->encoding);
 
 		return false === $output ? null : $output;
@@ -113,7 +96,7 @@ trait SearchPart {
 	 * @see Text::startsWithIgnoreCase()
 	 *
 	 */
-	public function startsWith(string | Stringable $substring): bool {
+	public function startsWith(string|Stringable $substring): bool {
 		return str_starts_with($this->getString(), (string) $substring);
 	}
 
@@ -127,8 +110,8 @@ trait SearchPart {
 	 * @see Text::startsWith()
 	 *
 	 */
-	public function startsWithIgnoreCase(string | Stringable $substring): bool {
-		return str_starts_with($this->toUpperCase()->getString(), strtoupper((string) $substring));
+	public function startsWithIgnoreCase(string|Stringable $substring): bool {
+		return str_starts_with($this->toUpperCase()->getString(), mb_strtoupper((string) $substring, $this->encoding));
 	}
 
 	/**
@@ -141,7 +124,7 @@ trait SearchPart {
 	 * @see Text::endsWithIgnoreCase()
 	 *
 	 */
-	public function endsWith(string | Stringable $substring): bool {
+	public function endsWith(string|Stringable $substring): bool {
 		return str_ends_with($this->getString(), (string) $substring);
 	}
 
@@ -155,8 +138,8 @@ trait SearchPart {
 	 * @see Text::endsWith()
 	 *
 	 */
-	public function endsWithIgnoreCase(string | Stringable $substring): bool {
-		return str_ends_with($this->toUpperCase()->getString(), strtoupper((string) $substring));
+	public function endsWithIgnoreCase(string|Stringable $substring): bool {
+		return str_ends_with($this->toUpperCase()->getString(), mb_strtoupper((string) $substring, $this->encoding));
 	}
 
 	/**
@@ -166,7 +149,7 @@ trait SearchPart {
 	 *
 	 * @return bool
 	 */
-	public function contains(Stringable | string $text): bool {
+	public function contains(Stringable|string $text): bool {
 		return str_contains($this->getString(), (string) $text);
 	}
 

@@ -48,7 +48,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @psalm-suppress PossiblyInvalidPropertyAssignmentValue mb_internal_encoding always return string when called as getter
 	 */
-	public function __construct(string | Stringable $string = '', ?string $encoding = null) {
+	public function __construct(string|Stringable $string = '', ?string $encoding = null) {
 		$this->string = (string) $string;
 		$this->encoding = $encoding ?? mb_internal_encoding();
 	}
@@ -64,7 +64,7 @@ class Text implements Comparable, Stringable {
 	 * @see Text::__construct()
 	 *
 	 */
-	public static function create(string | Stringable $string, ?string $encoding = null) {
+	public static function create(string|Stringable $string, ?string $encoding = null) {
 		return new self($string, $encoding);
 	}
 
@@ -101,7 +101,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function append(string | Stringable $string): self {
+	public function append(string|Stringable $string): self {
 		return new self($this->string . $string, $this->encoding);
 	}
 
@@ -112,7 +112,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function prepend(string | Stringable $string): self {
+	public function prepend(string|Stringable $string): self {
 		return new self($string . $this->string, $this->encoding);
 	}
 
@@ -129,7 +129,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function insert(string | Stringable $substring, int $index): self {
+	public function insert(string|Stringable $substring, int $index): self {
 		if ($index <= 0) {
 			return $this->prepend($substring);
 		}
@@ -164,10 +164,6 @@ class Text implements Comparable, Stringable {
 	public function slice(int $offset, ?int $length = null): self {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
-
-		if ($length === 0) {
-			return new self('', $this->encoding);
-		}
 
 		return new self(mb_substr($this->string, $offset, $length, $this->encoding), $this->encoding);
 	}
@@ -210,8 +206,11 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return int
 	 */
-	public function countSubstring(string | Stringable $substring, bool $caseSensitive = true): int {
-		$this->verifyNotEmpty($substring, '$substring');
+	public function countSubstring(string|Stringable $substring, bool $caseSensitive = true): int {
+		if (empty($substring)) {
+			throw new \InvalidArgumentException('$substring cannot be empty');
+		}
+
 		if ($caseSensitive) {
 			return mb_substr_count($this->string, (string) $substring, $this->encoding);
 		}
@@ -232,35 +231,30 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @see #supplant
 	 *
-	 * @param Arrayable|Text|array|string $search
+	 * @param Arrayable|Stringable|array|string $search
 	 * 		The value being searched for, otherwise known as the needle. An array may be used
 	 * 		to designate multiple needles.
-	 * @param Arrayable|Text|array|string $replace
+	 * @param Arrayable|Stringable[]|array|string $replace
 	 * 		The replacement value that replaces found search values. An array may be used to
 	 * 		designate multiple replacements.
 	 *
 	 * @return Text
+	 *
+	 * @psalm-suppress MixedArgumentTypeCoercion
 	 */
-	public function replace(Arrayable | Stringable | array | string $search, Arrayable | Stringable | array | string $replace): self {
-		if ($search instanceof Stringable) {
-			$search = (string) $search;
-		} elseif ($search instanceof Arrayable) {
-			$search = $search->toArray();
-		}
-
-		if ($replace instanceof Stringable) {
-			$replace = (string) $replace;
-		} elseif ($replace instanceof Arrayable) {
-			$replace = $replace->toArray();
-		}
+	public function replace(Arrayable|Stringable|array|string $search, Arrayable|Stringable|array|string $replace): self {
+		$search = $search instanceof Stringable ? (string) $search :
+			($search instanceof Arrayable ? $search->toArray() : $search);
+		$replace = $replace instanceof Stringable ? (string) $replace :
+			($replace instanceof Arrayable ? $replace->toArray() : $replace);
 
 		return new self(str_replace($search, $replace, $this->string), $this->encoding);
 	}
 
 	/**
-	 * Replaces all occurences of given replacement map. Keys will be replaced with its values.
+	 * Replaces all occurrences of given replacement map. Keys will be replaced with its values.
 	 *
-	 * @param array $map the replacements. Keys will be replaced with its value.
+	 * @param string[] $map the replacements. Keys will be replaced with its value.
 	 *
 	 * @return Text
 	 */
@@ -277,7 +271,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function splice(string | Stringable $replacement, int $offset, ?int $length = null): self {
+	public function splice(string|Stringable $replacement, int $offset, ?int $length = null): self {
 		$offset = $this->prepareOffset($offset);
 		$length = $this->prepareLength($offset, $length);
 
@@ -303,7 +297,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function trim(string | Stringable $characters = " \t\n\r\v\0"): self {
+	public function trim(string|Stringable $characters = " \t\n\r\v\0"): self {
 		return new self(trim($this->string, (string) $characters), $this->encoding);
 	}
 
@@ -317,7 +311,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function trimStart(string | Stringable $characters = " \t\n\r\v\0"): self {
+	public function trimStart(string|Stringable $characters = " \t\n\r\v\0"): self {
 		return new self(ltrim($this->string, (string) $characters), $this->encoding);
 	}
 
@@ -331,7 +325,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function trimEnd(string | Stringable $characters = " \t\n\r\v\0"): self {
+	public function trimEnd(string|Stringable $characters = " \t\n\r\v\0"): self {
 		return new self(rtrim($this->string, (string) $characters), $this->encoding);
 	}
 
@@ -343,7 +337,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function pad(int $length, string | Stringable $padding = ' '): self {
+	public function pad(int $length, string|Stringable $padding = ' '): self {
 		$len = $length - $this->length();
 
 		return $this->applyPadding(floor($len / 2), ceil($len / 2), $padding);
@@ -357,7 +351,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function padStart(int $length, string | Stringable $padding = ' ') {
+	public function padStart(int $length, string|Stringable $padding = ' ') {
 		return $this->applyPadding($length - $this->length(), 0, $padding);
 	}
 
@@ -369,7 +363,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text
 	 */
-	public function padEnd(int $length, string | Stringable $padding = ' '): self {
+	public function padEnd(int $length, string|Stringable $padding = ' '): self {
 		return $this->applyPadding(0, $length - $this->length(), $padding);
 	}
 
@@ -385,7 +379,7 @@ class Text implements Comparable, Stringable {
 	 *
 	 * @return Text the padded string
 	 */
-	protected function applyPadding(int | float $left = 0, int | float $right = 0, string | Stringable $padStr = ' '): self {
+	protected function applyPadding(int|float $left = 0, int|float $right = 0, string|Stringable $padStr = ' '): self {
 		$length = mb_strlen((string) $padStr, $this->encoding);
 		$strLength = $this->length();
 		$paddedLength = $strLength + $left + $right;
@@ -454,8 +448,6 @@ class Text implements Comparable, Stringable {
 	 * @return Text
 	 */
 	public function repeat(int $multiplier): self {
-		$this->verifyNotNegative($multiplier, 'Number of repetitions');
-
 		return new self(str_repeat($this->string, $multiplier), $this->encoding);
 	}
 

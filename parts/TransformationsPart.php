@@ -60,7 +60,7 @@ trait TransformationsPart {
 	 *
 	 * @return bool
 	 */
-	abstract public function contains(Stringable | string $text): bool;
+	abstract public function contains(Stringable|string $text): bool;
 
 	/**
 	 * Replace all occurrences of the search string with the replacement string
@@ -74,7 +74,7 @@ trait TransformationsPart {
 	 *
 	 * @return Text
 	 */
-	abstract public function replace(Arrayable | Stringable | array | string $search, Arrayable | Stringable | array | string $replace): Text;
+	abstract public function replace(Arrayable|Stringable|array|string $search, Arrayable|Stringable|array|string $replace): Text;
 
 	/**
 	 * Transforms the string to lowercase
@@ -186,6 +186,8 @@ trait TransformationsPart {
 	 * </code>
 	 *
 	 * @return Text
+	 *
+	 * @psalm-suppress MixedArgument $matches[0] is a string
 	 */
 	public function toStudlyCase(): Text {
 		$input = $this->trim('-_');
@@ -195,9 +197,10 @@ trait TransformationsPart {
 		$normString = preg_replace('/\s+/', ' ', $input->toString());
 		$encoding = $this->encoding;
 
-		return Text::create(preg_replace_callback('/([A-Z-_\s][a-z0-9]+)/', function (array $matches) use ($encoding) {
-			return ucfirst(str_replace(['-', '_', ' '], '', $matches[0]));
-		}, $normString), $encoding)->toUpperCaseFirst();
+		return Text::create(preg_replace_callback('/([A-Z-_\s][a-z0-9]+)/',
+			fn (array $matches): string => ucfirst(str_replace(['-', '_', ' '], '', $matches[0])),
+			$normString), $encoding)
+			->toUpperCaseFirst();
 	}
 
 	/**
@@ -205,7 +208,7 @@ trait TransformationsPart {
 	 *
 	 * <code>
 	 * $var = new Text('myOwnVariable');<br>
-	 * $var->toKebapCase(); // my-own-variable
+	 * $var->toKebabCase(); // my-own-variable
 	 *
 	 * $var = new Text('myTest3Variable');<br>
 	 * $var->toKebabCase(); // my-test3-variable

@@ -14,8 +14,6 @@ namespace phootwork\lang;
  * `phootwork\lang\ArrayObject` and `phootwork\class\AbstractCollection`
  *
  * @author Cristiano Cinotti
- *
- * @psalm-consistent-constructor
  */
 abstract class AbstractArray implements \Countable {
 
@@ -43,6 +41,11 @@ abstract class AbstractArray implements \Countable {
 		return $this->count();
 	}
 
+	/**
+	 * @psalm-suppress UnsafeInstantiation
+	 *
+	 * @return $this
+	 */
 	public function __clone() {
 		return new static($this->array);
 	}
@@ -82,9 +85,12 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @param array $arguments
 	 *
-	 * @return mixed|null the found element or null if it hasn't been found
+	 * @return mixed the found element or null if it hasn't been found
+	 *
+	 * @psalm-suppress MixedAssignment
+	 * @psalm-suppress MixedFunctionCall
 	 */
-	public function find(mixed ...$arguments) {
+	public function find(mixed ...$arguments): mixed {
 		foreach ($this->array as $element) {
 			$return = count($arguments) === 1 ? $arguments[0]($element) : $arguments[1]($element, $arguments[0]);
 
@@ -111,9 +117,12 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @param array $arguments
 	 *
-	 * @return mixed|null the found element or null if it hasn't been found
+	 * @return mixed the found element or null if it hasn't been found
+	 *
+	 * @psalm-suppress MixedAssignment
+	 * @psalm-suppress MixedFunctionCall
 	 */
-	public function findLast(mixed ...$arguments) {
+	public function findLast(mixed ...$arguments): mixed {
 		$reverse = array_reverse($this->array, true);
 		foreach ($reverse as $element) {
 			$return = count($arguments) === 1 ? $arguments[0]($element) : $arguments[1]($element, $arguments[0]);
@@ -139,12 +148,17 @@ abstract class AbstractArray implements \Countable {
 	 *     - find($query, callback)
 	 *     - find(callback)
 	 *
-	 * @param array $arguments
+	 * @param mixed ...$arguments
 	 *
-	 * @return mixed|null the found element or null if it hasn't been found
+	 * @return static an ArrayObject or a collection of found elements
+	 *
+	 * @psalm-suppress UnsafeInstantiation
+	 * @psalm-suppress MixedAssignment
+	 * @psalm-suppress MixedFunctionCall
 	 */
-	public function findAll(mixed ...$arguments) {
+	public function findAll(mixed ...$arguments): static {
 		$array = [];
+
 		foreach ($this->array as $k => $element) {
 			$return = count($arguments) === 1 ? $arguments[0]($element) : $arguments[1]($element, $arguments[0]);
 
@@ -169,9 +183,11 @@ abstract class AbstractArray implements \Countable {
 	 *     - search($query, callback)
 	 *     - search(callback)
 	 *
-	 * @param array $arguments
+	 * @param mixed ...$arguments
 	 *
 	 * @return bool
+	 * @psalm-suppress MixedFunctionCall
+	 * @psalm-suppress MixedAssignment
 	 */
 	public function search(mixed ...$arguments): bool {
 		foreach ($this->array as $element) {
@@ -201,7 +217,7 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * @return $this
 	 */
-	public function sort(Comparator | callable $cmp = null): self {
+	public function sort(Comparator|callable $cmp = null): self {
 		$this->doSort($this->array, 'usort', 'sort', $cmp);
 
 		return $this;
@@ -215,7 +231,7 @@ abstract class AbstractArray implements \Countable {
 	 * @param callable                 $sort  the default sort function
 	 * @param Comparator|callable|null $cmp   the compare function
 	 */
-	protected function doSort(array &$array, callable $usort, callable $sort, Comparator | callable $cmp = null): void {
+	protected function doSort(array &$array, callable $usort, callable $sort, Comparator|callable $cmp = null): void {
 		if (is_callable($cmp)) {
 			$usort($array, $cmp);
 		} elseif ($cmp instanceof Comparator) {
@@ -235,17 +251,12 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * Returns <code>true</code> for an empty array.
 	 *
-	 * @param callable $callback
+	 * @param callable(mixed, mixed): scalar $callback
 	 *
 	 * @return bool
 	 */
 	public function every(callable $callback): bool {
-		$match = true;
-		foreach ($this->array as $element) {
-			$match = $match && $callback($element);
-		}
-
-		return $match;
+		return $this->count() === count(array_filter($this->array, $callback));
 	}
 
 	/**
@@ -253,25 +264,21 @@ abstract class AbstractArray implements \Countable {
 	 *
 	 * Returns <code>false</code> for an empty array.
 	 *
-	 * @param callable $callback
+	 * @param callable(mixed, mixed): scalar $callback
 	 *
 	 * @return bool
 	 */
 	public function some(callable $callback): bool {
-		$match = false;
-		foreach ($this->array as $element) {
-			$match = $match || $callback($element);
-		}
-
-		return $match;
+		return count(array_filter($this->array, $callback)) > 0;
 	}
 
 	/**
 	 * Filters elements using a callback function
 	 *
-	 * @param callable $callback the filter function
+	 * @param callable(mixed, mixed): scalar $callback the filter function
 	 *
 	 * @return static
+	 * @psalm-suppress UnsafeInstantiation
 	 */
 	public function filter(callable $callback): self {
 		return new static(array_filter($this->array, $callback));
@@ -283,6 +290,7 @@ abstract class AbstractArray implements \Countable {
 	 * @param callable $callback the applied callback function
 	 *
 	 * @return static
+	 * @psalm-suppress UnsafeInstantiation
 	 */
 	public function map(callable $callback): self {
 		return new static(array_map($callback, $this->array));
