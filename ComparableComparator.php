@@ -31,7 +31,8 @@ class ComparableComparator implements Comparator {
 	public function compare(mixed $a, mixed $b): int {
 		if (! $a instanceof Comparable) {
 			throw new InvalidArgumentException(
-				"ComparableComparator can compare only objects implementing phootwork\lang\Comparable interface");
+				"ComparableComparator can compare only objects implementing phootwork\lang\Comparable interface"
+			);
 		}
 
 		return $a->compareTo($b);

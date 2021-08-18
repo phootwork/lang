@@ -197,9 +197,11 @@ trait TransformationsPart {
 		$normString = preg_replace('/\s+/', ' ', $input->toString());
 		$encoding = $this->encoding;
 
-		return Text::create(preg_replace_callback('/([A-Z-_\s][a-z0-9]+)/',
+		return Text::create(preg_replace_callback(
+			'/([A-Z-_\s][a-z0-9]+)/',
 			fn (array $matches): string => ucfirst(str_replace(['-', '_', ' '], '', $matches[0])),
-			$normString), $encoding)
+			$normString
+		), $encoding)
 			->toUpperCaseFirst();
 	}
 

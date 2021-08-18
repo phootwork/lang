@@ -51,7 +51,8 @@ trait InternalPart {
 	 */
 	protected function prepareLength(int $offset, ?int $length): int {
 		$length = (null === $length) ? ($this->length() - $offset) : (
-			($length < 0) ? ($length + $this->length() - $offset) : $length);
+			($length < 0) ? ($length + $this->length() - $offset) : $length
+		);
 
 		if ($length < 0) {
 			throw new InvalidArgumentException('Length too small');
