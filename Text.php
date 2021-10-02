@@ -59,13 +59,13 @@ class Text implements Comparable, Stringable {
 	 * @param string|Stringable       $string
 	 * @param string|null $encoding
 	 *
-	 * @return Text
+	 * @return static
 	 *
 	 * @see Text::__construct()
-	 *
+	 * @psalm-suppress UnsafeInstantiation
 	 */
-	public static function create(string|Stringable $string, ?string $encoding = null) {
-		return new self($string, $encoding);
+	public static function create(string|Stringable $string, ?string $encoding = null): static {
+		return new static($string, $encoding);
 	}
 
 	/**
