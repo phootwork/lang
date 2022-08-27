@@ -217,7 +217,7 @@ class Text implements Comparable, Stringable {
 		$str = mb_strtoupper($this->string, $this->encoding);
 		$substring = mb_strtoupper((string) $substring, $this->encoding);
 
-		return mb_substr_count($str, (string) $substring, $this->encoding);
+		return mb_substr_count($str, $substring, $this->encoding);
 	}
 
 	//

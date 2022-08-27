@@ -23,15 +23,15 @@ trait ComparisonPart {
 	/**
 	 * Compares this string to another
 	 *
-	 * @param mixed $compare
+	 * @param mixed $comparison
 	 *
 	 * @return int
 	 *
 	 * @see \phootwork\lang\Comparable::compareTo()
 	 */
-	public function compareTo(mixed $compare): int {
-		if (is_string($compare) || $compare instanceof Text) {
-			return $this->compare($compare);
+	public function compareTo(mixed $comparison): int {
+		if (is_string($comparison) || $comparison instanceof Text) {
+			return $this->compare($comparison);
 		}
 
 		throw new \InvalidArgumentException('`compareTo` method can accept only strings or Text objects.');

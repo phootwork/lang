@@ -63,8 +63,19 @@ trait ArrayConversionsPart {
 	 * @return Text
 	 *        Returns a string containing a string representation of all the array elements in the
 	 *        same order, with the glue string between each element.
+	 *
+	 * @psalm-suppress MixedArgumentTypeCoercion
 	 */
 	public static function join(array $pieces, string $glue = '', ?string $encoding = null): Text {
+		array_map(
+			function (mixed $element): void {
+				if (!($element === null || is_scalar($element) || $element instanceof \Stringable)) {
+					throw new \TypeError('Can join elements only if scalar, null or \\Stringable');
+				}
+			},
+			$pieces
+		);
+
 		return new Text(implode($glue, $pieces), $encoding);
 	}
 

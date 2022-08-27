@@ -36,6 +36,14 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 		$this->array = $contents;
 	}
 
+	public function __serialize(): array {
+		return $this->array;
+	}
+
+	public function __unserialize(array $data): void {
+		$this->array = $data;
+	}
+
 	public function getIterator(): \ArrayIterator {
 		return new \ArrayIterator($this->array);
 	}
@@ -138,8 +146,19 @@ class ArrayObject extends AbstractArray implements \ArrayAccess, \Countable, \It
 	 * @return Text
 	 * 		Returns a string containing a string representation of all the array elements in the
 	 * 		same order, with the glue string between each element.
+	 *
+	 * @psalm-suppress MixedArgumentTypeCoercion
 	 */
 	public function join(string $glue = ''): Text {
+		array_map(
+			function (mixed $element): void {
+				if (!($element === null || is_scalar($element) || $element instanceof \Stringable)) {
+					throw new \TypeError('Can join elements only if scalar, null or \\Stringable');
+				}
+			},
+			$this->array
+		);
+
 		return new Text(implode($glue, $this->array));
 	}
 
