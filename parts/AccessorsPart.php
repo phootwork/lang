@@ -10,7 +10,6 @@
 namespace phootwork\lang\parts;
 
 trait AccessorsPart {
-
 	/**
 	 * Returns the element at the given index (or null if the index isn't present)
 	 *

@@ -10,7 +10,6 @@
 namespace phootwork\lang\parts;
 
 trait ReversePart {
-
 	/**
 	 * Reverses the order of all elements
 	 *

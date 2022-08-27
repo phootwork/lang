@@ -10,7 +10,6 @@
 namespace phootwork\lang;
 
 interface Comparator {
-
 	/**
 	 * Compares two objects
 	 *

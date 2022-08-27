@@ -10,7 +10,6 @@
 namespace phootwork\lang;
 
 interface Comparable {
-
 	/**
 	 * Compares to another object
 	 *

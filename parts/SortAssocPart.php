@@ -12,7 +12,6 @@ namespace phootwork\lang\parts;
 use phootwork\lang\Comparator;
 
 trait SortAssocPart {
-
 	/**
 	 * Sorts the array and persisting key-value pairs
 	 *

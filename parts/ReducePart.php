@@ -10,7 +10,6 @@
 namespace phootwork\lang\parts;
 
 trait ReducePart {
-
 	/**
 	 * Iterative reduction of this array or collection with the help of a callback function. The callback
 	 * function takes two parameters, the first is the carry, the second the current item, with this

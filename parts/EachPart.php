@@ -10,7 +10,6 @@
 namespace phootwork\lang\parts;
 
 trait EachPart {
-
 	/**
 	 * Iterates the array and calls the callback function with the current item as parameter
 	 *

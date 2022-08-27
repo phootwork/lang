@@ -19,7 +19,6 @@ use InvalidArgumentException;
  * @author Thomas Gossmann
  */
 class ComparableComparator implements Comparator {
-
 	/**
 	 * @param mixed $a
 	 * @param mixed $b

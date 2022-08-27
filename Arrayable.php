@@ -10,7 +10,6 @@
 namespace phootwork\lang;
 
 interface Arrayable {
-
 	/**
 	 * Array representation of the object
 	 * 
