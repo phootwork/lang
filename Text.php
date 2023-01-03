@@ -62,6 +62,7 @@ class Text implements Comparable, Stringable {
 	 * @return static
 	 *
 	 * @see Text::__construct()
+	 *
 	 * @psalm-suppress UnsafeInstantiation
 	 */
 	public static function create(string|Stringable $string, ?string $encoding = null): static {

@@ -185,6 +185,7 @@ abstract class AbstractArray implements \Countable {
 	 * @param mixed ...$arguments
 	 *
 	 * @return bool
+	 *
 	 * @psalm-suppress MixedFunctionCall
 	 * @psalm-suppress MixedAssignment
 	 */
@@ -277,6 +278,7 @@ abstract class AbstractArray implements \Countable {
 	 * @param callable(mixed, mixed): scalar $callback the filter function
 	 *
 	 * @return static
+	 *
 	 * @psalm-suppress UnsafeInstantiation
 	 */
 	public function filter(callable $callback): self {
@@ -289,6 +291,7 @@ abstract class AbstractArray implements \Countable {
 	 * @param callable $callback the applied callback function
 	 *
 	 * @return static
+	 *
 	 * @psalm-suppress UnsafeInstantiation
 	 */
 	public function map(callable $callback): self {
