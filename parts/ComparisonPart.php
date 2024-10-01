@@ -61,7 +61,7 @@ trait ComparisonPart {
 	 *
 	 * @psalm-suppress MixedInferredReturnType
 	 */
-	public function compare(string|Text $compare, callable $callback = null): int {
+	public function compare(string|Text $compare, ?callable $callback = null): int {
 		if ($callback === null) {
 			$callback = 'strcmp';
 		}
